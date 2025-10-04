@@ -169,7 +169,7 @@ class DownloadableDocumentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DownloadableDocumentSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['is_active']
-    search_fields = ['title_ru', 'title_en', 'title_ky', 'description_ru']
+    search_fields = ['title_ru', 'title_en', 'title_kg', 'description_ru']
     ordering_fields = ['created_at', 'title_ru']
     ordering = ['-created_at']
     

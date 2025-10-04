@@ -266,7 +266,7 @@ class DownloadableDocumentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = DownloadableDocument
-        fields = ['id', 'title', 'title_ru', 'title_en', 'title_ky', 'file', 'file_url', 'upload_date']
+        fields = ['id', 'title', 'title_ru', 'title_en', 'title_kg', 'file', 'file_url', 'upload_date']
         read_only_fields = ['id', 'title', 'file_url', 'upload_date']
     
     def get_title(self, obj):
