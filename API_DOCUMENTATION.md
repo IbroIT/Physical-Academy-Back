@@ -1,462 +1,540 @@
-# Academy Management System - API Documentation
+# Student Clubs API Documentation
 
-## Overview
+## Обзор
 
-This API provides access to the Academy Management System's "About Section" data, including leadership information, accreditations, organizational structure, and downloadable documents. The API is built using Django REST Framework with multilingual support (Russian, Kyrgyz, English).
+API для управления студенческими клубами с поддержкой трех языков (ru, en, kg).
 
-## Base URL
+**Base URL:** `/api/student-clubs/`
 
+**Поддерживаемые языки:** `ru` (русский), `en` (английский), `kg` (кыргызский)
+
+---
+
+## Параметры языка
+
+Все эндпоинты поддерживают параметр `lang` для получения данных на нужном языке:
+
+- `?lang=ru` - русский (по умолчанию)
+- `?lang=en` - английский
+- `?lang=kg` - кыргызский
+
+Также можно использовать заголовок `Accept-Language`.
+
+---
+
+## Endpoints
+
+### 1. Категории клубов
+
+#### GET `/api/student-clubs/categories/`
+Получить список всех категорий клубов.
+
+**Query Parameters:**
+- `lang` - язык ответа (ru, en, kg)
+
+**Response Example:**
+```json
+[
+  {
+    "id": 1,
+    "slug": "tech",
+    "name": "Технологии и IT",
+    "name_ru": "Технологии и IT",
+    "name_en": "Technology & IT",
+    "name_kg": "Технология жана IT",
+    "order": 1
+  },
+  {
+    "id": 2,
+    "slug": "sports",
+    "name": "Спорт и здоровье",
+    "name_ru": "Спорт и здоровье",
+    "name_en": "Sports & Health",
+    "name_kg": "Спорт жана ден соолук",
+    "order": 2
+  }
+]
 ```
-http://localhost:8000/api/v1/
-```
 
-## Authentication
+#### GET `/api/student-clubs/categories/{slug}/`
+Получить детали конкретной категории.
 
-Currently, the API allows anonymous access for all endpoints. All endpoints are read-only.
-
-## Content Type
-
-All API responses return JSON data with the following content type:
-```
-Content-Type: application/json
-```
-
-## Multilingual Support
-
-The API supports three languages:
-- **Russian (ru)** - Default language
-- **Kyrgyz (ky)** 
-- **English (en)**
-
-### Language Selection
-
-You can specify the language using the `lang` query parameter:
-```
-GET /api/v1/leadership/?lang=en
-GET /api/v1/leadership/?lang=ky
-```
-
-Alternatively, set the `Accept-Language` header:
-```
-Accept-Language: en
-Accept-Language: ky
-```
-
-## Pagination
-
-List endpoints use pagination with the following format:
+**Response Example:**
 ```json
 {
-  "count": 25,
-  "next": "http://localhost:8000/api/v1/leadership/?page=2",
-  "previous": null,
-  "results": [...]
+  "id": 1,
+  "slug": "tech",
+  "name": "Технологии и IT",
+  "name_ru": "Технологии и IT",
+  "name_en": "Technology & IT",
+  "name_kg": "Технология жана IT",
+  "order": 1
 }
 ```
 
-Default page size is 20 items. You can modify this with the `page_size` parameter (max 100):
-```
-GET /api/v1/leadership/?page_size=50
+---
+
+### 2. Клубы
+
+#### GET `/api/student-clubs/clubs/`
+Получить список всех клубов с возможностью фильтрации.
+
+**Query Parameters:**
+- `lang` - язык ответа (ru, en, kg)
+- `category` - фильтр по slug категории
+- `status` - фильтр по статусу (active, recruiting, inactive)
+- `search` - поиск по названию, описанию и тегам
+- `ordering` - сортировка (members_count, created_at, order)
+
+**Response Example:**
+```json
+[
+  {
+    "id": 1,
+    "category": {
+      "id": 1,
+      "slug": "tech",
+      "name": "Технологии и IT",
+      "order": 1
+    },
+    "icon": "💻",
+    "status": "active",
+    "members_count": 45,
+    "name": "IT Club",
+    "short_description": "Программирование и разработка",
+    "description": "Клуб для студентов, интересующихся программированием...",
+    "meetings": "Каждую среду 19:00",
+    "tags": ["python", "javascript", "web", "programming"],
+    "join_link": "https://t.me/itclub_academy",
+    "created_at": "2025-01-15T10:30:00Z",
+    "updated_at": "2025-01-15T10:30:00Z"
+  }
+]
 ```
 
-## Filtering and Search
+**Примеры запросов:**
+- `/api/student-clubs/clubs/?lang=en` - все клубы на английском
+- `/api/student-clubs/clubs/?category=tech` - клубы категории "tech"
+- `/api/student-clubs/clubs/?status=active` - только активные клубы
+- `/api/student-clubs/clubs/?search=programming` - поиск по слову "programming"
+- `/api/student-clubs/clubs/?ordering=-members_count` - сортировка по количеству участников (убывание)
 
-Most endpoints support filtering and search:
+#### GET `/api/student-clubs/clubs/{id}/`
+Получить детальную информацию о клубе.
 
-### Filtering
-Use query parameters matching model fields:
-```
-GET /api/v1/leadership/?leadership_type=director
-GET /api/v1/leadership/?department=Mathematics
-GET /api/v1/accreditations/?accreditation_type=international
-```
+**Query Parameters:**
+- `lang` - язык ответа (ru, en, kg)
 
-### Search
-Use the `search` parameter to search across multiple fields:
-```
-GET /api/v1/leadership/?search=John
-GET /api/v1/organization-structure/?search=department
-```
-
-### Ordering
-Use the `ordering` parameter to sort results:
-```
-GET /api/v1/leadership/?ordering=name
-GET /api/v1/leadership/?ordering=-created_at
-GET /api/v1/accreditations/?ordering=issue_date
-```
-
-## API Endpoints
-
-### 1. Leadership
-
-#### Get All Leadership Members
-```
-GET /api/v1/leadership/
-```
-
-**Response:**
+**Response Example:**
 ```json
 {
-  "count": 5,
-  "next": null,
-  "previous": null,
-  "results": [
+  "id": 1,
+  "category": {
+    "id": 1,
+    "slug": "tech",
+    "name": "Технологии и IT",
+    "order": 1
+  },
+  "icon": "💻",
+  "status": "active",
+  "members_count": 45,
+  "join_link": "https://t.me/itclub_academy",
+  "name": "IT Club",
+  "short_description": "Программирование и разработка",
+  "description": "Клуб для студентов, интересующихся программированием, веб-разработкой и IT-технологиями...",
+  "goals": "Развитие практических навыков программирования\nОбмен опытом между участниками\nУчастие в IT-конференциях и хакатонах\nСоздание реальных проектов",
+  "motivation": "Получите реальный опыт работы над проектами\nПодготовьтесь к карьере в IT\nНайдите единомышленников\nУлучшите свое портфолио",
+  "meetings": "Каждую среду 19:00",
+  "tags": ["python", "javascript", "web", "programming"],
+  "leaders": [
     {
       "id": 1,
-      "name": "Иван Иванов",
-      "name_kg": "Иван Иванов",
-      "name_en": "Ivan Ivanov",
-      "position": "Директор",
-      "position_kg": "Директор",
-      "position_en": "Director",
-      "degree": "Доктор технических наук",
-      "degree_kg": "Техникалык илимдердин доктору",
-      "degree_en": "Doctor of Technical Sciences",
-      "experience": "15 лет",
-      "experience_kg": "15 жыл",
-      "experience_en": "15 years",
-      "bio": "Краткая биография...",
-      "bio_kg": "Кыскача биография...",
-      "bio_en": "Brief biography...",
-      "achievements": ["Награда 1", "Награда 2"],
-      "achievements_kg": ["Сыйлык 1", "Сыйлык 2"],
-      "achievements_en": ["Award 1", "Award 2"],
-      "department": "Администрация",
-      "department_kg": "Администрация",
-      "department_en": "Administration",
-      "specialization": "Управление",
-      "specialization_kg": "Башкаруу",
-      "specialization_en": "Management",
-      "email": "director@academy.edu",
-      "phone": "+996 555 123456",
-      "image": "/media/leadership/photos/director.jpg",
-      "image_url": "http://localhost:8000/media/leadership/photos/director.jpg",
-      "leadership_type": "director",
-      "leadership_type_display": "Директор",
-      "is_director": true,
+      "name": "Иванов Иван Иванович",
+      "role": "Президент клуба",
+      "email": "president@1.club",
+      "phone": null,
+      "photo": null
+    },
+    {
+      "id": 2,
+      "name": "Петров Петр Петрович",
+      "role": "Вице-президент",
+      "email": "vicepresident@1.club",
+      "phone": null,
+      "photo": null
+    }
+  ],
+  "order": 1,
+  "is_active": true,
+  "created_at": "2025-01-15T10:30:00Z",
+  "updated_at": "2025-01-15T10:30:00Z"
+}
+```
+
+#### GET `/api/student-clubs/clubs/page_data/`
+Получить все данные для страницы клубов (заголовки, статистику, категории, клубы).
+
+**Query Parameters:**
+- `lang` - язык ответа (ru, en, kg)
+- `category` - фильтр по slug категории (опционально)
+- `search` - поиск (опционально)
+
+**Response Example:**
+```json
+{
+  "title": "Студенческие клубы и сообщества",
+  "subtitle": "Присоединяйтесь к клубам и развивайте свои навыки вместе с единомышленниками",
+  "stats": [
+    {
+      "id": 1,
+      "value": "50+",
+      "label": "Активных клубов",
+      "icon": "🎯",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "value": "1200+",
+      "label": "Участников",
+      "icon": "👥",
+      "order": 2
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "slug": "tech",
+      "name": "Технологии и IT",
       "order": 1
     }
-  ]
-}
-```
-
-**Filtering Options:**
-- `leadership_type`: director, deputy_director, department_head, dean, vice_dean
-- `department`: Department name
-- `is_director`: true/false
-- `is_active`: true/false
-
-**Search Fields:**
-- `name`, `name_kg`, `name_en`
-- `position`
-- `department`
-
-#### Get Directors Only
-```
-GET /api/v1/leadership/directors/
-```
-
-#### Get Department Heads
-```
-GET /api/v1/leadership/department-heads/
-```
-
-#### Get Leadership Member Details
-```
-GET /api/v1/leadership/{id}/
-```
-
-### 2. Accreditations
-
-#### Get All Accreditations
-```
-GET /api/v1/accreditations/
-```
-
-**Response:**
-```json
-{
-  "count": 3,
-  "next": null,
-  "previous": null,
-  "results": [
+  ],
+  "clubs": [
     {
       "id": 1,
-      "name": "ISO 9001:2015",
-      "name_kg": "ISO 9001:2015",
-      "name_en": "ISO 9001:2015",
-      "organization": "Международная организация по стандартизации",
-      "organization_kg": "Эл аралык стандарттоо уюму",
-      "organization_en": "International Organization for Standardization",
-      "accreditation_type": "international",
-      "accreditation_type_kg": "эл аралык",
-      "accreditation_type_en": "international",
-      "accreditation_type_display": "Международная",
-      "description": "Сертификат качества...",
-      "description_kg": "Сапат сертификаты...",
-      "description_en": "Quality certificate...",
-      "certificate_image": "/media/accreditations/certificates/iso9001.pdf",
-      "certificate_image_url": "http://localhost:8000/media/accreditations/certificates/iso9001.pdf",
-      "organization_logo": "/media/accreditations/logos/iso.png",
-      "organization_logo_url": "http://localhost:8000/media/accreditations/logos/iso.png",
-      "issue_date": "2023-01-15",
-      "expiry_date": "2026-01-15",
-      "certificate_number": "ISO-2023-001",
-      "is_valid": true,
-      "is_active": true,
-      "order": 1,
-      "created_at": "2023-01-15T10:00:00Z",
-      "updated_at": "2023-01-15T10:00:00Z"
-    }
-  ]
-}
-```
-
-**Filtering Options:**
-- `accreditation_type`: national, international, institutional, programmatic
-- `is_active`: true/false
-
-#### Get Active/Valid Accreditations Only
-```
-GET /api/v1/accreditations/active/
-```
-
-### 3. Organization Structure
-
-#### Get All Departments
-```
-GET /api/v1/organization-structure/
-```
-
-**Response:**
-```json
-{
-  "count": 10,
-  "next": null,
-  "previous": null,
-  "results": [
-    {
-      "id": 1,
-      "name": "Факультет информатики",
-      "name_ru": "Факультет информатики",
-      "name_en": "Faculty of Computer Science",
-      "name_ky": "Информатика факультети",
-      "head_name": "Петр Петров",
-      "head_name_ru": "Петр Петров",
-      "head_name_en": "Petr Petrov",
-      "head_name_ky": "Петр Петров",
-      "structure_type": "faculties",
-      "phone": "+996 555 789012",
-      "email": "cs@academy.edu",
+      "category": {...},
       "icon": "💻",
-      "parent": null,
-      "children": [
-        {
-          "id": 2,
-          "name": "Кафедра программирования",
-          "name_ru": "Кафедра программирования",
-          "name_en": "Programming Department",
-          "name_ky": "Программалоо кафедрасы",
-          "head_name": "Анна Сидорова",
-          "head_name_ru": "Анна Сидорова",
-          "head_name_en": "Anna Sidorova",
-          "head_name_ky": "Анна Сидорова",
-          "structure_type": "faculties",
-          "phone": "+996 555 345678",
-          "email": "programming@academy.edu",
-          "icon": "🔧",
-          "parent": 1,
-          "children": [],
-          "order": 1,
-          "is_active": true,
-          "title": "Факультеты"
-        }
-      ],
-      "order": 1,
-      "is_active": true,
-      "title": "Факультеты"
+      "status": "active",
+      "members_count": 45,
+      "name": "IT Club",
+      "short_description": "Программирование и разработка",
+      "description": "...",
+      "meetings": "Каждую среду 19:00",
+      "tags": ["python", "javascript"],
+      "join_link": "https://t.me/itclub_academy"
     }
   ]
 }
 ```
 
-**Filtering Options:**
-- `structure_type`: leadership, faculties, administrative, support
-- `parent`: Parent department ID
-- `is_active`: true/false
+**Применение:** Этот эндпоинт идеален для загрузки всех данных страницы одним запросом.
 
-#### Get Hierarchical Structure
-```
-GET /api/v1/organization-structure/hierarchy/
-```
-Returns only top-level departments with their nested children.
+**Примеры:**
+- `/api/student-clubs/clubs/page_data/?lang=ru` - все данные на русском
+- `/api/student-clubs/clubs/page_data/?lang=en&category=tech` - данные на английском, только tech категория
+- `/api/student-clubs/clubs/page_data/?lang=kg&search=футбол` - данные на кыргызском с поиском
 
-### 4. Downloadable Documents
+#### GET `/api/student-clubs/clubs/by_category/`
+Получить клубы конкретной категории.
 
-#### Get All Documents
-```
-GET /api/v1/documents/
+**Query Parameters:**
+- `category` - slug категории (обязательно)
+- `lang` - язык ответа (ru, en, kg)
+
+**Response Example:**
+```json
+[
+  {
+    "id": 1,
+    "category": {...},
+    "icon": "💻",
+    "status": "active",
+    "members_count": 45,
+    "name": "IT Club",
+    "short_description": "Программирование и разработка",
+    "description": "...",
+    "meetings": "Каждую среду 19:00",
+    "tags": ["python", "javascript"],
+    "join_link": "https://t.me/itclub_academy"
+  }
+]
 ```
 
-**Response:**
+**Примеры:**
+- `/api/student-clubs/clubs/by_category/?category=tech&lang=ru`
+- `/api/student-clubs/clubs/by_category/?category=sports&lang=en`
+
+#### POST `/api/student-clubs/clubs/{id}/join/`
+Присоединиться к клубу (отправка заявки).
+
+**Request Body:**
 ```json
 {
-  "count": 5,
-  "next": null,
-  "previous": null,
-  "results": [
-    {
-      "id": 1,
-      "title": "Устав академии",
-      "title_ru": "Устав академии",
-      "title_en": "Academy Charter",
-      "title_ky": "Академиянын жарыялыгы",
-      "file": "/media/documents/charter.pdf",
-      "file_url": "http://localhost:8000/media/documents/charter.pdf",
-      "upload_date": "2023-01-10T09:00:00Z"
-    }
-  ]
+  "email": "student@example.com",
+  "name": "John Doe"
 }
 ```
 
-**Filtering Options:**
-- `is_active`: true/false
-
-**Search Fields:**
-- `title_ru`, `title_en`, `title_ky`
-- `description_ru`
-
-## Error Handling
-
-The API uses standard HTTP status codes:
-
-- **200**: Success
-- **404**: Resource not found
-- **400**: Bad request (invalid parameters)
-- **500**: Internal server error
-
-Error responses follow this format:
+**Response Example:**
 ```json
 {
-  "detail": "Not found."
+  "success": true,
+  "message": "Заявка на вступление в клуб \"IT Club\" отправлена",
+  "club_name": "IT Club",
+  "join_link": "https://t.me/itclub_academy"
 }
 ```
 
-## API Documentation
+---
 
-Interactive API documentation is available at:
-- **Swagger UI**: http://localhost:8000/api/docs/
-- **ReDoc**: http://localhost:8000/api/redoc/
-- **OpenAPI Schema**: http://localhost:8000/api/schema/
+### 3. Руководители клубов
 
-## CORS Configuration
+#### GET `/api/student-clubs/leaders/`
+Получить список всех руководителей клубов.
 
-The API is configured to accept requests from common frontend development servers:
-- http://localhost:3000 (React)
-- http://localhost:8080 (Vue.js)
-- http://localhost:4200 (Angular)
+**Query Parameters:**
+- `lang` - язык ответа (ru, en, kg)
+- `club` - фильтр по ID клуба
 
-## Example Frontend Integration
+**Response Example:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Иванов Иван Иванович",
+    "role": "Президент клуба",
+    "email": "president@1.club",
+    "phone": null,
+    "photo": null,
+    "name_ru": "Иванов Иван Иванович",
+    "name_en": "Ivan Ivanov",
+    "name_kg": "Иван Иванов",
+    "role_ru": "Президент клуба",
+    "role_en": "Club President",
+    "role_kg": "Клубдун президенти"
+  }
+]
+```
 
-### JavaScript/React Example
+**Примеры:**
+- `/api/student-clubs/leaders/?lang=en` - все руководители на английском
+- `/api/student-clubs/leaders/?club=1` - руководители клуба с ID 1
 
+#### GET `/api/student-clubs/leaders/{id}/`
+Получить детали конкретного руководителя.
+
+---
+
+### 4. Статистика
+
+#### GET `/api/student-clubs/stats/`
+Получить статистику для отображения на странице клубов.
+
+**Query Parameters:**
+- `lang` - язык ответа (ru, en, kg)
+
+**Response Example:**
+```json
+[
+  {
+    "id": 1,
+    "value": "50+",
+    "label": "Активных клубов",
+    "icon": "🎯",
+    "order": 1
+  },
+  {
+    "id": 2,
+    "value": "1200+",
+    "label": "Участников",
+    "icon": "👥",
+    "order": 2
+  }
+]
+```
+
+---
+
+## Статусы клубов
+
+- `active` - Клуб активен, идет набор участников
+- `recruiting` - Идет активный набор
+- `inactive` - Клуб временно неактивен
+
+---
+
+## Примеры использования в React компоненте
+
+### Получение всех данных страницы:
 ```javascript
-// Fetch leadership data
-const fetchLeadership = async (language = 'ru') => {
-  try {
-    const response = await fetch(`http://localhost:8000/api/v1/leadership/?lang=${language}`);
-    const data = await response.json();
-    return data.results;
-  } catch (error) {
-    console.error('Error fetching leadership:', error);
-    return [];
-  }
+const fetchPageData = async (lang = 'ru', category = 'all', search = '') => {
+  const params = new URLSearchParams();
+  params.append('lang', lang);
+  if (category !== 'all') params.append('category', category);
+  if (search) params.append('search', search);
+  
+  const response = await fetch(`/api/student-clubs/clubs/page_data/?${params}`);
+  const data = await response.json();
+  return data;
 };
+```
 
-// Fetch organization structure hierarchy
-const fetchOrganizationStructure = async (language = 'ru') => {
-  try {
-    const response = await fetch(`http://localhost:8000/api/v1/organization-structure/hierarchy/?lang=${language}`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching organization structure:', error);
-    return [];
-  }
-};
-
-// Usage in React component
-const LeadershipComponent = () => {
-  const [leadership, setLeadership] = useState([]);
-  const [language, setLanguage] = useState('ru');
-
-  useEffect(() => {
-    fetchLeadership(language).then(setLeadership);
-  }, [language]);
-
-  return (
-    <div>
-      <select onChange={(e) => setLanguage(e.target.value)}>
-        <option value="ru">Русский</option>
-        <option value="ky">Кыргызча</option>
-        <option value="en">English</option>
-      </select>
-      
-      {leadership.map(leader => (
-        <div key={leader.id}>
-          <h3>{leader.name}</h3>
-          <p>{leader.position}</p>
-          <p>{leader.degree}</p>
-          {leader.image_url && <img src={leader.image_url} alt={leader.name} />}
-        </div>
-      ))}
-    </div>
+### Фильтрация по категории:
+```javascript
+const fetchClubsByCategory = async (categorySlug, lang = 'ru') => {
+  const response = await fetch(
+    `/api/student-clubs/clubs/by_category/?category=${categorySlug}&lang=${lang}`
   );
+  const data = await response.json();
+  return data;
 };
 ```
 
-### Python/Requests Example
-
-```python
-import requests
-
-# Fetch all leadership members
-def get_leadership(language='ru'):
-    url = f"http://localhost:8000/api/v1/leadership/?lang={language}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()['results']
-    return []
-
-# Fetch directors only
-def get_directors(language='ru'):
-    url = f"http://localhost:8000/api/v1/leadership/directors/?lang={language}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    return []
-
-# Usage
-leadership = get_leadership('en')
-directors = get_directors('ky')
+### Получение деталей клуба:
+```javascript
+const fetchClubDetails = async (clubId, lang = 'ru') => {
+  const response = await fetch(
+    `/api/student-clubs/clubs/${clubId}/?lang=${lang}`
+  );
+  const data = await response.json();
+  return data;
+};
 ```
 
-## Rate Limiting
+### Присоединение к клубу:
+```javascript
+const joinClub = async (clubId, userData) => {
+  const response = await fetch(`/api/student-clubs/clubs/${clubId}/join/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
+  const data = await response.json();
+  return data;
+};
+```
 
-Currently, there are no rate limits applied to the API. For production deployment, consider implementing rate limiting.
+---
 
-## Production Considerations
+## Миграции и установка
 
-1. **Environment Variables**: Use environment variables for sensitive settings
-2. **Database**: Configure PostgreSQL or another production database
-3. **Static Files**: Configure proper static file serving
-4. **Media Files**: Set up proper media file storage (AWS S3, etc.)
-5. **HTTPS**: Enable HTTPS in production
-6. **Authentication**: Add authentication if needed
-7. **Caching**: Implement caching for frequently accessed data
-8. **Monitoring**: Add logging and monitoring
+### 1. Добавьте приложение в settings.py:
+```python
+INSTALLED_APPS = [
+    ...
+    'student_clubs',
+    'django_filters',  # если еще не установлено
+]
+```
 
-## Support
+### 2. Добавьте URL в главный urls.py:
+```python
+urlpatterns = [
+    ...
+    path('api/student-clubs/', include('student_clubs.urls')),
+]
+```
 
-For questions or issues, please contact the development team or refer to the Django REST Framework documentation at https://www.django-rest-framework.org/
+### 3. Примените миграции:
+```bash
+python manage.py makemigrations student_clubs
+python manage.py migrate student_clubs
+```
+
+### 4. Создайте тестовые данные:
+```bash
+python manage.py create_clubs_sample_data
+```
+
+### 5. Создайте суперпользователя (если еще нет):
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+## Django Admin
+
+Все модели доступны в админ-панели Django:
+- `/admin/student_clubs/clubcategory/` - Категории
+- `/admin/student_clubs/club/` - Клубы
+- `/admin/student_clubs/clubleader/` - Руководители
+- `/admin/student_clubs/clubstats/` - Статистика
+
+Админка поддерживает:
+- Inline редактирование руководителей при создании клуба
+- Фильтрацию по категориям и статусу
+- Поиск по всем языковым полям
+- Сортировку через order поля
+- Массовое редактирование статуса и порядка
+
+---
+
+## Модели данных
+
+### Club (Клуб)
+- `category` - FK на ClubCategory
+- `icon` - эмодзи иконка
+- `status` - статус (active/recruiting/inactive)
+- `members_count` - количество участников
+- `join_link` - ссылка для присоединения
+- `name_*` - название на 3 языках
+- `short_description_*` - краткое описание на 3 языках
+- `description_*` - полное описание на 3 языках
+- `goals_*` - цели клуба на 3 языках
+- `motivation_*` - мотивация для вступления на 3 языках
+- `meetings_*` - расписание встреч на 3 языках
+- `tags` - JSON список тегов
+- `order` - порядок сортировки
+- `is_active` - активность
+
+### ClubCategory (Категория)
+- `name_*` - название на 3 языках
+- `slug` - уникальный слаг для URL
+- `order` - порядок сортировки
+
+### ClubLeader (Руководитель)
+- `club` - FK на Club
+- `name_*` - ФИО на 3 языках
+- `role_*` - роль/должность на 3 языках
+- `email` - email
+- `phone` - телефон
+- `photo` - фото
+- `order` - порядок
+
+### ClubStats (Статистика)
+- `value` - значение (например, "50+")
+- `label_*` - метка на 3 языках
+- `icon` - эмодзи иконка
+- `order` - порядок
+- `is_active` - активность
+
+---
+
+## Требования
+
+- Django >= 3.2
+- djangorestframework >= 3.12
+- django-filter >= 2.4
+- Pillow (для ImageField в ClubLeader)
+
+```bash
+pip install django djangorestframework django-filter Pillow
+```
+
+---
+
+## Примечания
+
+1. **Производительность**: Все запросы оптимизированы с использованием `select_related` и `prefetch_related`
+2. **Безопасность**: Рекомендуется добавить аутентификацию для POST запросов
+3. **Кэширование**: Для production рекомендуется добавить кэширование списка клубов
+4. **Изображения**: Для фото руководителей настройте MEDIA_ROOT и MEDIA_URL
+5. **CORS**: Не забудьте настроить CORS для frontend приложения
+
+---
+
+## Поддержка
+
+Для вопросов и предложений создавайте issue в репозитории проекта.
