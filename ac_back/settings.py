@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     'django_filters',
+    'drf_yasg',
     
     # Local apps
     'student_clubs',
     'leadership_structure',
+    'admission',
 ]
 
 MIDDLEWARE = [
@@ -153,7 +155,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
+        }
 
 # drf-spectacular settings
 SPECTACULAR_SETTINGS = {
@@ -196,3 +198,11 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
     'accept-language',
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Academy API',
+    'DESCRIPTION': 'API documentation for the Academy project',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,  # hide schema endpoint from Swagger list
+}
+
