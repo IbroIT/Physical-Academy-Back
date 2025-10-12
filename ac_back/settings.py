@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     # Local apps
     'student_clubs',
     'leadership_structure',
-    'admission',
+    'admission',   
+    'main_page',
 ]
 
 MIDDLEWARE = [

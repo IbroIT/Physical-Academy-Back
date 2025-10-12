@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/student-clubs/', include('student_clubs.urls')),
     path('api/leadership-structure/', include('leadership_structure.urls')),
     path('api/admission/', include('admission.urls')),
+    path('api/academy/', include('main_page.urls')),
 
     # Swagger / Redoc documentation
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
