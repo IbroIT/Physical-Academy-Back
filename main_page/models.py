@@ -241,3 +241,4 @@ class AcademyInfrastructure(models.Model):
 
     def get_description(self, language='ru'):
         return getattr(self, f'description_{language}', self.description_ru)
+

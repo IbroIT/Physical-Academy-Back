@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
+    BachelorProgramViewSet,
     CollegeAdmissionRequirementsViewSet, CollegeAdmissionStepsViewSet, CollegeProgramsViewSet, CollegeSoonEventsViewSet, CollegeStatisticsViewSet, DoctorAdmissionStepsViewSet, DoctorSoonEventsViewSet, DoctorStatisticsViewSet, QuotaTypeViewSet, QuotaStatsViewSet, AdditionalSupportViewSet,
     ProcessStepViewSet, BachelorQuotasViewSet, MasterDocumentsViewSet, 
     MasterProgramsViewSet, MasterMainDateViewSet, MasterRequirementsViewSet,
@@ -31,6 +32,7 @@ router.register(r'college-soon-events', CollegeSoonEventsViewSet, basename='coll
 router.register(r'college-admission-steps', CollegeAdmissionStepsViewSet, basename='college-admission-steps')
 router.register(r'college-admission-requirements', CollegeAdmissionRequirementsViewSet, basename='college-admission-requirements')
 router.register(r'college-statistics', CollegeStatisticsViewSet, basename='college-statistics')
+router.register(r'bachelor-programs', BachelorProgramViewSet, basename='bachelor-programs')
 
 doctor_programs_list = DoctorProgramsViewSet.as_view({'get': 'list'})
 college_programs_list = CollegeProgramsViewSet.as_view({'get': 'list'})

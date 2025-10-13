@@ -1,11 +1,14 @@
 from django.contrib import admin
 from .models import (
+    BachelorProgram,
     CollegeAdmissionSteps, CollegePrograms, CollegeStatistics, DoctorAdmissionSteps, QuotaType, QuotaRequirement, QuotaBenefit, 
     QuotaStats, AdditionalSupport, ProcessStep,
     AspirantRequirements, AspirantMainDate, AspirantDocuments, AspirantPrograms,
     MasterDocuments, MasterRequirements, MasterPrograms, MasterMainDate,
     DoctorStatistics, DoctorPrograms, DoctorAdmissionSteps, CollegeSoonEvents, CollegeAdmissionRequirements
 )
+
+admin.site.register(BachelorProgram)
 
 
 class QuotaRequirementInline(admin.TabularInline):

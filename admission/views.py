@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from .models import (
-    CollegeAdmissionSteps, CollegePrograms, CollegeSoonEvents, CollegeStatistics, DoctorPrograms, DoctorSoonEvents, DoctorStatistics, QuotaType, QuotaRequirement, QuotaBenefit, 
+    BachelorProgram, CollegeAdmissionSteps, CollegePrograms, CollegeSoonEvents, CollegeStatistics, DoctorPrograms, DoctorSoonEvents, DoctorStatistics, QuotaType, QuotaRequirement, QuotaBenefit, 
     QuotaStats, AdditionalSupport, ProcessStep,
     MasterDocuments, MasterPrograms, MasterMainDate, MasterRequirements,
     AspirantDocuments, AspirantPrograms, AspirantMainDate, AspirantRequirements,
@@ -12,7 +12,7 @@ from .models import (
 
 )
 from .serializers import (
-    CollegeAdmissionStepsSerializer, CollegeProgramsFullSerializer, CollegeProgramsShortSerializer, CollegeSoonEventsSerializer, CollegeStatisticsSerializer, DoctorProgramsFullSerializer, DoctorProgramsShortSerializer, DoctorSoonEventsSerializer, DoctorStatisticsSerializer, DoctorStatisticsSerializer, QuotaTypeSerializer, QuotaRequirementSerializer, QuotaBenefitSerializer,
+    BachelorProgramSerializer, CollegeAdmissionStepsSerializer, CollegeProgramsFullSerializer, CollegeProgramsShortSerializer, CollegeSoonEventsSerializer, CollegeStatisticsSerializer, DoctorProgramsFullSerializer, DoctorProgramsShortSerializer, DoctorSoonEventsSerializer, DoctorStatisticsSerializer, DoctorStatisticsSerializer, QuotaTypeSerializer, QuotaRequirementSerializer, QuotaBenefitSerializer,
     QuotaStatsSerializer, AdditionalSupportSerializer, ProcessStepSerializer,
     BachelorQuotasDataSerializer, MasterDocumentsSerializer, MasterProgramsSerializer, 
     MasterMainDateSerializer, MasterRequirementsSerializer,
@@ -473,4 +473,13 @@ class CollegeStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
         # язык берём из query-параметра, например ?lang=en
         language = self.request.query_params.get('lang', 'ru')
         context['language'] = language
+        return context
+    
+class BachelorProgramViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = BachelorProgram.objects.all()
+    serializer_class = BachelorProgramSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['language'] = self.request.query_params.get('lang', 'ru')
         return context

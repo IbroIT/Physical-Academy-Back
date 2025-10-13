@@ -4,7 +4,8 @@ from .models import (
     QuotaStats, AdditionalSupport, ProcessStep,
     AspirantDocuments, AspirantMainDate, AspirantPrograms, AspirantRequirements,
     MasterDocuments, MasterMainDate, MasterPrograms, MasterRequirements,
-    DoctorAdmissionSteps, DoctorStatistics, DoctorPrograms
+    DoctorAdmissionSteps, DoctorStatistics, DoctorPrograms,
+    BachelorProgram
 )
 
 
@@ -565,3 +566,40 @@ class CollegeStatisticsSerializer(serializers.ModelSerializer):
         """Получить описание на нужном языке"""      
         language = self.context.get('language', 'ru')
         return obj.get_description(language)
+    
+
+class BachelorProgramSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    CareerPerspectives = serializers.SerializerMethodField()
+    mainDiscipline = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BachelorProgram
+        fields = [
+            'id',
+            'name',
+            'description',
+            'duration',
+            'CareerPerspectives',
+            'mainDiscipline',
+            'Offline',
+            'emoji'
+        ]
+
+    def get_name(self, obj):
+        lang = self.context.get('language', 'ru')
+        return obj.get_name(lang)
+
+    def get_description(self, obj):
+        lang = self.context.get('language', 'ru')
+        return obj.get_description(lang)
+    
+    def get_CareerPerspectives(self, obj):
+        lang = self.context.get('language', 'ru')
+        return obj.get_CareerPerspectives(lang)
+    def get_mainDiscipline(self, obj):
+        lang = self.context.get('language', 'ru')
+        return obj.get_mainDiscipline(lang)
+
+    

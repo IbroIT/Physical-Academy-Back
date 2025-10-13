@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import AcademyInfrastructure, AcademyStatistics, AcademyAchievements,  Accreditation, AccreditationType, Mission, MissionCategory, aboutStatistics, AboutPhotos, ImportantDates ,HistoryStep 
+from .models import  AcademyInfrastructure, AcademyStatistics, AcademyAchievements,  Accreditation, AccreditationType, Mission, MissionCategory, aboutStatistics, AboutPhotos, ImportantDates ,HistoryStep 
 
 class AboutStatisticsSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
@@ -161,3 +161,4 @@ class AcademyInfrastructureSerializer(serializers.ModelSerializer):
     def get_description(self, obj):
         lang = self.context.get('language', 'ru')
         return obj.get_description(lang)
+

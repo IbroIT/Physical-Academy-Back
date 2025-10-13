@@ -13,6 +13,7 @@ router.register(r'achievements', AcademyAchievementsViewSet)
 router.register(r'statistics', AcademyStatisticsViewSet)
 router.register(r'infrastructure', AcademyInfrastructureViewSet)
 
+
 urlpatterns = [
     path('', include(router.urls)),
 ]

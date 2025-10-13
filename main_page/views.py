@@ -87,3 +87,4 @@ class AcademyInfrastructureViewSet(viewsets.ReadOnlyModelViewSet):
         context = super().get_serializer_context()
         context['language'] = self.request.query_params.get('lang', 'ru')
         return context
+

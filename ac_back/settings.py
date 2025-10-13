@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'leadership_structure',
     'admission',   
     'main_page',
+    'education',
 ]
 
 MIDDLEWARE = [
