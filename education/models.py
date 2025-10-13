@@ -34,6 +34,68 @@ class MasterPrograms(models.Model):
     def get_features(self, language='ru'):
         return getattr(self, f'features_{language}', self.features_ru)
 
+class PhdPrograms(models.Model):
+    emoji = models.CharField(max_length=10, verbose_name="Эмодзи")
+
+    name_ru = models.CharField(max_length=100, verbose_name="Название (RU)")
+    name_ky = models.CharField(max_length=100, verbose_name="Название (KY)")
+    name_en = models.CharField(max_length=100 , verbose_name="Название (EN)")
+
+    description_ru = models.TextField(verbose_name='Описание (RU)')
+    description_ky = models.TextField(verbose_name='Описание (KY)')
+    description_en = models.TextField(verbose_name='Описание (EN)')
+
+    features_ru = models.JSONField(verbose_name='Особенности (RU)')
+    features_ky = models.JSONField(verbose_name='Особенности (KY)')
+    features_en = models.JSONField(verbose_name='Особенности (EN)')
+
+    duration_years = models.IntegerField(verbose_name="Продолжительность (годы)")
+    offline = models.BooleanField(default=True, verbose_name="Очная форма")
+    tuition_fee = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Стоимость обучения")
+    
+    class Meta:
+        verbose_name = 'Программа доктурантуры'
+        verbose_name_plural = 'Программы доктурантуры'
+    def __str__(self):
+        return self.name_ru
+    def get_name(self, language='ru'):
+        return getattr(self, f'name_{language}', self.name_ru)
+    def get_description(self, language='ru'):
+        return getattr(self, f'description_{language}', self.description_ru)
+    def get_features(self, language='ru'):
+        return getattr(self, f'features_{language}', self.features_ru)
+
+class CollegePrograms(models.Model):
+    emoji = models.CharField(max_length=10, verbose_name="Эмодзи")
+
+    name_ru = models.CharField(max_length=100, verbose_name="Название (RU)")
+    name_ky = models.CharField(max_length=100, verbose_name="Название (KY)")
+    name_en = models.CharField(max_length=100 , verbose_name="Название (EN)")
+
+    description_ru = models.TextField(verbose_name='Описание (RU)')
+    description_ky = models.TextField(verbose_name='Описание (KY)')
+    description_en = models.TextField(verbose_name='Описание (EN)')
+
+    features_ru = models.JSONField(verbose_name='Особенности (RU)')
+    features_ky = models.JSONField(verbose_name='Особенности (KY)')
+    features_en = models.JSONField(verbose_name='Особенности (EN)')
+
+    duration_years = models.IntegerField(verbose_name="Продолжительность (годы)")
+    offline = models.BooleanField(default=True, verbose_name="Очная форма")
+    tuition_fee = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Стоимость обучения")
+    
+    class Meta:
+        verbose_name = 'Программа колледжа'
+        verbose_name_plural = 'Программы колледжа'
+    def __str__(self):
+        return self.name_ru
+    def get_name(self, language='ru'):
+        return getattr(self, f'name_{language}', self.name_ru)
+    def get_description(self, language='ru'):
+        return getattr(self, f'description_{language}', self.description_ru)
+    def get_features(self, language='ru'):
+        return getattr(self, f'features_{language}', self.features_ru)
+
 
 class FacultyStatistics(models.Model):
     faculty = models.ForeignKey('Faculty', on_delete=models.CASCADE, related_name='statistics')

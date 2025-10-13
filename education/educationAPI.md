@@ -101,4 +101,64 @@
         }
     ]
 }
+
 ```
+
+
+### 3. college programs endpoint
+
+```http
+api/education/college-programs/
+```
+```json
+
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "emoji": "🔰",
+            "name": "Название (RU):🔰",
+            "description": "Описание (RU):",
+            "features": [
+                "Особенности (RU):"
+            ],
+            "duration_years": 4,
+            "offline": true,
+            "tuition_fee": "2222222.00"
+        }
+    ]
+}
+```
+
+### phd programs endpoint
+
+```http
+api/education/phd-programs/
+```
+```json
+
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "emoji": "🔰",
+            "name": "Название (RU):🔰",
+            "description": "Описание (RU):",
+            "features": [
+                "Особенности (RU):"
+            ],
+            "duration_years": 4,
+            "offline": true,
+            "tuition_fee": "2222222.00"
+        }
+    ]
+}
+```
+
+
