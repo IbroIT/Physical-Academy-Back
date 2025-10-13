@@ -1,0 +1,6522 @@
+openapi: 3.0.3
+info:
+  title: Academy API
+  version: 1.0.0
+  description: API documentation for the Academy project
+paths:
+  /api/admission/additional-support/:
+    get:
+      operationId: api_admission_additional_support_list
+      description: ViewSet для дополнительной поддержки
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAdditionalSupportList'
+          description: ''
+  /api/admission/additional-support/{id}/:
+    get:
+      operationId: api_admission_additional_support_retrieve
+      description: ViewSet для дополнительной поддержки
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Additional Support.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdditionalSupport'
+          description: ''
+  /api/admission/aspirant-documents/:
+    get:
+      operationId: api_admission_aspirant_documents_list
+      description: ViewSet для документов аспирантуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAspirantDocumentsList'
+          description: ''
+  /api/admission/aspirant-documents/{id}/:
+    get:
+      operationId: api_admission_aspirant_documents_retrieve
+      description: ViewSet для документов аспирантуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Aspirant  Document.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AspirantDocuments'
+          description: ''
+  /api/admission/aspirant-main-dates/:
+    get:
+      operationId: api_admission_aspirant_main_dates_list
+      description: ViewSet для основных дат аспирантуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAspirantMainDateList'
+          description: ''
+  /api/admission/aspirant-main-dates/{id}/:
+    get:
+      operationId: api_admission_aspirant_main_dates_retrieve
+      description: ViewSet для основных дат аспирантуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Aspirant Main Date.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AspirantMainDate'
+          description: ''
+  /api/admission/aspirant-programs/:
+    get:
+      operationId: api_admission_aspirant_programs_list
+      description: ViewSet для программ аспирантуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAspirantProgramsList'
+          description: ''
+  /api/admission/aspirant-programs/{id}/:
+    get:
+      operationId: api_admission_aspirant_programs_retrieve
+      description: ViewSet для программ аспирантуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Aspirant Program.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AspirantPrograms'
+          description: ''
+  /api/admission/aspirant-requirements/:
+    get:
+      operationId: api_admission_aspirant_requirements_list
+      description: ViewSet для требований аспирантуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAspirantRequirementsList'
+          description: ''
+  /api/admission/aspirant-requirements/{id}/:
+    get:
+      operationId: api_admission_aspirant_requirements_retrieve
+      description: ViewSet для требований аспирантуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Aspirant Requirement.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AspirantRequirements'
+          description: ''
+  /api/admission/bachelor-quotas/:
+    get:
+      operationId: api_admission_bachelor_quotas_list
+      description: |-
+        Получить все данные для страницы бакалаврских квот (по умолчанию)
+
+        Параметры:
+        - lang: язык (ru, ky, en) - по умолчанию ru
+
+        Возвращает структуру данных:
+        {
+            "quotas": [...],
+            "quota_stats": [...],
+            "additional_support": [...],
+            "process_steps": [...]
+        }
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBachelorQuotasDataList'
+          description: ''
+  /api/admission/bachelor-quotas/data/:
+    get:
+      operationId: api_admission_bachelor_quotas_data_retrieve
+      description: |-
+        Получить все данные для страницы бакалаврских квот
+
+        Параметры:
+        - lang: язык (ru, ky, en) - по умолчанию ru
+
+        Возвращает структуру данных:
+        {
+            "quotas": [...],
+            "quota_stats": [...],
+            "additional_support": [...],
+            "process_steps": [...]
+        }
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BachelorQuotasData'
+          description: ''
+  /api/admission/bachelor-quotas/quotas-only/:
+    get:
+      operationId: api_admission_bachelor_quotas_quotas_only_retrieve
+      description: Получить только данные о квотах
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BachelorQuotasData'
+          description: ''
+  /api/admission/bachelor-quotas/stats-only/:
+    get:
+      operationId: api_admission_bachelor_quotas_stats_only_retrieve
+      description: Получить только статистические данные
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BachelorQuotasData'
+          description: ''
+  /api/admission/college-admission-requirements/:
+    get:
+      operationId: api_admission_college_admission_requirements_list
+      description: ViewSet для требований поступления в колледж
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCollegeAdmissionStepsList'
+          description: ''
+  /api/admission/college-admission-requirements/{id}/:
+    get:
+      operationId: api_admission_college_admission_requirements_retrieve
+      description: ViewSet для требований поступления в колледж
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this College Admission Step.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollegeAdmissionSteps'
+          description: ''
+  /api/admission/college-admission-steps/:
+    get:
+      operationId: api_admission_college_admission_steps_list
+      description: ViewSet для шагов поступления в колледж
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCollegeAdmissionStepsList'
+          description: ''
+  /api/admission/college-admission-steps/{id}/:
+    get:
+      operationId: api_admission_college_admission_steps_retrieve
+      description: ViewSet для шагов поступления в колледж
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this College Admission Step.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollegeAdmissionSteps'
+          description: ''
+  /api/admission/college-programs/:
+    get:
+      operationId: api_admission_college_programs_list
+      description: |-
+        ViewSet для программ колледжа.
+        - GET /college-programs/ → список всех программ (короткая информация)
+        - GET /college-programs/?id=<id> → полная информация по одной программе
+        - Поддержка языков через query-параметр ?lang=<ru|ky|en>
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CollegeProgramsShort'
+          description: ''
+  /api/admission/college-soon-events/:
+    get:
+      operationId: api_admission_college_soon_events_list
+      description: ViewSet для предстоящих событий колледжа
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCollegeSoonEventsList'
+          description: ''
+  /api/admission/college-soon-events/{id}/:
+    get:
+      operationId: api_admission_college_soon_events_retrieve
+      description: ViewSet для предстоящих событий колледжа
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this College Soon Event.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollegeSoonEvents'
+          description: ''
+  /api/admission/college-statistics/:
+    get:
+      operationId: api_admission_college_statistics_list
+      description: ViewSet для статистики колледжа
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCollegeStatisticsList'
+          description: ''
+  /api/admission/college-statistics/{id}/:
+    get:
+      operationId: api_admission_college_statistics_retrieve
+      description: ViewSet для статистики колледжа
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this College Statistics.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollegeStatistics'
+          description: ''
+  /api/admission/doctor-admission-steps/:
+    get:
+      operationId: api_admission_doctor_admission_steps_list
+      description: ViewSet для шагов поступления в докторантуру
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDoctorAdmissionStepsList'
+          description: ''
+  /api/admission/doctor-admission-steps/{id}/:
+    get:
+      operationId: api_admission_doctor_admission_steps_retrieve
+      description: ViewSet для шагов поступления в докторантуру
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Doctor Admission Info.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorAdmissionSteps'
+          description: ''
+  /api/admission/doctor-programs/:
+    get:
+      operationId: api_admission_doctor_programs_list
+      description: |-
+        ViewSet для программ докторантуры.
+        - GET /doctor-programs/ → список всех программ (короткая информация)
+        - GET /doctor-programs/?id=<id> → полная информация по одной программе
+        - Поддержка языков через query-параметр ?lang=<ru|ky|en>
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DoctorProgramsShort'
+          description: ''
+  /api/admission/doctor-soon-events/:
+    get:
+      operationId: api_admission_doctor_soon_events_list
+      description: ViewSet для предстоящих событий докторантуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDoctorSoonEventsList'
+          description: ''
+  /api/admission/doctor-soon-events/{id}/:
+    get:
+      operationId: api_admission_doctor_soon_events_retrieve
+      description: ViewSet для предстоящих событий докторантуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Doctor Soon Event.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorSoonEvents'
+          description: ''
+  /api/admission/doctor-statistics/:
+    get:
+      operationId: api_admission_doctor_statistics_list
+      description: ViewSet для статистики докторантуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDoctorStatisticsList'
+          description: ''
+  /api/admission/doctor-statistics/{id}/:
+    get:
+      operationId: api_admission_doctor_statistics_retrieve
+      description: ViewSet для статистики докторантуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Doctor Statistics.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorStatistics'
+          description: ''
+  /api/admission/master-documents/:
+    get:
+      operationId: api_admission_master_documents_list
+      description: ViewSet для документов магистратуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMasterDocumentsList'
+          description: ''
+  /api/admission/master-documents/{id}/:
+    get:
+      operationId: api_admission_master_documents_retrieve
+      description: ViewSet для документов магистратуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Master Document.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterDocuments'
+          description: ''
+  /api/admission/master-main-dates/:
+    get:
+      operationId: api_admission_master_main_dates_list
+      description: ViewSet для основных дат магистратуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMasterMainDateList'
+          description: ''
+  /api/admission/master-main-dates/{id}/:
+    get:
+      operationId: api_admission_master_main_dates_retrieve
+      description: ViewSet для основных дат магистратуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Master Main Date.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterMainDate'
+          description: ''
+  /api/admission/master-programs/:
+    get:
+      operationId: api_admission_master_programs_list
+      description: ViewSet для программ магистратуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMasterProgramsList'
+          description: ''
+  /api/admission/master-programs/{id}/:
+    get:
+      operationId: api_admission_master_programs_retrieve
+      description: ViewSet для программ магистратуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Master Program.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterPrograms'
+          description: ''
+  /api/admission/master-requirements/:
+    get:
+      operationId: api_admission_master_requirements_list
+      description: ViewSet для требований магистратуры
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMasterRequirementsList'
+          description: ''
+  /api/admission/master-requirements/{id}/:
+    get:
+      operationId: api_admission_master_requirements_retrieve
+      description: ViewSet для требований магистратуры
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Master Requirement.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterRequirements'
+          description: ''
+  /api/admission/process-steps/:
+    get:
+      operationId: api_admission_process_steps_list
+      description: ViewSet для шагов процесса
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProcessStepList'
+          description: ''
+  /api/admission/process-steps/{id}/:
+    get:
+      operationId: api_admission_process_steps_retrieve
+      description: ViewSet для шагов процесса
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Process Step.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessStep'
+          description: ''
+  /api/admission/quota-stats/:
+    get:
+      operationId: api_admission_quota_stats_list
+      description: ViewSet для статистики квот
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedQuotaStatsList'
+          description: ''
+  /api/admission/quota-stats/{id}/:
+    get:
+      operationId: api_admission_quota_stats_retrieve
+      description: ViewSet для статистики квот
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Quota Statistics.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaStats'
+          description: ''
+  /api/admission/quota-types/:
+    get:
+      operationId: api_admission_quota_types_list
+      description: ViewSet для типов квот
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedQuotaTypeList'
+          description: ''
+  /api/admission/quota-types/{id}/:
+    get:
+      operationId: api_admission_quota_types_retrieve
+      description: ViewSet для типов квот
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Quota Type.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaType'
+          description: ''
+  /api/leadership-structure/academic-council/:
+    get:
+      operationId: api_leadership_structure_academic_council_list
+      description: Retrieve all active Academic Council members with multilingual
+        support (ru, kg, en).
+      summary: Get list of Academic Council members
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Leadership Structure - Academic Council
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAcademicCouncilList'
+          description: ''
+  /api/leadership-structure/academic-council/{id}/:
+    get:
+      operationId: api_leadership_structure_academic_council_retrieve
+      description: Retrieve detailed information about a specific council member.
+      summary: Get Academic Council member details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Член ученого совета.
+        required: true
+      tags:
+      - Leadership Structure - Academic Council
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicCouncil'
+          description: ''
+  /api/leadership-structure/administrative/departments/:
+    get:
+      operationId: api_leadership_structure_administrative_departments_list
+      description: Retrieve all active administrative departments with multilingual
+        support (ru, kg, en).
+      summary: Get list of Administrative Departments
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Leadership Structure - Administrative
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAdministrativeDepartmentList'
+          description: ''
+  /api/leadership-structure/administrative/departments/{id}/:
+    get:
+      operationId: api_leadership_structure_administrative_departments_retrieve
+      description: Retrieve detailed information about a specific department.
+      summary: Get Administrative Department details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Административный отдел.
+        required: true
+      tags:
+      - Leadership Structure - Administrative
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdministrativeDepartment'
+          description: ''
+  /api/leadership-structure/administrative/units/:
+    get:
+      operationId: api_leadership_structure_administrative_units_list
+      description: Retrieve all active administrative units with multilingual support
+        (ru, kg, en).
+      summary: Get list of Administrative Units
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search by name, description, or head
+      tags:
+      - Leadership Structure - Administrative
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAdministrativeUnitList'
+          description: ''
+  /api/leadership-structure/administrative/units/{id}/:
+    get:
+      operationId: api_leadership_structure_administrative_units_retrieve
+      description: Retrieve detailed information about a specific unit.
+      summary: Get Administrative Unit details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Административное подразделение.
+        required: true
+      tags:
+      - Leadership Structure - Administrative
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdministrativeUnit'
+          description: ''
+  /api/leadership-structure/audit-commission/:
+    get:
+      operationId: api_leadership_structure_audit_commission_list
+      description: Retrieve all active Audit Commission members with multilingual
+        support (ru, kg, en).
+      summary: Get list of Audit Commission members
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Leadership Structure - Audit Commission
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditCommissionList'
+          description: ''
+  /api/leadership-structure/audit-commission-statistics/:
+    get:
+      operationId: api_leadership_structure_audit_commission_statistics_list
+      description: Retrieve statistics for the Audit Commission page.
+      summary: Get Audit Commission statistics
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Leadership Structure - Audit Commission
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditCommissionStatisticsList'
+          description: ''
+  /api/leadership-structure/audit-commission-statistics/{id}/:
+    get:
+      operationId: api_leadership_structure_audit_commission_statistics_retrieve
+      description: ViewSet for Audit Commission Statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статистика ревизионной
+          комиссии.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditCommissionStatistics'
+          description: ''
+  /api/leadership-structure/audit-commission/{id}/:
+    get:
+      operationId: api_leadership_structure_audit_commission_retrieve
+      description: Retrieve detailed information about a specific commission member.
+      summary: Get Audit Commission member details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Член ревизионной комиссии.
+        required: true
+      tags:
+      - Leadership Structure - Audit Commission
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditCommission'
+          description: ''
+  /api/leadership-structure/board-of-trustees/:
+    get:
+      operationId: api_leadership_structure_board_of_trustees_list
+      description: Retrieve all active Board of Trustees members with multilingual
+        support (ru, kg, en).
+      summary: Get list of Board of Trustees members
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Leadership Structure - Board of Trustees
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBoardOfTrusteesList'
+          description: ''
+  /api/leadership-structure/board-of-trustees-stats/:
+    get:
+      operationId: api_leadership_structure_board_of_trustees_stats_list
+      description: Retrieve statistics for the Board of Trustees page.
+      summary: Get Board of Trustees statistics
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Leadership Structure - Board of Trustees
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBoardOfTrusteesStatsList'
+          description: ''
+  /api/leadership-structure/board-of-trustees-stats/{id}/:
+    get:
+      operationId: api_leadership_structure_board_of_trustees_stats_retrieve
+      description: ViewSet for Board of Trustees Statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статистика попечительского
+          совета.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardOfTrusteesStats'
+          description: ''
+  /api/leadership-structure/board-of-trustees/{id}/:
+    get:
+      operationId: api_leadership_structure_board_of_trustees_retrieve
+      description: Retrieve detailed information about a specific trustee.
+      summary: Get Board of Trustees member details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Член попечительского
+          совета.
+        required: true
+      tags:
+      - Leadership Structure - Board of Trustees
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardOfTrustees'
+          description: ''
+  /api/leadership-structure/commissions/:
+    get:
+      operationId: api_leadership_structure_commissions_list
+      description: Retrieve all active commissions with multilingual support (ru,
+        kg, en). Can be filtered by category.
+      summary: Get list of Commissions
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: string
+        description: Filter by category (academic, quality, student, methodical, all)
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Leadership Structure - Commissions
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCommissionList'
+          description: ''
+  /api/leadership-structure/commissions/{id}/:
+    get:
+      operationId: api_leadership_structure_commissions_retrieve
+      description: Retrieve detailed information about a specific commission.
+      summary: Get Commission details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Комиссия.
+        required: true
+      tags:
+      - Leadership Structure - Commissions
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commission'
+          description: ''
+  /api/leadership-structure/commissions/by_category/:
+    get:
+      operationId: api_leadership_structure_commissions_by_category_retrieve
+      description: Filter commissions by specific category
+      summary: Get commissions by category
+      tags:
+      - Leadership Structure - Commissions
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commission'
+          description: ''
+  /api/leadership-structure/documents/:
+    get:
+      operationId: api_leadership_structure_documents_list
+      description: Retrieve all active documents with multilingual support and filtering.
+      summary: Get list of Documents
+      parameters:
+      - in: query
+        name: document_type
+        schema:
+          type: string
+        description: Filter by document type
+      - in: query
+        name: is_featured
+        schema:
+          type: boolean
+        description: Filter featured documents
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search by title or description
+      tags:
+      - Leadership Structure - Documents
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDocumentList'
+          description: ''
+  /api/leadership-structure/documents/{id}/:
+    get:
+      operationId: api_leadership_structure_documents_retrieve
+      description: Retrieve detailed information about a specific document.
+      summary: Get Document details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Документ.
+        required: true
+      tags:
+      - Leadership Structure - Documents
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: ''
+  /api/leadership-structure/documents/featured/:
+    get:
+      operationId: api_leadership_structure_documents_featured_retrieve
+      description: Get featured documents
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: ''
+  /api/leadership-structure/leadership/:
+    get:
+      operationId: api_leadership_structure_leadership_list
+      description: Retrieve all active Leadership members (ректорат) with multilingual
+        support.
+      summary: Get list of Leadership members
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - in: query
+        name: leadership_type
+        schema:
+          type: string
+        description: Filter by leadership type
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search by name, position, or department
+      tags:
+      - Leadership Structure - Leadership
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLeadershipList'
+          description: ''
+  /api/leadership-structure/leadership/{id}/:
+    get:
+      operationId: api_leadership_structure_leadership_retrieve
+      description: Retrieve detailed information about a specific leadership member.
+      summary: Get Leadership member details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Руководство.
+        required: true
+      tags:
+      - Leadership Structure - Leadership
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Leadership'
+          description: ''
+  /api/leadership-structure/organization-structure/:
+    get:
+      operationId: api_leadership_structure_organization_structure_list
+      description: Retrieve hierarchical organization structure with multilingual
+        support.
+      summary: Get Organization Structure
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: parent
+        schema:
+          type: string
+        description: Filter by parent ID (null for root elements)
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search by name or head
+      - in: query
+        name: structure_type
+        schema:
+          type: string
+        description: Filter by structure type
+      tags:
+      - Leadership Structure - Organization
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationStructureList'
+          description: ''
+  /api/leadership-structure/organization-structure/{id}/:
+    get:
+      operationId: api_leadership_structure_organization_structure_retrieve
+      description: Retrieve detailed information about a specific structure unit.
+      summary: Get Organization Structure details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Организационная структура.
+        required: true
+      tags:
+      - Leadership Structure - Organization
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationStructure'
+          description: ''
+  /api/leadership-structure/organization-structure/root/:
+    get:
+      operationId: api_leadership_structure_organization_structure_root_retrieve
+      description: Get root level structure units (without parent)
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationStructure'
+          description: ''
+  /api/leadership-structure/trade-union/benefits/:
+    get:
+      operationId: api_leadership_structure_trade_union_benefits_list
+      description: Retrieve all active Trade Union benefits with multilingual support
+        (ru, kg, en).
+      summary: Get list of Trade Union benefits
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Leadership Structure - Trade Union
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTradeUnionBenefitList'
+          description: ''
+  /api/leadership-structure/trade-union/benefits/{id}/:
+    get:
+      operationId: api_leadership_structure_trade_union_benefits_retrieve
+      description: ViewSet for Trade Union Benefits
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Преимущество профсоюза.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeUnionBenefit'
+          description: ''
+  /api/leadership-structure/trade-union/events/:
+    get:
+      operationId: api_leadership_structure_trade_union_events_list
+      description: Retrieve all active Trade Union events with multilingual support
+        (ru, kg, en).
+      summary: Get list of Trade Union events
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Leadership Structure - Trade Union
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTradeUnionEventList'
+          description: ''
+  /api/leadership-structure/trade-union/events/{id}/:
+    get:
+      operationId: api_leadership_structure_trade_union_events_retrieve
+      description: ViewSet for Trade Union Events
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Событие профсоюза.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeUnionEvent'
+          description: ''
+  /api/leadership-structure/trade-union/stats/:
+    get:
+      operationId: api_leadership_structure_trade_union_stats_list
+      description: Retrieve statistics for the Trade Union page.
+      summary: Get Trade Union statistics
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Language code (ru, kg, en)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Leadership Structure - Trade Union
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTradeUnionStatsList'
+          description: ''
+  /api/leadership-structure/trade-union/stats/{id}/:
+    get:
+      operationId: api_leadership_structure_trade_union_stats_retrieve
+      description: ViewSet for Trade Union Statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статистика профсоюза.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeUnionStats'
+          description: ''
+  /api/science/publication-stats/:
+    get:
+      operationId: api_science_publication_stats_list
+      description: ViewSet for managing publication statistics
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPublicationStatsList'
+          description: ''
+    post:
+      operationId: api_science_publication_stats_create
+      description: ViewSet for managing publication statistics
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicationStats'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PublicationStats'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PublicationStats'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationStats'
+          description: ''
+  /api/science/publication-stats/{id}/:
+    get:
+      operationId: api_science_publication_stats_retrieve
+      description: ViewSet for managing publication statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication Statistic.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationStats'
+          description: ''
+    put:
+      operationId: api_science_publication_stats_update
+      description: ViewSet for managing publication statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication Statistic.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicationStats'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PublicationStats'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PublicationStats'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationStats'
+          description: ''
+    patch:
+      operationId: api_science_publication_stats_partial_update
+      description: ViewSet for managing publication statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication Statistic.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPublicationStats'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPublicationStats'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPublicationStats'
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationStats'
+          description: ''
+    delete:
+      operationId: api_science_publication_stats_destroy
+      description: ViewSet for managing publication statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication Statistic.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/science/publications/:
+    get:
+      operationId: api_science_publications_list
+      description: ViewSet for managing publications
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPublicationList'
+          description: ''
+    post:
+      operationId: api_science_publications_create
+      description: ViewSet for managing publications
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Publication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Publication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Publication'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+  /api/science/publications-page/:
+    get:
+      operationId: api_science_publications_page_retrieve
+      description: View for the complete publications page data
+      parameters:
+      - in: query
+        name: lang
+        schema:
+          type: string
+          default: ru
+        description: Language code (ru, en, kg)
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search term for filtering publications
+      - in: query
+        name: type
+        schema:
+          type: string
+        description: Filter by publication type
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/science/publications/{id}/:
+    get:
+      operationId: api_science_publications_retrieve
+      description: ViewSet for managing publications
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+    put:
+      operationId: api_science_publications_update
+      description: ViewSet for managing publications
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Publication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Publication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Publication'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+    patch:
+      operationId: api_science_publications_partial_update
+      description: ViewSet for managing publications
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPublication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPublication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPublication'
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+    delete:
+      operationId: api_science_publications_destroy
+      description: ViewSet for managing publications
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Publication.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/student-clubs/categories/:
+    get:
+      operationId: api_student_clubs_categories_list
+      description: API для категорий клубов
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClubCategoryList'
+          description: ''
+    post:
+      operationId: api_student_clubs_categories_create
+      description: API для категорий клубов
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubCategory'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCategory'
+          description: ''
+  /api/student-clubs/categories/{slug}/:
+    get:
+      operationId: api_student_clubs_categories_retrieve
+      description: API для категорий клубов
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          title: Слаг
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCategory'
+          description: ''
+    put:
+      operationId: api_student_clubs_categories_update
+      description: API для категорий клубов
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          title: Слаг
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubCategory'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCategory'
+          description: ''
+    patch:
+      operationId: api_student_clubs_categories_partial_update
+      description: API для категорий клубов
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          title: Слаг
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubCategory'
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCategory'
+          description: ''
+    delete:
+      operationId: api_student_clubs_categories_destroy
+      description: API для категорий клубов
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          title: Слаг
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/student-clubs/clubs/:
+    get:
+      operationId: api_student_clubs_clubs_list
+      description: API для клубов с фильтрацией и поиском
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: integer
+      - in: query
+        name: category__slug
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          title: Статус
+          enum:
+          - active
+          - inactive
+          - recruiting
+        description: |-
+          * `active` - Активен
+          * `recruiting` - Набор
+          * `inactive` - Неактивен
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClubListList'
+          description: ''
+    post:
+      operationId: api_student_clubs_clubs_create
+      description: API для клубов с фильтрацией и поиском
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubList'
+          description: ''
+  /api/student-clubs/clubs/{id}/:
+    get:
+      operationId: api_student_clubs_clubs_retrieve
+      description: API для клубов с фильтрацией и поиском
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Клуб.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubDetail'
+          description: ''
+    put:
+      operationId: api_student_clubs_clubs_update
+      description: API для клубов с фильтрацией и поиском
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Клуб.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubList'
+          description: ''
+    patch:
+      operationId: api_student_clubs_clubs_partial_update
+      description: API для клубов с фильтрацией и поиском
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Клуб.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubList'
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubList'
+          description: ''
+    delete:
+      operationId: api_student_clubs_clubs_destroy
+      description: API для клубов с фильтрацией и поиском
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Клуб.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/student-clubs/clubs/{id}/join/:
+    post:
+      operationId: api_student_clubs_clubs_join_create
+      description: |-
+        Присоединиться к клубу (отправка данных)
+        POST /api/clubs/{id}/join/
+        Body: {"email": "user@example.com", "name": "John Doe"}
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Клуб.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubList'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubList'
+          description: ''
+  /api/student-clubs/clubs/by_category/:
+    get:
+      operationId: api_student_clubs_clubs_by_category_retrieve
+      description: |-
+        Получить клубы по категории
+        GET /api/clubs/by_category/?category=tech&lang=ru
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubList'
+          description: ''
+  /api/student-clubs/clubs/page_data/:
+    get:
+      operationId: api_student_clubs_clubs_page_data_retrieve
+      description: |-
+        Возвращает все данные для страницы клубов: заголовки, статистику, категории и клубы
+        GET /api/clubs/page_data/?lang=ru
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubList'
+          description: ''
+  /api/student-clubs/leaders/:
+    get:
+      operationId: api_student_clubs_leaders_list
+      description: API для руководителей клубов
+      parameters:
+      - in: query
+        name: club
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClubLeaderList'
+          description: ''
+    post:
+      operationId: api_student_clubs_leaders_create
+      description: API для руководителей клубов
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubLeader'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubLeader'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubLeader'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubLeader'
+          description: ''
+  /api/student-clubs/leaders/{id}/:
+    get:
+      operationId: api_student_clubs_leaders_retrieve
+      description: API для руководителей клубов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Руководитель клуба.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubLeader'
+          description: ''
+    put:
+      operationId: api_student_clubs_leaders_update
+      description: API для руководителей клубов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Руководитель клуба.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubLeader'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubLeader'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubLeader'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubLeader'
+          description: ''
+    patch:
+      operationId: api_student_clubs_leaders_partial_update
+      description: API для руководителей клубов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Руководитель клуба.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubLeader'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubLeader'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubLeader'
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubLeader'
+          description: ''
+    delete:
+      operationId: api_student_clubs_leaders_destroy
+      description: API для руководителей клубов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Руководитель клуба.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/student-clubs/stats/:
+    get:
+      operationId: api_student_clubs_stats_list
+      description: API для статистики клубов
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClubStatsList'
+          description: ''
+  /api/student-clubs/stats/{id}/:
+    get:
+      operationId: api_student_clubs_stats_retrieve
+      description: API для статистики клубов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Статистика клубов.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubStats'
+          description: ''
+components:
+  schemas:
+    AcademicCouncil:
+      type: object
+      description: Serializer for Academic Council
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        name_kg:
+          type: string
+          title: ФИО (KG)
+          maxLength: 200
+        name_en:
+          type: string
+          title: ФИО (EN)
+          maxLength: 200
+        position:
+          type: string
+          readOnly: true
+        position_kg:
+          type: string
+          title: Должность (KG)
+          maxLength: 200
+        position_en:
+          type: string
+          title: Должность (EN)
+          maxLength: 200
+        department:
+          type: string
+          readOnly: true
+        department_kg:
+          type: string
+          title: Кафедра/Отдел (KG)
+          maxLength: 200
+        department_en:
+          type: string
+          title: Кафедра/Отдел (EN)
+          maxLength: 200
+        achievements:
+          type: string
+          readOnly: true
+        achievements_kg:
+          title: Достижения (KG)
+        achievements_en:
+          title: Достижения (EN)
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        image:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото
+        image_url:
+          type: string
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - achievements
+      - department
+      - id
+      - image_url
+      - name
+      - position
+    AdditionalSupport:
+      type: object
+      description: Сериализатор для дополнительной поддержки
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        support:
+          type: string
+          description: Получить поддержку на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+      required:
+      - id
+      - support
+    AdministrativeDepartment:
+      type: object
+      description: Serializer for Administrative Departments
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        name_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        name_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        head:
+          type: string
+          readOnly: true
+        head_kg:
+          type: string
+          title: Руководитель (KG)
+          maxLength: 200
+        head_en:
+          type: string
+          title: Руководитель (EN)
+          maxLength: 200
+        responsibilities:
+          type: string
+          readOnly: true
+        responsibilities_kg:
+          title: Обязанности (KG)
+        responsibilities_en:
+          title: Обязанности (EN)
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - head
+      - id
+      - name
+      - responsibilities
+    AdministrativeUnit:
+      type: object
+      description: Serializer for Administrative Units
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        name_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        name_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        description:
+          type: string
+          readOnly: true
+        description_kg:
+          type: string
+          title: Описание (KG)
+        description_en:
+          type: string
+          title: Описание (EN)
+        head:
+          type: string
+          readOnly: true
+        head_kg:
+          type: string
+          title: Руководитель (KG)
+          maxLength: 200
+        head_en:
+          type: string
+          title: Руководитель (EN)
+          maxLength: 200
+        location:
+          type: string
+          readOnly: true
+        location_kg:
+          type: string
+          title: Местоположение (KG)
+          maxLength: 200
+        location_en:
+          type: string
+          title: Местоположение (EN)
+          maxLength: 200
+        staff:
+          type: string
+          readOnly: true
+        staff_kg:
+          type: string
+          title: Персонал (KG)
+          maxLength: 100
+        staff_en:
+          type: string
+          title: Персонал (EN)
+          maxLength: 100
+        responsibilities:
+          type: string
+          readOnly: true
+        responsibilities_kg:
+          title: Обязанности (KG)
+        responsibilities_en:
+          title: Обязанности (EN)
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        color:
+          type: string
+          title: Цвет
+          maxLength: 50
+        color_class:
+          type: string
+          title: CSS класс цвета
+          maxLength: 100
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - description
+      - head
+      - id
+      - location
+      - name
+      - responsibilities
+      - staff
+    AspirantDocuments:
+      type: object
+      description: Сериализатор для документов аспирантуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        document_name:
+          type: string
+          description: Получить название документа на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+        file:
+          type: string
+          format: uri
+      required:
+      - document_name
+      - file
+      - id
+    AspirantMainDate:
+      type: object
+      description: Сериализатор для основных дат аспирантуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        event_name:
+          type: string
+          description: Получить название события на нужном языке
+          readOnly: true
+        date:
+          type: string
+          title: Date/Period
+          maxLength: 100
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+      required:
+      - date
+      - event_name
+      - id
+    AspirantPrograms:
+      type: object
+      description: Сериализатор для программ аспирантуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        program_name:
+          type: string
+          description: Получить название программы на нужном языке
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание программы на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+        features:
+          type: string
+          description: Получить особенности программы на нужном языке
+          readOnly: true
+      required:
+      - description
+      - features
+      - id
+      - program_name
+    AspirantRequirements:
+      type: object
+      description: Сериализатор для требований аспирантуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+        title:
+          type: string
+          description: Получить название на нужном языке
+          readOnly: true
+      required:
+      - description
+      - id
+      - title
+    AuditCommission:
+      type: object
+      description: Serializer for Audit Commission
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        name_kg:
+          type: string
+          title: ФИО (KG)
+          maxLength: 200
+        name_en:
+          type: string
+          title: ФИО (EN)
+          maxLength: 200
+        position:
+          type: string
+          readOnly: true
+        position_kg:
+          type: string
+          title: Должность (KG)
+          maxLength: 200
+        position_en:
+          type: string
+          title: Должность (EN)
+          maxLength: 200
+        department:
+          type: string
+          readOnly: true
+        department_kg:
+          type: string
+          title: Отдел (KG)
+          maxLength: 200
+        department_en:
+          type: string
+          title: Отдел (EN)
+          maxLength: 200
+        achievements:
+          type: string
+          readOnly: true
+        achievements_kg:
+          title: Достижения (KG)
+        achievements_en:
+          title: Достижения (EN)
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        image:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото
+        image_url:
+          type: string
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - achievements
+      - department
+      - id
+      - image_url
+      - name
+      - position
+    AuditCommissionStatistics:
+      type: object
+      description: Serializer for Audit Commission Statistics
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          readOnly: true
+        label_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        label_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        value:
+          type: string
+          description: |-
+            Given the *incoming* primitive data, return the value for this field
+            that should be validated and transformed to a native value.
+          readOnly: true
+        value_kg:
+          type: string
+          title: Значение (KG)
+          maxLength: 100
+        value_en:
+          type: string
+          title: Значение (EN)
+          maxLength: 100
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - id
+      - label
+      - value
+    BachelorQuotasData:
+      type: object
+      description: Комплексный сериализатор для всех данных страницы квот
+      properties:
+        quotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaType'
+        quota_stats:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaStats'
+        additional_support:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalSupport'
+        process_steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProcessStep'
+      required:
+      - additional_support
+      - process_steps
+      - quota_stats
+      - quotas
+    BoardOfTrustees:
+      type: object
+      description: Serializer for Board of Trustees
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        name_kg:
+          type: string
+          title: ФИО (KG)
+          maxLength: 200
+        name_en:
+          type: string
+          title: ФИО (EN)
+          maxLength: 200
+        position:
+          type: string
+          readOnly: true
+        position_kg:
+          type: string
+          title: Должность (KG)
+          maxLength: 200
+        position_en:
+          type: string
+          title: Должность (EN)
+          maxLength: 200
+        bio:
+          type: string
+          readOnly: true
+        bio_kg:
+          type: string
+          title: Биография (KG)
+        bio_en:
+          type: string
+          title: Биография (EN)
+        achievements:
+          type: string
+          readOnly: true
+        achievements_kg:
+          title: Достижения (KG)
+        achievements_en:
+          title: Достижения (EN)
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        image:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото
+        image_url:
+          type: string
+          readOnly: true
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - achievements
+      - bio
+      - id
+      - image_url
+      - name
+      - position
+    BoardOfTrusteesStats:
+      type: object
+      description: Serializer for Board of Trustees Statistics
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          readOnly: true
+        value:
+          type: integer
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        color:
+          type: string
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - color
+      - id
+      - label
+      - value
+    CategoryEnum:
+      enum:
+      - academic
+      - quality
+      - student
+      - methodical
+      - all
+      type: string
+      description: |-
+        * `academic` - Академические
+        * `quality` - Качество образования
+        * `student` - Студенческие
+        * `methodical` - Методические
+        * `all` - Все
+    ClubCategory:
+      type: object
+      description: Сериализатор категорий с поддержкой языков
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        slug:
+          type: string
+          title: Слаг
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          description: Возвращает название на языке из контекста запроса
+          readOnly: true
+        name_ru:
+          type: string
+          title: Название (RU)
+          maxLength: 100
+        name_en:
+          type: string
+          title: Название (EN)
+          maxLength: 100
+        name_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 100
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок сортировки
+      required:
+      - id
+      - name
+      - name_en
+      - name_kg
+      - name_ru
+      - slug
+    ClubDetail:
+      type: object
+      description: Полный сериализатор клуба со всеми деталями
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        category:
+          allOf:
+          - $ref: '#/components/schemas/ClubCategory'
+          readOnly: true
+        category_id:
+          type: integer
+          writeOnly: true
+        icon:
+          type: string
+          title: Иконка (эмодзи)
+          maxLength: 10
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          title: Статус
+        members_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Количество участников
+        join_link:
+          type: string
+          format: uri
+          title: Ссылка для присоединения
+          description: Ссылка на форму регистрации или Telegram группу
+          maxLength: 500
+        name:
+          type: string
+          readOnly: true
+        short_description:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        goals:
+          type: string
+          readOnly: true
+        motivation:
+          type: string
+          readOnly: true
+        meetings:
+          type: string
+          readOnly: true
+        tags:
+          title: Теги
+          description: Список тегов для поиска
+        leaders:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubLeader'
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок сортировки
+        is_active:
+          type: boolean
+          title: Активен
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата создания
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата обновления
+        name_ru:
+          type: string
+          title: Название (RU)
+          maxLength: 200
+        name_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        name_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        short_description_ru:
+          type: string
+          title: Краткое описание (RU)
+          maxLength: 300
+        short_description_en:
+          type: string
+          title: Краткое описание (EN)
+          maxLength: 300
+        short_description_kg:
+          type: string
+          title: Краткое описание (KG)
+          maxLength: 300
+        description_ru:
+          type: string
+          title: Описание (RU)
+        description_en:
+          type: string
+          title: Описание (EN)
+        description_kg:
+          type: string
+          title: Описание (KG)
+        goals_ru:
+          type: string
+          title: Цели и задачи (RU)
+          description: Основные цели клуба
+        goals_en:
+          type: string
+          title: Цели и задачи (EN)
+          description: Основные цели клуба
+        goals_kg:
+          type: string
+          title: Цели и задачи (KG)
+          description: Основные цели клуба
+        motivation_ru:
+          type: string
+          title: Мотивация для вступления (RU)
+          description: Почему стоит вступить в клуб
+        motivation_en:
+          type: string
+          title: Мотивация для вступления (EN)
+          description: Почему стоит вступить в клуб
+        motivation_kg:
+          type: string
+          title: Мотивация для вступления (KG)
+          description: Почему стоит вступить в клуб
+        meetings_ru:
+          type: string
+          title: Расписание встреч (RU)
+          description: 'Например: Каждую среду 19:00'
+          maxLength: 200
+        meetings_en:
+          type: string
+          title: Расписание встреч (EN)
+          description: 'Например: Every Wednesday 7 PM'
+          maxLength: 200
+        meetings_kg:
+          type: string
+          title: Расписание встреч (KG)
+          description: 'Например: Ар шаршемби саат 19:00'
+          maxLength: 200
+      required:
+      - category
+      - category_id
+      - created_at
+      - description
+      - description_en
+      - description_kg
+      - description_ru
+      - goals
+      - goals_en
+      - goals_kg
+      - goals_ru
+      - id
+      - join_link
+      - leaders
+      - meetings
+      - meetings_en
+      - meetings_kg
+      - meetings_ru
+      - motivation
+      - motivation_en
+      - motivation_kg
+      - motivation_ru
+      - name
+      - name_en
+      - name_kg
+      - name_ru
+      - short_description
+      - short_description_en
+      - short_description_kg
+      - short_description_ru
+      - updated_at
+    ClubLeader:
+      type: object
+      description: Сериализатор руководителей клубов
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        role:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Телефон
+          maxLength: 50
+        photo:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото
+        name_ru:
+          type: string
+          title: ФИО (RU)
+          maxLength: 200
+        name_en:
+          type: string
+          title: ФИО (EN)
+          maxLength: 200
+        name_kg:
+          type: string
+          title: ФИО (KG)
+          maxLength: 200
+        role_ru:
+          type: string
+          title: Роль (RU)
+          maxLength: 200
+        role_en:
+          type: string
+          title: Роль (EN)
+          maxLength: 200
+        role_kg:
+          type: string
+          title: Роль (KG)
+          maxLength: 200
+      required:
+      - id
+      - name
+      - name_en
+      - name_kg
+      - name_ru
+      - role
+      - role_en
+      - role_kg
+      - role_ru
+    ClubList:
+      type: object
+      description: Краткий сериализатор для списка клубов
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        category:
+          allOf:
+          - $ref: '#/components/schemas/ClubCategory'
+          readOnly: true
+        category_id:
+          type: integer
+          writeOnly: true
+        icon:
+          type: string
+          title: Иконка (эмодзи)
+          maxLength: 10
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          title: Статус
+        members_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Количество участников
+        name:
+          type: string
+          readOnly: true
+        short_description:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        meetings:
+          type: string
+          readOnly: true
+        tags:
+          title: Теги
+          description: Список тегов для поиска
+        join_link:
+          type: string
+          format: uri
+          title: Ссылка для присоединения
+          description: Ссылка на форму регистрации или Telegram группу
+          maxLength: 500
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата создания
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата обновления
+      required:
+      - category
+      - category_id
+      - created_at
+      - description
+      - id
+      - join_link
+      - meetings
+      - name
+      - short_description
+      - updated_at
+    ClubStats:
+      type: object
+      description: Сериализатор статистики
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        value:
+          type: string
+          title: Значение
+          maxLength: 50
+        label:
+          type: string
+          readOnly: true
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 10
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок
+      required:
+      - id
+      - label
+      - value
+    CollegeAdmissionSteps:
+      type: object
+      description: Сериализатор для шагов приема в колледж
+      properties:
+        title:
+          type: string
+          description: Получить название шага на нужном языке
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание шага на нужном языке
+          readOnly: true
+        duration:
+          type: string
+          description: Получить длительность шага на нужном языке
+          readOnly: true
+      required:
+      - description
+      - duration
+      - title
+    CollegeProgramsShort:
+      type: object
+      description: Сериализатор для программ колледжа
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        program_name:
+          type: string
+          description: Получить название программы на нужном языке
+          readOnly: true
+        duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Duration (years)
+        features:
+          type: string
+          description: Получить особенности программы на нужном языке
+          readOnly: true
+        short_description:
+          type: string
+          description: Получить краткое описание программы на нужном языке
+          readOnly: true
+      required:
+      - duration
+      - features
+      - id
+      - program_name
+      - short_description
+    CollegeSoonEvents:
+      type: object
+      description: Сериализатор для предстоящих событий колледжа
+      properties:
+        event:
+          type: string
+          description: Получить событие на нужном языке
+          readOnly: true
+      required:
+      - event
+    CollegeStatistics:
+      type: object
+      description: Сериализатор для статистики колледжа
+      properties:
+        titleInt:
+          type: string
+          title: Title (Russian)
+          maxLength: 200
+        description:
+          type: string
+          description: Получить описание на нужном языке
+          readOnly: true
+      required:
+      - description
+      - titleInt
+    ColorEnum:
+      enum:
+      - blue
+      - green
+      - cyan
+      - purple
+      - orange
+      type: string
+      description: |-
+        * `blue` - Blue
+        * `green` - Green
+        * `cyan` - Cyan
+        * `purple` - Purple
+        * `orange` - Orange
+    Commission:
+      type: object
+      description: Serializer for Commissions
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        name_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        name_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        chairman:
+          type: string
+          readOnly: true
+        chairman_kg:
+          type: string
+          title: Председатель (KG)
+          maxLength: 200
+        chairman_en:
+          type: string
+          title: Председатель (EN)
+          maxLength: 200
+        description:
+          type: string
+          readOnly: true
+        description_kg:
+          type: string
+          title: Описание (KG)
+        description_en:
+          type: string
+          title: Описание (EN)
+        members:
+          type: string
+          readOnly: true
+        members_kg:
+          title: Члены (KG)
+        members_en:
+          title: Члены (EN)
+        responsibilities:
+          type: string
+          readOnly: true
+        responsibilities_kg:
+          title: Обязанности (KG)
+        responsibilities_en:
+          title: Обязанности (EN)
+        category:
+          allOf:
+          - $ref: '#/components/schemas/CategoryEnum'
+          title: Категория
+        category_display:
+          type: string
+          readOnly: true
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - category_display
+      - chairman
+      - description
+      - id
+      - members
+      - name
+      - responsibilities
+    DoctorAdmissionSteps:
+      type: object
+      description: Сериализатор для шагов приема в докторантуру
+      properties:
+        title:
+          type: string
+          description: Получить название шага на нужном языке
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание шага на нужном языке
+          readOnly: true
+        deadline:
+          type: string
+          description: Получить крайний срок шага на нужном языке
+          readOnly: true
+        requirement:
+          type: string
+          description: Получить требования шага на нужном языке
+          readOnly: true
+      required:
+      - deadline
+      - description
+      - requirement
+      - title
+    DoctorProgramsShort:
+      type: object
+      description: Сериализатор для программ докторантуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        program_name:
+          type: string
+          description: Получить название программы на нужном языке
+          readOnly: true
+        duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Duration (years)
+        features:
+          type: string
+          description: Получить особенности программы на нужном языке
+          readOnly: true
+        short_description:
+          type: string
+          description: Получить краткое описание программы на нужном языке
+          readOnly: true
+      required:
+      - duration
+      - features
+      - id
+      - program_name
+      - short_description
+    DoctorSoonEvents:
+      type: object
+      description: Сериализатор для предстоящих событий докторантуры
+      properties:
+        event:
+          type: string
+          description: Получить событие на нужном языке
+          readOnly: true
+      required:
+      - event
+    DoctorStatistics:
+      type: object
+      description: Сериализатор для статистики докторантуры
+      properties:
+        titleInt:
+          type: string
+          title: Title (Russian)
+          maxLength: 200
+        description:
+          type: string
+          description: Получить описание на нужном языке
+          readOnly: true
+      required:
+      - description
+      - titleInt
+    Document:
+      type: object
+      description: Сериалайзер для Document (для /documents/)
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        document_type:
+          allOf:
+          - $ref: '#/components/schemas/DocumentTypeEnum'
+          title: Тип документа
+        description:
+          type: string
+          readOnly: true
+        file:
+          type: string
+          format: uri
+          nullable: true
+          title: Файл
+        file_url:
+          type: string
+          description: Get absolute URL for file
+          readOnly: true
+        document_number:
+          type: string
+          title: Номер документа
+          maxLength: 100
+        document_date:
+          type: string
+          format: date
+          nullable: true
+          title: Дата документа
+        file_size:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Размер файла (байт)
+        file_size_formatted:
+          type: string
+          description: Format file size in human readable format
+          readOnly: true
+        file_format:
+          type: string
+          title: Формат файла
+          maxLength: 10
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        is_active:
+          type: boolean
+          title: Активен
+        is_featured:
+          type: boolean
+          title: Рекомендуемый
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - description
+      - file_size_formatted
+      - file_url
+      - id
+      - title
+    DocumentTypeEnum:
+      enum:
+      - regulation
+      - order
+      - instruction
+      - charter
+      - plan
+      - report
+      - other
+      type: string
+      description: |-
+        * `regulation` - Положение
+        * `order` - Приказ
+        * `instruction` - Инструкция
+        * `charter` - Устав
+        * `plan` - План
+        * `report` - Отчет
+        * `other` - Другое
+    Leadership:
+      type: object
+      description: Сериалайзер для Leadership (для /leadership/)
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        position:
+          type: string
+          readOnly: true
+        leadership_type:
+          allOf:
+          - $ref: '#/components/schemas/LeadershipTypeEnum'
+          title: Тип руководства
+        department:
+          type: string
+          readOnly: true
+        bio:
+          type: string
+          readOnly: true
+        achievements:
+          type: string
+          readOnly: true
+        education:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        image:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото
+        experience_years:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Лет опыта
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        is_active:
+          type: boolean
+          title: Активен
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - achievements
+      - bio
+      - department
+      - education
+      - id
+      - name
+      - position
+    LeadershipTypeEnum:
+      enum:
+      - rector
+      - vice_rector
+      - director
+      - deputy_director
+      - department_head
+      - dean
+      - vice_dean
+      type: string
+      description: |-
+        * `rector` - Ректор
+        * `vice_rector` - Проректор
+        * `director` - Директор
+        * `deputy_director` - Заместитель директора
+        * `department_head` - Заведующий кафедрой
+        * `dean` - Декан
+        * `vice_dean` - Заместитель декана
+    MasterDocuments:
+      type: object
+      description: Сериализатор для документов магистратуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        document_name:
+          type: string
+          description: Получить название документа на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+        file:
+          type: string
+          format: uri
+      required:
+      - document_name
+      - file
+      - id
+    MasterMainDate:
+      type: object
+      description: Сериализатор для основных дат магистратуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        event_name:
+          type: string
+          description: Получить название события на нужном языке
+          readOnly: true
+        date:
+          type: string
+          title: Date/Period
+          maxLength: 100
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+      required:
+      - date
+      - event_name
+      - id
+    MasterPrograms:
+      type: object
+      description: Сериализатор для программ магистратуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        program_name:
+          type: string
+          description: Получить название программы на нужном языке
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание программы на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+        features:
+          type: string
+          description: Получить особенности программы на нужном языке
+          readOnly: true
+      required:
+      - description
+      - features
+      - id
+      - program_name
+    MasterRequirements:
+      type: object
+      description: Сериализатор для требований магистратуры
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+        title:
+          type: string
+          description: Получить название на нужном языке
+          readOnly: true
+      required:
+      - description
+      - id
+      - title
+    OrganizationStructure:
+      type: object
+      description: Сериалайзер для OrganizationStructure (для /organization-structure/)
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        structure_type:
+          allOf:
+          - $ref: '#/components/schemas/StructureTypeEnum'
+          title: Тип структуры
+        description:
+          type: string
+          readOnly: true
+        head:
+          type: string
+          readOnly: true
+        parent:
+          type: integer
+          nullable: true
+          title: Родительская структура
+        responsibilities:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 20
+        location:
+          type: string
+          readOnly: true
+        staff_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Количество сотрудников
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        is_active:
+          type: boolean
+          title: Активен
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+        children:
+          type: array
+          items: {}
+          description: Get child structures
+          readOnly: true
+      required:
+      - children
+      - description
+      - head
+      - id
+      - location
+      - name
+      - responsibilities
+    PaginatedAcademicCouncilList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AcademicCouncil'
+    PaginatedAdditionalSupportList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalSupport'
+    PaginatedAdministrativeDepartmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdministrativeDepartment'
+    PaginatedAdministrativeUnitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdministrativeUnit'
+    PaginatedAspirantDocumentsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AspirantDocuments'
+    PaginatedAspirantMainDateList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AspirantMainDate'
+    PaginatedAspirantProgramsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AspirantPrograms'
+    PaginatedAspirantRequirementsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AspirantRequirements'
+    PaginatedAuditCommissionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditCommission'
+    PaginatedAuditCommissionStatisticsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditCommissionStatistics'
+    PaginatedBachelorQuotasDataList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BachelorQuotasData'
+    PaginatedBoardOfTrusteesList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardOfTrustees'
+    PaginatedBoardOfTrusteesStatsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardOfTrusteesStats'
+    PaginatedClubCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubCategory'
+    PaginatedClubLeaderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubLeader'
+    PaginatedClubListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubList'
+    PaginatedClubStatsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubStats'
+    PaginatedCollegeAdmissionStepsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollegeAdmissionSteps'
+    PaginatedCollegeSoonEventsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollegeSoonEvents'
+    PaginatedCollegeStatisticsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollegeStatistics'
+    PaginatedCommissionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commission'
+    PaginatedDoctorAdmissionStepsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorAdmissionSteps'
+    PaginatedDoctorSoonEventsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorSoonEvents'
+    PaginatedDoctorStatisticsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorStatistics'
+    PaginatedDocumentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+    PaginatedLeadershipList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Leadership'
+    PaginatedMasterDocumentsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterDocuments'
+    PaginatedMasterMainDateList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterMainDate'
+    PaginatedMasterProgramsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterPrograms'
+    PaginatedMasterRequirementsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterRequirements'
+    PaginatedOrganizationStructureList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationStructure'
+    PaginatedProcessStepList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProcessStep'
+    PaginatedPublicationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Publication'
+    PaginatedPublicationStatsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicationStats'
+    PaginatedQuotaStatsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaStats'
+    PaginatedQuotaTypeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaType'
+    PaginatedTradeUnionBenefitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TradeUnionBenefit'
+    PaginatedTradeUnionEventList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TradeUnionEvent'
+    PaginatedTradeUnionStatsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TradeUnionStats'
+    PatchedClubCategory:
+      type: object
+      description: Сериализатор категорий с поддержкой языков
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        slug:
+          type: string
+          title: Слаг
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          description: Возвращает название на языке из контекста запроса
+          readOnly: true
+        name_ru:
+          type: string
+          title: Название (RU)
+          maxLength: 100
+        name_en:
+          type: string
+          title: Название (EN)
+          maxLength: 100
+        name_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 100
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок сортировки
+    PatchedClubLeader:
+      type: object
+      description: Сериализатор руководителей клубов
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        role:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Телефон
+          maxLength: 50
+        photo:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото
+        name_ru:
+          type: string
+          title: ФИО (RU)
+          maxLength: 200
+        name_en:
+          type: string
+          title: ФИО (EN)
+          maxLength: 200
+        name_kg:
+          type: string
+          title: ФИО (KG)
+          maxLength: 200
+        role_ru:
+          type: string
+          title: Роль (RU)
+          maxLength: 200
+        role_en:
+          type: string
+          title: Роль (EN)
+          maxLength: 200
+        role_kg:
+          type: string
+          title: Роль (KG)
+          maxLength: 200
+    PatchedClubList:
+      type: object
+      description: Краткий сериализатор для списка клубов
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        category:
+          allOf:
+          - $ref: '#/components/schemas/ClubCategory'
+          readOnly: true
+        category_id:
+          type: integer
+          writeOnly: true
+        icon:
+          type: string
+          title: Иконка (эмодзи)
+          maxLength: 10
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          title: Статус
+        members_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Количество участников
+        name:
+          type: string
+          readOnly: true
+        short_description:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        meetings:
+          type: string
+          readOnly: true
+        tags:
+          title: Теги
+          description: Список тегов для поиска
+        join_link:
+          type: string
+          format: uri
+          title: Ссылка для присоединения
+          description: Ссылка на форму регистрации или Telegram группу
+          maxLength: 500
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата создания
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата обновления
+    PatchedPublication:
+      type: object
+      description: Serializer for scientific publications
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        authors:
+          type: string
+          readOnly: true
+        journal:
+          type: string
+          title: Journal/Conference
+          maxLength: 255
+        year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Publication Year
+        citation_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        impact_factor:
+          type: number
+          format: double
+          nullable: true
+        abstract:
+          type: string
+          readOnly: true
+        doi:
+          type: string
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          title: External URL
+          maxLength: 200
+        pdf_url:
+          type: string
+          readOnly: true
+        publication_type:
+          $ref: '#/components/schemas/PublicationTypeEnum'
+        is_featured:
+          type: boolean
+          title: Featured
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        title_ru:
+          type: string
+          title: Title (Russian)
+          maxLength: 500
+        title_en:
+          type: string
+          title: Title (English)
+          maxLength: 500
+        title_kg:
+          type: string
+          title: Title (Kyrgyz)
+          maxLength: 500
+        authors_ru:
+          type: string
+          title: Authors (Russian)
+          maxLength: 500
+        authors_en:
+          type: string
+          title: Authors (English)
+          maxLength: 500
+        authors_kg:
+          type: string
+          title: Authors (Kyrgyz)
+          maxLength: 500
+        abstract_ru:
+          type: string
+          title: Abstract (Russian)
+        abstract_en:
+          type: string
+          title: Abstract (English)
+        abstract_kg:
+          type: string
+          title: Abstract (Kyrgyz)
+    PatchedPublicationStats:
+      type: object
+      description: Serializer for publication statistics
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          readOnly: true
+        value:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        icon:
+          type: string
+          title: Icon Class
+          maxLength: 50
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+    ProcessStep:
+      type: object
+      description: Сериализатор для шагов процесса
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        step_number:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        title:
+          type: string
+          description: Получить название на нужном языке
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание на нужном языке
+          readOnly: true
+        color_scheme:
+          type: string
+          maxLength: 50
+      required:
+      - description
+      - id
+      - step_number
+      - title
+    Publication:
+      type: object
+      description: Serializer for scientific publications
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        authors:
+          type: string
+          readOnly: true
+        journal:
+          type: string
+          title: Journal/Conference
+          maxLength: 255
+        year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Publication Year
+        citation_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        impact_factor:
+          type: number
+          format: double
+          nullable: true
+        abstract:
+          type: string
+          readOnly: true
+        doi:
+          type: string
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          title: External URL
+          maxLength: 200
+        pdf_url:
+          type: string
+          readOnly: true
+        publication_type:
+          $ref: '#/components/schemas/PublicationTypeEnum'
+        is_featured:
+          type: boolean
+          title: Featured
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        title_ru:
+          type: string
+          title: Title (Russian)
+          maxLength: 500
+        title_en:
+          type: string
+          title: Title (English)
+          maxLength: 500
+        title_kg:
+          type: string
+          title: Title (Kyrgyz)
+          maxLength: 500
+        authors_ru:
+          type: string
+          title: Authors (Russian)
+          maxLength: 500
+        authors_en:
+          type: string
+          title: Authors (English)
+          maxLength: 500
+        authors_kg:
+          type: string
+          title: Authors (Kyrgyz)
+          maxLength: 500
+        abstract_ru:
+          type: string
+          title: Abstract (Russian)
+        abstract_en:
+          type: string
+          title: Abstract (English)
+        abstract_kg:
+          type: string
+          title: Abstract (Kyrgyz)
+      required:
+      - abstract
+      - abstract_ru
+      - authors
+      - authors_ru
+      - id
+      - journal
+      - pdf_url
+      - title
+      - title_ru
+      - year
+    PublicationStats:
+      type: object
+      description: Serializer for publication statistics
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          readOnly: true
+        value:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        icon:
+          type: string
+          title: Icon Class
+          maxLength: 50
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+      required:
+      - id
+      - label
+      - value
+    PublicationTypeEnum:
+      enum:
+      - article
+      - conference
+      - book
+      - patent
+      type: string
+      description: |-
+        * `article` - Journal Article
+        * `conference` - Conference Paper
+        * `book` - Book/Chapter
+        * `patent` - Patent
+    QuotaBenefit:
+      type: object
+      description: Сериализатор для преимуществ квот
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        benefit:
+          type: string
+          description: Получить преимущество на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+      required:
+      - benefit
+      - id
+    QuotaRequirement:
+      type: object
+      description: Сериализатор для требований к квотам
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        requirement:
+          type: string
+          description: Получить требование на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+      required:
+      - id
+      - requirement
+    QuotaStats:
+      type: object
+      description: Сериализатор для статистики квот
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        stat_type:
+          allOf:
+          - $ref: '#/components/schemas/StatTypeEnum'
+          title: Statistic Type
+        number:
+          type: string
+          title: Number/Value
+          maxLength: 20
+        label:
+          type: string
+          description: Получить подпись на нужном языке
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание на нужном языке
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+      required:
+      - description
+      - id
+      - label
+      - number
+      - stat_type
+    QuotaType:
+      type: object
+      description: Сериализатор для типов квот
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        title:
+          type: string
+          description: Получить название на нужном языке
+          readOnly: true
+        description:
+          type: string
+          description: Получить описание на нужном языке
+          readOnly: true
+        icon:
+          type: string
+          title: Icon (emoji)
+          maxLength: 10
+        spots:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Available spots
+        deadline:
+          type: string
+          title: Application deadline
+          maxLength: 50
+        color:
+          allOf:
+          - $ref: '#/components/schemas/ColorEnum'
+          title: Color scheme
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Display order
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaRequirement'
+          readOnly: true
+        benefits:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaBenefit'
+          readOnly: true
+      required:
+      - benefits
+      - deadline
+      - description
+      - icon
+      - id
+      - requirements
+      - spots
+      - title
+      - type
+    StatTypeEnum:
+      enum:
+      - total_spots
+      - success_rate
+      - organizations
+      - quota_types
+      type: string
+      description: |-
+        * `total_spots` - Total Spots
+        * `success_rate` - Success Rate
+        * `organizations` - Organizations
+        * `quota_types` - Quota Types
+    StatusEnum:
+      enum:
+      - active
+      - recruiting
+      - inactive
+      type: string
+      description: |-
+        * `active` - Активен
+        * `recruiting` - Набор
+        * `inactive` - Неактивен
+    StructureTypeEnum:
+      enum:
+      - faculty
+      - department
+      - unit
+      - service
+      - center
+      type: string
+      description: |-
+        * `faculty` - Факультет
+        * `department` - Кафедра
+        * `unit` - Подразделение
+        * `service` - Служба
+        * `center` - Центр
+    TradeUnionBenefit:
+      type: object
+      description: Serializer for Trade Union Benefits
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        title_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        title_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        description:
+          type: string
+          readOnly: true
+        description_kg:
+          type: string
+          title: Описание (KG)
+        description_en:
+          type: string
+          title: Описание (EN)
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - description
+      - id
+      - title
+    TradeUnionEvent:
+      type: object
+      description: Serializer for Trade Union Events
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        title_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        title_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        date:
+          type: string
+          readOnly: true
+        date_kg:
+          type: string
+          title: Дата (KG)
+          maxLength: 100
+        date_en:
+          type: string
+          title: Дата (EN)
+          maxLength: 100
+        description:
+          type: string
+          readOnly: true
+        description_kg:
+          type: string
+          title: Описание (KG)
+        description_en:
+          type: string
+          title: Описание (EN)
+        image:
+          type: string
+          format: uri
+          nullable: true
+          title: Фото
+        image_url:
+          type: string
+          readOnly: true
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - date
+      - description
+      - id
+      - image_url
+      - title
+    TradeUnionStats:
+      type: object
+      description: Serializer for Trade Union Statistics
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        label:
+          type: string
+          readOnly: true
+        label_kg:
+          type: string
+          title: Название (KG)
+          maxLength: 200
+        label_en:
+          type: string
+          title: Название (EN)
+          maxLength: 200
+        value:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          title: Значение
+        icon:
+          type: string
+          title: Иконка
+          maxLength: 50
+        color:
+          type: string
+          readOnly: true
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Порядок отображения
+      required:
+      - color
+      - id
+      - label
+      - value
+    TypeEnum:
+      enum:
+      - sports
+      - health
+      - target
+      type: string
+      description: |-
+        * `sports` - Sports
+        * `health` - Health
+        * `target` - Target
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
