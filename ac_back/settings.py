@@ -44,20 +44,12 @@ INSTALLED_APPS = [
     "django_filters",
     # 'drf_yasg', удалил, так как используется drf_spectacular
     # Local apps
-    "student_clubs",
-    "leadership_structure",
-    "admission",
-    "science",
-
+    'student_clubs',
+    'leadership_structure',
+    'admission',   
+    'main_page',
+    'education',
 ]
-
-# CORS settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite default development server
-    "http://localhost:3000",  # Alternative development port
-]
-
-CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

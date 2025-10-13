@@ -355,3 +355,35 @@ base_url = api/admission/
 3.additional-support
 4.process-steps
 5.bachelor-quotas
+
+
+
+### 9 bachelor programs endpoint
+```http
+api/admission/bachelor-programs/
+```
+```json
+
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "name": "Название программы (русский):",
+            "description": "Описание программы (русский):",
+            "duration": 4,
+            "CareerPerspectives": [
+                "трудоустроиство"
+            ],
+            "mainDiscipline": [
+                "программы",
+                "туда сюда"
+            ],
+            "Offline": true,
+            "emoji": "🎓"
+        }
+    ]
+}
+```

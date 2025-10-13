@@ -788,3 +788,41 @@ class CollegeStatistics(models.Model):
     def get_description(self, language='ru'):
         """Получить описание на указанном языке"""
         return getattr(self, f'description_{language}', self.description_ru)
+    
+class BachelorProgram(models.Model):
+    name_ru = models.CharField(max_length=200, verbose_name='Название программы (русский)')
+    name_en = models.CharField(max_length=200, verbose_name='Название программы (английский)')
+    name_ky = models.CharField(max_length=200, verbose_name='Название программы (киргизский)')
+
+    description_ru = models.TextField(verbose_name='Описание программы (русский)')
+    description_en = models.TextField(verbose_name='Описание программы (английский)')
+    description_ky = models.TextField(verbose_name='Описание программы (киргизский)')
+
+    duration = models.PositiveBigIntegerField(verbose_name='Продолжительность программы (в годах)')
+
+    Offline = models.BooleanField(default=False, verbose_name='очное')
+
+    emoji = models.CharField(max_length=5, verbose_name='эмодзи', blank=True)
+
+    mainDiscipline_ru = models.JSONField(max_length=200, verbose_name='Основные дисциплины (русский)')
+    mainDiscipline_en = models.JSONField(max_length=200, verbose_name='Основные дисциплины (английский)')
+    mainDiscipline_ky = models.JSONField(max_length=200, verbose_name='Основные дисциплины (киргизский)')
+
+    CareerPerspectives_ru = models.JSONField(max_length=200, verbose_name='Перспективы карьеры (русский)')
+    CareerPerspectives_en = models.JSONField(max_length=200, verbose_name='Перспективы карьеры (английский)')
+    CareerPerspectives_ky = models.JSONField(max_length=200, verbose_name='Перспективы карьеры (киргизский)')
+
+    class Meta:
+        verbose_name = 'Бакалаврская программа'
+        verbose_name_plural = 'Бакалаврские программы'
+
+    def __str__(self):
+        return self.name_ru
+    def get_name(self, language='ru'):
+        return getattr(self, f'name_{language}', self.name_ru)
+    def get_description(self, language='ru'):
+        return getattr(self, f'description_{language}', self.description_ru)
+    def get_mainDiscipline(self, language='ru'):
+        return getattr(self, f'mainDiscipline_{language}', self.mainDiscipline_ru)
+    def get_CareerPerspectives(self, language='ru'):
+        return getattr(self, f'CareerPerspectives_{language}', self.CareerPerspectives_ru)
