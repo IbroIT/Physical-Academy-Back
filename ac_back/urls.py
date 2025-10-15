@@ -10,19 +10,23 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-# drf-spectacular schema/views
+# Создание schema_view
+schema_view = SpectacularAPIView.as_view()
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # API URLs
+
+    # API endpoints
     path('api/student-clubs/', include('student_clubs.urls')),
     path('api/leadership-structure/', include('leadership_structure.urls')),
     path('api/admission/', include('admission.urls')),
 
-    # Swagger / Redoc documentation
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
-            schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='redoc'),
+    # Schema (JSON/YAML)
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+
+    # Swagger / Redoc UI
+    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 # Serve static and media files in development
