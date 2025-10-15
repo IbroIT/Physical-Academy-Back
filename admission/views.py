@@ -214,14 +214,8 @@ class MasterDocumentsViewSet(viewsets.ReadOnlyModelViewSet):
 
 class MasterProgramsViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для программ магистратуры"""
-
+    queryset = MasterPrograms.objects.filter(is_active=True)
     serializer_class = MasterProgramsSerializer
-
-    def get_queryset(self):
-        # Check for swagger schema generation
-        if getattr(self, "swagger_fake_view", False):
-            return MasterPrograms.objects.none()
-        return super().get_queryset().filter(is_active=True).order_by("order")
 
     def get_serializer_context(self):
         """Передаём язык в контекст сериализатора"""

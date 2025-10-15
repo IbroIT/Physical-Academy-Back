@@ -18,11 +18,11 @@ urlpatterns = [
     path('api/leadership-structure/', include('leadership_structure.urls')),
     path('api/admission/', include('admission.urls')),
 
-    # Swagger / Redoc documentation
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
-            schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='redoc'),
+    # # Swagger / Redoc documentation
+    # re_path(r'^swagger(?P<format>\.json|\.yaml)$',
+    #         schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    # # path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),
+    # path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='redoc'),
 ]
 
 # Serve static and media files in development
