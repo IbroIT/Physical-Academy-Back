@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, re_path, include
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -10,19 +10,18 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-# drf-spectacular schema/views
 urlpatterns = [
     path("admin/", admin.site.urls),
     # API URLs
     path('api/student-clubs/', include('student_clubs.urls')),
     path('api/leadership-structure/', include('leadership_structure.urls')),
     path('api/admission/', include('admission.urls')),
+    path('api/science/', include('science.urls')),
 
-    # Swagger / Redoc documentation
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
-            schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='redoc'),
+    # DRF Spectacular URLs
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 # Serve static and media files in development

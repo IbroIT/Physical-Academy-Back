@@ -143,12 +143,20 @@ class PublicationsPageSerializer(serializers.Serializer):
     def get_featured(self, obj):
         from .publication import PublicationSerializer
 
-        return PublicationSerializer(many=True).data
+        # `obj` is expected to be a dict with 'featured' key containing a
+        # queryset or iterable of Publication instances. We must pass the
+        # request/context so that URL-building methods (pdf_url/image_url)
+        # work correctly.
+        featured_qs = obj.get("featured", [])
+        serializer = PublicationSerializer(featured_qs, many=True, context=self.context)
+        return serializer.data
 
     def get_publications(self, obj):
         from .publication import PublicationSerializer
 
-        return PublicationSerializer(many=True).data
+        pubs_qs = obj.get("publications", [])
+        serializer = PublicationSerializer(pubs_qs, many=True, context=self.context)
+        return serializer.data
 
 
 class VestnikPageSerializer(serializers.Serializer):

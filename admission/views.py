@@ -8,7 +8,7 @@ from .models import (
     QuotaStats, AdditionalSupport, ProcessStep,
     MasterDocuments, MasterPrograms, MasterMainDate, MasterRequirements,
     AspirantDocuments, AspirantPrograms, AspirantMainDate, AspirantRequirements,
-    DoctorAdmissionSteps
+    DoctorAdmissionSteps, BachelorProgram
 
 )
 from .serializers import (
@@ -20,7 +20,25 @@ from .serializers import (
     AspirantRequirementsSerializer, DoctorAdmissionStepsSerializer
 )
 
+class BachelorProgramViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet для программ бакалавриата
+    """
+    serializer_class = BachelorQuotasDataSerializer  # You'll need to create this serializer
 
+    def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return BachelorProgram.objects.none()
+        return BachelorProgram.objects.filter(is_active=True).order_by("order")
+
+    def get_serializer_context(self):
+        """Передаём язык в контекст сериализатора"""
+        context = super().get_serializer_context()
+        language = self.request.query_params.get("lang", "ru")
+        context["language"] = language
+        return context
+    
 class QuotaTypeViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для типов квот"""
 

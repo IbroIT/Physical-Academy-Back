@@ -37,3 +37,25 @@ from .vestnik_stats import (
     PublicationsPageSerializer,
     VestnikPageSerializer,
 )
+from .webofscience import (
+    WebOfScienceTimeRangeSerializer,
+    WebOfScienceMetricSerializer,
+    WebOfScienceCategorySerializer,
+    WebOfScienceCollaborationSerializer,
+    WebOfScienceJournalQuartileSerializer,
+    WebOfScienceAdditionalMetricSerializer,
+    WebOfScienceSectionSerializer,
+    WebOfSciencePageSerializer,
+)
+from .student_scientific_society import (
+    StudentScientificSocietyInfoSerializer,
+    StudentScientificSocietyStatSerializer,
+    StudentScientificSocietyFeatureSerializer,
+    StudentScientificSocietyProjectSerializer,
+    ProjectTagSerializer,
+    StudentScientificSocietyEventSerializer,
+    StudentScientificSocietyJoinStepSerializer,
+    StudentScientificSocietyLeaderSerializer,
+    StudentScientificSocietyContactSerializer,
+    StudentScientificSocietyPageSerializer,
+)

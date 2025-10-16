@@ -25,3 +25,13 @@ from .views.scopus import (
     ScopusStatsViewSet,
     ScopusPageView,
 )
+from .views.webofscience import (
+    WebOfScienceTimeRangeViewSet,
+    WebOfScienceMetricViewSet,
+    WebOfScienceCategoryViewSet,
+    WebOfScienceCollaborationViewSet,
+    WebOfScienceJournalQuartileViewSet,
+    WebOfScienceAdditionalMetricViewSet,
+    WebOfScienceSectionViewSet,
+    WebOfSciencePageView,
+)

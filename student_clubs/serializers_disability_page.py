@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models_disability_page import DisabilityPage
+from .models_disabilities import DisabilityPage
 from .serializers_base import LanguageAwareSerializer
 
 

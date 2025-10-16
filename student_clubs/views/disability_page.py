@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from ..models_disability_page import DisabilityPage
+from ..models_disabilities import DisabilityPage
 from ..serializers_disability_page import DisabilityPageSerializer
 
 

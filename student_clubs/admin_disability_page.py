@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models_disability_page import DisabilityPage
+from .models_disabilities import DisabilityPage
 
 
 @admin.register(DisabilityPage)

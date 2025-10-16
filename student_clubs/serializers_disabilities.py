@@ -103,10 +103,12 @@ class DisabilityEmergencyContactSerializer(serializers.ModelSerializer):
 
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    phoneLink = serializers.SerializerMethodField()
 
     class Meta:
         model = DisabilityEmergencyContact
-        fields = ["id", "title", "description", "phone", "phone_link"]
+        # Keep snake_case 'phone_link' for backward compatibility and add camelCase 'phoneLink'
+        fields = ["id", "title", "description", "phone", "phone_link", "phoneLink"]
 
     def get_title(self, obj):
         language = self.context.get("language", "ru")
@@ -129,6 +131,14 @@ class DisabilityEmergencyContactSerializer(serializers.ModelSerializer):
             return getattr(first_item, f"description_{language}") if first_item else ""
         # Normal case - obj is a model instance
         return getattr(obj, f"description_{language}", "")
+
+    def get_phoneLink(self, obj):
+        # Provide camelCase alias for phone_link to match frontend expectation
+        # obj may be a QuerySet in some edge cases handled above; normalize
+        if hasattr(obj, "all") and callable(obj.all):
+            first_item = obj.first()
+            return getattr(first_item, "phone_link") if first_item else ""
+        return getattr(obj, "phone_link", "")
 
 
 class DisabilitiesPageDataSerializer(serializers.Serializer):

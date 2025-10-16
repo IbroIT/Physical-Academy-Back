@@ -125,8 +125,8 @@ class Command(BaseCommand):
 
         members = [
             {
-                "name_ru": "Иванов Сергей Петрович",
-                "name_en": "Ivanov Sergey Petrovich",
+                "full_name_ru": "Иванов Сергей Петрович",
+                "full_name_en": "Ivanov Sergey Petrovich",
                 "role": chairman_role,
                 "research_direction": directions[0],
                 "position_ru": "Доктор наук, профессор",
@@ -139,8 +139,8 @@ class Command(BaseCommand):
                 "order": 1,
             },
             {
-                "name_ru": "Петрова Анна Ивановна",
-                "name_en": "Petrova Anna Ivanovna",
+                "full_name_ru": "Петрова Анна Ивановна",
+                "full_name_en": "Petrova Anna Ivanovna",
                 "role": vice_role,
                 "research_direction": directions[1],
                 "position_ru": "Кандидат наук, доцент",
@@ -153,8 +153,8 @@ class Command(BaseCommand):
                 "order": 2,
             },
             {
-                "name_ru": "Сидоров Михаил Александрович",
-                "name_en": "Sidorov Mikhail Alexandrovich",
+                "full_name_ru": "Сидоров Михаил Александрович",
+                "full_name_en": "Sidorov Mikhail Alexandrovich",
                 "role": secretary_role,
                 "research_direction": directions[2],
                 "position_ru": "Кандидат наук, старший научный сотрудник",
@@ -167,8 +167,8 @@ class Command(BaseCommand):
                 "order": 3,
             },
             {
-                "name_ru": "Козлов Андрей Викторович",
-                "name_en": "Kozlov Andrey Viktorovich",
+                "full_name_ru": "Козлов Андрей Викторович",
+                "full_name_en": "Kozlov Andrey Viktorovich",
                 "role": member_role,
                 "research_direction": directions[3],
                 "position_ru": "Доктор медицинских наук, профессор",
@@ -181,8 +181,8 @@ class Command(BaseCommand):
                 "order": 4,
             },
             {
-                "name_ru": "Смирнова Елена Владимировна",
-                "name_en": "Smirnova Elena Vladimirovna",
+                "full_name_ru": "Смирнова Елена Владимировна",
+                "full_name_en": "Smirnova Elena Vladimirovna",
                 "role": member_role,
                 "research_direction": directions[4],
                 "position_ru": "Кандидат педагогических наук, доцент",
@@ -195,8 +195,8 @@ class Command(BaseCommand):
                 "order": 5,
             },
             {
-                "name_ru": "Соколов Алексей Николаевич",
-                "name_en": "Sokolov Alexey Nikolaevich",
+                "full_name_ru": "Соколов Алексей Николаевич",
+                "full_name_en": "Sokolov Alexey Nikolaevich",
                 "role": member_role,
                 "research_direction": directions[5],
                 "position_ru": "Кандидат биологических наук, доцент",
@@ -209,8 +209,8 @@ class Command(BaseCommand):
                 "order": 6,
             },
             {
-                "name_ru": "Новиков Игорь Дмитриевич",
-                "name_en": "Novikov Igor Dmitrievich",
+                "full_name_ru": "Новиков Игорь Дмитриевич",
+                "full_name_en": "Novikov Igor Dmitrievich",
                 "role": member_role,
                 "research_direction": directions[0],
                 "position_ru": "Доктор биологических наук, профессор",
@@ -223,8 +223,8 @@ class Command(BaseCommand):
                 "order": 7,
             },
             {
-                "name_ru": "Морозова Светлана Андреевна",
-                "name_en": "Morozova Svetlana Andreevna",
+                "full_name_ru": "Морозова Светлана Андреевна",
+                "full_name_en": "Morozova Svetlana Andreevna",
                 "role": member_role,
                 "research_direction": directions[1],
                 "position_ru": "Кандидат наук, старший научный сотрудник",

@@ -10,12 +10,30 @@ from ..models import (
 
 
 class ScopusMetricsSerializer(serializers.ModelSerializer):
-    label = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
+    publication_title = serializers.SerializerMethodField()
 
     class Meta:
         model = ScopusMetrics
-        fields = ["id", "value", "label", "icon", "description", "trend"]
+        fields = ["id", "citation_count", "h_index", "publication_title"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_publication_title(self, obj) -> str:
+        if obj.publication:
+            language = self.context.get("language", "ru")
+            if language == "kg" and obj.publication.title_kg:
+                return obj.publication.title_kg
+            elif language == "en" and obj.publication.title_en:
+                return obj.publication.title_en
+            return obj.publication.title_ru
+        return ""
+
+
+class ScopusDocumentTypeSerializer(serializers.ModelSerializer):
+    label = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ScopusDocumentType
+        fields = ["id", "code", "label"]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_label(self, obj) -> str:
@@ -25,41 +43,15 @@ class ScopusMetricsSerializer(serializers.ModelSerializer):
         elif language == "en" and obj.label_en:
             return obj.label_en
         return obj.label_ru
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj) -> str:
-        language = self.context.get("language", "ru")
-        if language == "kg" and obj.description_kg:
-            return obj.description_kg
-        elif language == "en" and obj.description_en:
-            return obj.description_en
-        return obj.description_ru
-
-
-class ScopusDocumentTypeSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ScopusDocumentType
-        fields = ["id", "name", "code", "count"]
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_name(self, obj) -> str:
-        language = self.context.get("language", "ru")
-        if language == "kg" and obj.name_kg:
-            return obj.name_kg
-        elif language == "en" and obj.name_en:
-            return obj.name_en
-        return obj.name_ru
 
 
 class ScopusStatsSerializer(serializers.ModelSerializer):
     label = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
 
     class Meta:
         model = ScopusStats
-        fields = ["id", "value", "label", "icon", "description", "trend"]
+        # ScopusStats model fields: label_*, value, order
+        fields = ["id", "value", "label", "order"]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_label(self, obj) -> str:
@@ -69,15 +61,6 @@ class ScopusStatsSerializer(serializers.ModelSerializer):
         elif language == "en" and obj.label_en:
             return obj.label_en
         return obj.label_ru
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj) -> str:
-        language = self.context.get("language", "ru")
-        if language == "kg" and obj.description_kg:
-            return obj.description_kg
-        elif language == "en" and obj.description_en:
-            return obj.description_en
-        return obj.description_ru
 
 
 class ScopusSectionSerializer(serializers.ModelSerializer):

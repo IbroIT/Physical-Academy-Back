@@ -47,8 +47,9 @@ class NTSCommitteeMemberSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     position = serializers.SerializerMethodField()
     bio = serializers.SerializerMethodField()
-    role = NTSCommitteeRoleSerializer()
-    research_direction = NTSResearchDirectionSerializer()
+    role = NTSCommitteeRoleSerializer(allow_null=True, read_only=True)
+    # Убираем неиспользуемое поле research_direction
+    # research_direction = NTSResearchDirectionSerializer()
 
     class Meta:
         model = NTSCommitteeMember
@@ -61,7 +62,7 @@ class NTSCommitteeMemberSerializer(serializers.ModelSerializer):
             "phone",
             "photo",
             "role",
-            "research_direction",
+            # "research_direction", # Убираем поле, которого нет в модели
             "is_active",
             "order",
         ]

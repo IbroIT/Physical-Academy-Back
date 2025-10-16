@@ -147,3 +147,23 @@ class VisaSupportContactAdmin(admin.ModelAdmin):
             },
         ),
     ]
+
+
+@admin.register(ScholarshipRequiredDocument)
+class ScholarshipRequiredDocumentAdmin(admin.ModelAdmin):
+    """Standalone admin for ScholarshipRequiredDocument so it appears in admin list."""
+
+    list_display = ("scholarship", "name_ru", "is_required", "order")
+    list_filter = ("scholarship", "is_required")
+    search_fields = ("name_ru", "name_en", "name_kg", "scholarship__name_ru")
+    list_editable = ("is_required", "order")
+    raw_id_fields = ("scholarship",)
+    fieldsets = (
+        ("Relation", {"fields": ("scholarship",)}),
+        ("Names", {"fields": ("name_ru", "name_en", "name_kg")}),
+        (
+            "Descriptions",
+            {"fields": ("description_ru", "description_en", "description_kg")},
+        ),
+        ("Settings", {"fields": ("is_required", "order")}),
+    )
