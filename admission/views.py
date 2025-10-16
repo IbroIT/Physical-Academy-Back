@@ -17,7 +17,7 @@ from .serializers import (
     BachelorQuotasDataSerializer, MasterDocumentsSerializer, MasterProgramsSerializer, 
     MasterMainDateSerializer, MasterRequirementsSerializer,
     AspirantDocumentsSerializer, AspirantProgramsSerializer, AspirantMainDateSerializer, 
-    AspirantRequirementsSerializer, DoctorAdmissionStepsSerializer
+    AspirantRequirementsSerializer, DoctorAdmissionStepsSerializer, BachelorProgramsSerializer
 )
 
 class BachelorProgramViewSet(viewsets.ReadOnlyModelViewSet):
@@ -587,6 +587,20 @@ class CollegeStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             return CollegeStatistics.objects.none()
         return super().get_queryset().order_by("id")
+
+    def get_serializer_context(self):
+        """Передаём язык в контекст сериализатора"""
+        context = super().get_serializer_context()
+        # язык берём из query-параметра, например ?lang=en
+        language = self.request.query_params.get("lang", "ru")
+        context["language"] = language
+        return context
+    
+class BachelorProgramViewSet(viewsets.ReadOnlyModelViewSet):
+    """ViewSet для программ бакалавриата"""
+
+    serializer_class = BachelorProgramsSerializer
+    queryset = BachelorProgram.objects.all()
 
     def get_serializer_context(self):
         """Передаём язык в контекст сериализатора"""

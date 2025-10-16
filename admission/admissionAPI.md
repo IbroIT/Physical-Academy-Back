@@ -348,14 +348,155 @@ api/admission/college-soon-events/
 
 ### 8. bachelor quatas endpoints
 
-base_url = api/admission/
 
-1.quata-types/
-2.quota-stats
-3.additional-support
-4.process-steps
-5.bachelor-quotas
+### 8.1
+```http
+api/admission/quata-types/
+```
+```json
+[
+        {
+            "id": 1,
+            "type": "sports",
+            "title": "одаренным",
+            "description": "Description (Russian):",
+            "icon": "emoji",
+            "spots": 9,
+            "deadline": "10",
+            "color": "blue",
+            "order": 1,
+            "requirements": [
+                {
+                    "id": 1,
+                    "requirement": "Requirement (Russian):",
+                    "order": 1
+                }
+            ],
+            "benefits": [
+                {
+                    "id": 1,
+                    "benefit": "Benefit (Russian)",
+                    "order": 0
+                }
+            ]
+        }
+]
+```
 
+
+
+### 8.2.api/admission/quota-stats
+
+```json
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "stat_type": "total_spots",
+            "number": "8798",
+            "label": "Benefit (English)",
+            "description": "Description (Russian):",
+            "order": 2
+        }
+    ]
+}
+```
+
+### 8.3.api/admission/additional-support
+```json
+
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "support": "Support (Russian):",
+            "order": 1
+        }
+    ]
+}
+```
+### 8.4.api/admission/process-steps
+```json
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "step_number": 1,
+            "title": "Title (Russian):",
+            "description": "Description (Russian):",
+            "color_scheme": "from-blue-500 to-cyan-500"
+        }
+    ]
+}
+```
+### 8.5.api/admission/bachelor-quotas
+```json
+
+{
+    "quotas": [
+        {
+            "id": 1,
+            "type": "sports",
+            "title": "одаренным",
+            "description": "Description (Russian):",
+            "icon": "emoji",
+            "spots": 9,
+            "deadline": "10",
+            "color": "blue",
+            "order": 1,
+            "requirements": [
+                {
+                    "id": 1,
+                    "requirement": "Requirement (Russian):",
+                    "order": 1
+                }
+            ],
+            "benefits": [
+                {
+                    "id": 1,
+                    "benefit": "Benefit (Russian)",
+                    "order": 0
+                }
+            ]
+        }
+    ],
+    "quota_stats": [
+        {
+            "id": 1,
+            "stat_type": "total_spots",
+            "number": "8798",
+            "label": "Benefit (English)",
+            "description": "Description (Russian):",
+            "order": 2
+        }
+    ],
+    "additional_support": [
+        {
+            "id": 1,
+            "support": "Support (Russian):",
+            "order": 1
+        }
+    ],
+    "process_steps": [
+        {
+            "id": 1,
+            "step_number": 1,
+            "title": "Title (Russian):",
+            "description": "Description (Russian):",
+            "color_scheme": "from-blue-500 to-cyan-500"
+        }
+    ]
+}
+```
 
 
 ### 9 bachelor programs endpoint
