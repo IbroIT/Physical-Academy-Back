@@ -46,6 +46,9 @@ class BoardOfTrusteesViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return BoardOfTrustees.objects.none()
         return BoardOfTrustees.objects.filter(is_active=True)
 
 
@@ -67,6 +70,9 @@ class BoardOfTrusteesStatsViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return BoardOfTrusteesStats.objects.none()
         return BoardOfTrusteesStats.objects.filter(is_active=True)
 
 
@@ -97,6 +103,9 @@ class AuditCommissionViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return AuditCommission.objects.none()
         return AuditCommission.objects.filter(is_active=True)
 
 
@@ -118,6 +127,9 @@ class AuditCommissionStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return AuditCommissionStatistics.objects.none()
         return AuditCommissionStatistics.objects.filter(is_active=True)
 
 
@@ -148,6 +160,9 @@ class AcademicCouncilViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return AcademicCouncil.objects.none()
         return AcademicCouncil.objects.filter(is_active=True)
 
 
@@ -169,6 +184,9 @@ class TradeUnionBenefitViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return TradeUnionBenefit.objects.none()
         return TradeUnionBenefit.objects.filter(is_active=True)
 
 
@@ -190,6 +208,9 @@ class TradeUnionEventViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return TradeUnionEvent.objects.none()
         return TradeUnionEvent.objects.filter(is_active=True)
 
 
@@ -211,6 +232,9 @@ class TradeUnionStatsViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return TradeUnionStats.objects.none()
         return TradeUnionStats.objects.filter(is_active=True)
 
 
@@ -243,6 +267,9 @@ class CommissionViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return Commission.objects.none()
         return Commission.objects.filter(is_active=True)
     
     @extend_schema(
@@ -290,6 +317,9 @@ class AdministrativeDepartmentViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return AdministrativeDepartment.objects.none()
         return AdministrativeDepartment.objects.filter(is_active=True)
 
 
@@ -321,6 +351,9 @@ class AdministrativeUnitViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return AdministrativeUnit.objects.none()
         return AdministrativeUnit.objects.filter(is_active=True)
 
 
@@ -356,6 +389,9 @@ class LeadershipViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return Leadership.objects.none()
         return Leadership.objects.filter(is_active=True)
 
 
@@ -390,6 +426,9 @@ class OrganizationStructureViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['order', 'name']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return OrganizationStructure.objects.none()
         return OrganizationStructure.objects.filter(is_active=True)
     
     @action(detail=False, methods=['get'])
@@ -431,6 +470,9 @@ class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['-document_date', 'order', 'title']
     
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return Document.objects.none()
         return Document.objects.filter(is_active=True)
     
     @action(detail=False, methods=['get'])
