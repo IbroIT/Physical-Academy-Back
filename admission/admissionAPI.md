@@ -243,7 +243,7 @@ GET /api/admission/doctor-programs/?lang=en&id=1
         "bio"
     ],
     "duration": 5
-}
+}'
 ```
 
 ### 7 college api -- college programs

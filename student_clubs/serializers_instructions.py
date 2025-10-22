@@ -89,22 +89,6 @@ class InstructionsPageDataSerializer(serializers.Serializer):
         }
         return subtitles.get(language, subtitles["en"])
 
-    def get_categories(self, obj):
-        categories = InstructionCategory.objects.all().order_by("order")
-        language = self.context.get("language", "en")
-
-        result = {}
-        for category in categories:
-            if language == "ru":
-                name = category.name_ru
-            elif language == "kg":
-                name = category.name_kg
-            else:
-                name = category.name_en
-            result[category.code] = name
-
-        return result
-
     def get_documents(self, obj):
         language = self.context.get("language", "en")
         documents = InstructionDocument.objects.filter(is_active=True).select_related(
