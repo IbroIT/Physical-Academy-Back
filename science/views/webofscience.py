@@ -2,6 +2,7 @@ from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from django.utils.translation import get_language
 from django.db.models import F
+from rest_framework import status
 
 from ..models import (
     WebOfScienceTimeRange,
@@ -123,130 +124,172 @@ class WebOfScienceSectionViewSet(viewsets.ModelViewSet):
 class WebOfSciencePageView(generics.RetrieveAPIView):
     """API endpoint for Web of Science page data."""
 
-    serializer_class = WebOfSciencePageSerializer
-
-    def get_object(self):
-        # Get the requested time range or default to 'all'
-        time_range_key = self.request.query_params.get("time_range", "all")
-
+    def get(self, request, *args, **kwargs):
         try:
-            time_range = WebOfScienceTimeRange.objects.get(key=time_range_key)
-        except WebOfScienceTimeRange.DoesNotExist:
-            # If the requested time range doesn't exist, get the default one
-            time_range = WebOfScienceTimeRange.objects.filter(is_default=True).first()
-            if not time_range:
-                # If no default time range exists, get the first one
-                time_range = WebOfScienceTimeRange.objects.first()
+            # Get the requested time range or default to 'all'
+            time_range_key = self.request.query_params.get("time_range", "all")
 
-        # Get all sections for the text content
-        sections = {}
-        for section in WebOfScienceSection.objects.all():
-            lang_suffix = ""
-            if get_language() == "en":
-                lang_suffix = "_en"
-            elif get_language() == "kg":
-                lang_suffix = "_kg"
-            else:
-                lang_suffix = "_ru"
+            try:
+                time_range = WebOfScienceTimeRange.objects.get(key=time_range_key)
+            except WebOfScienceTimeRange.DoesNotExist:
+                # If the requested time range doesn't exist, get the default one
+                time_range = WebOfScienceTimeRange.objects.filter(is_default=True).first()
+                if not time_range:
+                    # If no default time range exists, get the first one
+                    time_range = WebOfScienceTimeRange.objects.first()
 
-            sections[section.section_key] = (
-                getattr(section, f"text{lang_suffix}", "") or section.text_ru
+            # Get all sections for the text content
+            sections = {}
+            for section in WebOfScienceSection.objects.all():
+                lang_suffix = ""
+                if get_language() == "en":
+                    lang_suffix = "_en"
+                elif get_language() == "kg":
+                    lang_suffix = "_kg"
+                else:
+                    lang_suffix = "_ru"
+
+                sections[section.section_key] = (
+                    getattr(section, f"text{lang_suffix}", "") or section.text_ru
+                )
+
+            # Get data as querysets
+            metrics = WebOfScienceMetric.objects.filter(time_range=time_range).order_by("order")
+            subject_categories = WebOfScienceCategory.objects.filter(
+                time_range=time_range
+            ).order_by("-count")[:8]
+            
+            source_categories = WebOfScienceCategory.objects.filter(
+                time_range=time_range
+            ).order_by("-count")[:6]
+
+            collaborations = WebOfScienceCollaboration.objects.filter(
+                time_range=time_range
+            ).order_by("-publications")
+
+            journal_quartiles = WebOfScienceJournalQuartile.objects.filter(
+                time_range=time_range
+            ).order_by("order")
+
+            additional_metrics = WebOfScienceAdditionalMetric.objects.filter(
+                time_range=time_range
+            ).order_by("order")
+
+            # Sample time series data
+            year_labels = ["2018", "2019", "2020", "2021", "2022", "2023"]
+            publication_data = [18, 22, 25, 31, 28, 32]
+            citation_data = [145, 203, 275, 390, 420, 439]
+
+            # Prepare chart data
+            lang = get_language()
+            
+            # Subject categories data for chart
+            subject_categories_data = {
+                "labels": [],
+                "datasets": [{"data": [], "backgroundColor": []}]
+            }
+            
+            colors = [
+                "rgba(16, 185, 129, 0.8)", "rgba(59, 130, 246, 0.8)", "rgba(99, 102, 241, 0.8)",
+                "rgba(139, 92, 246, 0.8)", "rgba(236, 72, 153, 0.8)", "rgba(244, 63, 94, 0.8)",
+                "rgba(234, 88, 12, 0.8)", "rgba(22, 163, 74, 0.8)", "rgba(6, 182, 212, 0.8)", "rgba(168, 85, 247, 0.8)"
+            ]
+            
+            for i, category in enumerate(subject_categories):
+                if lang == "en" and category.name_en:
+                    subject_categories_data["labels"].append(category.name_en)
+                elif lang == "kg" and category.name_kg:
+                    subject_categories_data["labels"].append(category.name_kg)
+                else:
+                    subject_categories_data["labels"].append(category.name_ru)
+                    
+                subject_categories_data["datasets"][0]["data"].append(category.count)
+                if i < len(colors):
+                    subject_categories_data["datasets"][0]["backgroundColor"].append(colors[i])
+
+            # Source categories data for chart
+            source_categories_data = {
+                "labels": [],
+                "datasets": [{"data": [], "backgroundColor": []}]
+            }
+            
+            for i, category in enumerate(source_categories):
+                if lang == "en" and category.name_en:
+                    source_categories_data["labels"].append(category.name_en)
+                elif lang == "kg" and category.name_kg:
+                    source_categories_data["labels"].append(category.name_kg)
+                else:
+                    source_categories_data["labels"].append(category.name_ru)
+                    
+                source_categories_data["datasets"][0]["data"].append(category.count)
+                if i < len(colors):
+                    source_categories_data["datasets"][0]["backgroundColor"].append(colors[i])
+
+            # Journal quartiles data for chart
+            journal_quartiles_data = {
+                "labels": [jq.quartile for jq in journal_quartiles],
+                "datasets": [{
+                    "data": [jq.count for jq in journal_quartiles],
+                    "backgroundColor": [
+                        "rgba(16, 185, 129, 0.8)", "rgba(59, 130, 246, 0.8)",
+                        "rgba(139, 92, 246, 0.8)", "rgba(244, 63, 94, 0.8)"
+                    ][:len(journal_quartiles)],
+                    "borderColor": [
+                        "rgba(16, 185, 129, 1)", "rgba(59, 130, 246, 1)",
+                        "rgba(139, 92, 246, 1)", "rgba(244, 63, 94, 1)"
+                    ][:len(journal_quartiles)]
+                }]
+            }
+
+            # Сериализуем данные
+            metrics_serializer = WebOfScienceMetricSerializer(metrics, many=True)
+            collaborations_serializer = WebOfScienceCollaborationSerializer(collaborations, many=True)
+            additional_metrics_serializer = WebOfScienceAdditionalMetricSerializer(additional_metrics, many=True)
+
+            # Формируем финальные данные в формате, ожидаемом фронтендом
+            formatted_data = {
+                "pageData": {
+                    "title": sections.get("title", "Web of Science Publications"),
+                    "subtitle": sections.get("subtitle", "Publications in Web of Science indexed journals"),
+                    "titleIcon": "📊",
+                    "categoriesIcon": "📈",
+                    "collaborationsIcon": "🌍",
+                    "topJournalsIcon": "⭐",
+                    "timeRanges": {"5years": "5 Years", "10years": "10 Years"},
+                    "collaborationsInstitutions": sections.get("collaborationsInstitutions", "institutions"),
+                    "collaborationsPublications": sections.get("collaborationsPublications", "publications"),
+                    "topJournalsTitle": sections.get("topJournalsTitle", "Publications by Journal Quartile"),
+                    "categoriesTitle": sections.get("categoriesTitle", "Publications by Category"),
+                    "collaborationsTitle": sections.get("collaborationsTitle", "International Collaboration"),
+                    "additionalMetrics": additional_metrics_serializer.data
+                },
+                "metrics": {
+                    "5years": {
+                        "main": {},
+                        "categories": subject_categories_data,
+                        "collaborations": collaborations_serializer.data,
+                        "topJournals": journal_quartiles_data
+                    }
+                }
+            }
+
+            # Заполняем основные метрики
+            for i, metric_data in enumerate(metrics_serializer.data):
+                if metric_data and metric_data.get('key'):
+                    formatted_data["metrics"]["5years"]["main"][metric_data['key']] = {
+                        "value": metric_data.get('value', '0'),
+                        "label": metric_data.get('label', ''),
+                        "icon": metric_data.get('icon', '📊'),
+                        "description": metric_data.get('description', '')
+                    }
+
+            return Response(formatted_data)
+            
+        except Exception as e:
+            print(f"Error in WebOfSciencePageView: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return Response(
+                {"error": "Internal server error"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-        # Get metrics for the selected time range
-        metrics = WebOfScienceMetric.objects.filter(time_range=time_range).order_by(
-            "order"
-        )
-        metrics_serializer = WebOfScienceMetricSerializer(metrics, many=True)
-
-        # Get categories for the selected time range - filter subject categories
-        subject_categories = WebOfScienceCategory.objects.filter(
-            time_range=time_range
-        ).order_by("-count")[
-            :8
-        ]  # Limit to 8 for readability
-        subject_cats_serializer = WebOfScienceCategorySerializer(
-            subject_categories, many=True
-        )
-
-        # Get source categories
-        source_categories = WebOfScienceCategory.objects.filter(
-            time_range=time_range
-        ).order_by("-count")[
-            :6
-        ]  # Limit to 6 for readability
-        source_cats_serializer = WebOfScienceCategorySerializer(
-            source_categories, many=True
-        )
-
-        # Get collaborations for the selected time range
-        collaborations = WebOfScienceCollaboration.objects.filter(
-            time_range=time_range
-        ).order_by("-publications")
-        collaborations_serializer = WebOfScienceCollaborationSerializer(
-            collaborations, many=True
-        )
-
-        # Get journal quartiles for the selected time range
-        journal_quartiles = WebOfScienceJournalQuartile.objects.filter(
-            time_range=time_range
-        ).order_by("order")
-        journal_quartiles_serializer = WebOfScienceJournalQuartileSerializer(
-            journal_quartiles, many=True
-        )
-
-        # Get additional metrics for the selected time range
-        additional_metrics = WebOfScienceAdditionalMetric.objects.filter(
-            time_range=time_range
-        ).order_by("order")
-        additional_metrics_serializer = WebOfScienceAdditionalMetricSerializer(
-            additional_metrics, many=True
-        )
-
-        # Sample time series data (should be replaced with real data from models)
-        # In a real implementation, this would come from a separate model with year-by-year data
-        # For now, we'll just use mock data similar to what's in the frontend component
-        year_labels = ["2018", "2019", "2020", "2021", "2022", "2023"]
-        publication_data = [18, 22, 25, 31, 28, 32]
-        citation_data = [145, 203, 275, 390, 420, 439]
-
-        # Assemble the page data
-        page_data = {
-            "title": sections.get("title", "Web of Science Publications"),
-            "subtitle": sections.get(
-                "subtitle", "Publications in Web of Science indexed journals"
-            ),
-            "metrics": metrics_serializer.data,
-            "year_labels": year_labels,
-            "publication_data": publication_data,
-            "citation_data": citation_data,
-            "subject_categories": subject_cats_serializer.data,
-            "source_categories": source_cats_serializer.data,
-            "collaborations": collaborations_serializer.data,
-            "journal_quartiles": journal_quartiles_serializer.data,
-            "additionalMetrics": additional_metrics_serializer.data,
-            # Translation strings
-            "categoriesTitle": sections.get(
-                "categoriesTitle", "Publications by Category"
-            ),
-            "collaborationsTitle": sections.get(
-                "collaborationsTitle", "International Collaborations"
-            ),
-            "collaborationsInstitutions": sections.get(
-                "collaborationsInstitutions", "institutions"
-            ),
-            "collaborationsPublications": sections.get(
-                "collaborationsPublications", "publications"
-            ),
-            "topJournalsTitle": sections.get(
-                "topJournalsTitle", "Publications by Journal Quartile"
-            ),
-            "topJournalsPublications": sections.get(
-                "topJournalsPublications", "publications"
-            ),
-            "timelineTitle": sections.get(
-                "timelineTitle", "Publications & Citations Over Time"
-            ),
-        }
-
-        return page_data

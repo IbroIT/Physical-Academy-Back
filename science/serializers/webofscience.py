@@ -40,21 +40,40 @@ class WebOfScienceMetricSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.CharField())
     def get_label(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.label_en:
-            return obj.label_en
-        elif lang == "kg" and obj.label_kg:
-            return obj.label_kg
-        return obj.label_ru
+        # Обрабатываем как объект модели, так и словарь
+        if isinstance(obj, dict):
+            lang = get_language()
+            if lang == "en" and obj.get('label_en'):
+                return obj['label_en']
+            elif lang == "kg" and obj.get('label_kg'):
+                return obj['label_kg']
+            return obj.get('label_ru', '')
+        else:
+            # Обычная обработка для объекта модели
+            lang = get_language()
+            if lang == "en" and obj.label_en:
+                return obj.label_en
+            elif lang == "kg" and obj.label_kg:
+                return obj.label_kg
+            return obj.label_ru
 
     @extend_schema_field(serializers.CharField())
     def get_description(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.description_en:
-            return obj.description_en
-        elif lang == "kg" and obj.description_kg:
-            return obj.description_kg
-        return obj.description_ru
+        # Аналогичная обработка для description
+        if isinstance(obj, dict):
+            lang = get_language()
+            if lang == "en" and obj.get('description_en'):
+                return obj['description_en']
+            elif lang == "kg" and obj.get('description_kg'):
+                return obj['description_kg']
+            return obj.get('description_ru', '')
+        else:
+            lang = get_language()
+            if lang == "en" and obj.description_en:
+                return obj.description_en
+            elif lang == "kg" and obj.description_kg:
+                return obj.description_kg
+            return obj.description_ru
 
 
 class WebOfScienceCategorySerializer(serializers.ModelSerializer):
@@ -66,12 +85,21 @@ class WebOfScienceCategorySerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.CharField())
     def get_name(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.name_en:
-            return obj.name_en
-        elif lang == "kg" and obj.name_kg:
-            return obj.name_kg
-        return obj.name_ru
+        # Аналогичное исправление для категорий
+        if isinstance(obj, dict):
+            lang = get_language()
+            if lang == "en" and obj.get('name_en'):
+                return obj['name_en']
+            elif lang == "kg" and obj.get('name_kg'):
+                return obj['name_kg']
+            return obj.get('name_ru', '')
+        else:
+            lang = get_language()
+            if lang == "en" and obj.name_en:
+                return obj.name_en
+            elif lang == "kg" and obj.name_kg:
+                return obj.name_kg
+            return obj.name_ru
 
 
 class WebOfScienceCollaborationSerializer(serializers.ModelSerializer):
@@ -83,12 +111,21 @@ class WebOfScienceCollaborationSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.CharField())
     def get_country(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.country_en:
-            return obj.country_en
-        elif lang == "kg" and obj.country_kg:
-            return obj.country_kg
-        return obj.country_ru
+        # Аналогичное исправление для collaborations
+        if isinstance(obj, dict):
+            lang = get_language()
+            if lang == "en" and obj.get('country_en'):
+                return obj['country_en']
+            elif lang == "kg" and obj.get('country_kg'):
+                return obj['country_kg']
+            return obj.get('country_ru', '')
+        else:
+            lang = get_language()
+            if lang == "en" and obj.country_en:
+                return obj.country_en
+            elif lang == "kg" and obj.country_kg:
+                return obj.country_kg
+            return obj.country_ru
 
 
 class WebOfScienceJournalQuartileSerializer(serializers.ModelSerializer):
@@ -103,25 +140,42 @@ class WebOfScienceAdditionalMetricSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebOfScienceAdditionalMetric
-        fields = ["id", "key", "value", "title", "description", "icon", "order"]
+        fields = ['id', 'key', 'value', 'title', 'description', 'icon', 'order']  # Убрал 'time_range'
 
-    @extend_schema_field(serializers.CharField())
     def get_title(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.title_en:
-            return obj.title_en
-        elif lang == "kg" and obj.title_kg:
-            return obj.title_kg
-        return obj.title_ru
+        # Обрабатываем как объект модели, так и словарь
+        if isinstance(obj, dict):
+            lang = get_language()
+            if lang == "en" and obj.get('title_en'):
+                return obj['title_en']
+            elif lang == "kg" and obj.get('title_kg'):
+                return obj['title_kg']
+            return obj.get('title_ru', '')
+        else:
+            # Обычная обработка для объекта модели
+            lang = get_language()
+            if lang == "en" and obj.title_en:
+                return obj.title_en
+            elif lang == "kg" and obj.title_kg:
+                return obj.title_kg
+            return obj.title_ru
 
-    @extend_schema_field(serializers.CharField())
     def get_description(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.description_en:
-            return obj.description_en
-        elif lang == "kg" and obj.description_kg:
-            return obj.description_kg
-        return obj.description_ru
+        # Аналогичная обработка для description
+        if isinstance(obj, dict):
+            lang = get_language()
+            if lang == "en" and obj.get('description_en'):
+                return obj['description_en']
+            elif lang == "kg" and obj.get('description_kg'):
+                return obj['description_kg']
+            return obj.get('description_ru', '')
+        else:
+            lang = get_language()
+            if lang == "en" and obj.description_en:
+                return obj.description_en
+            elif lang == "kg" and obj.description_kg:
+                return obj.description_kg
+            return obj.description_ru
 
 
 class WebOfScienceSectionSerializer(serializers.ModelSerializer):
@@ -144,13 +198,10 @@ class WebOfScienceSectionSerializer(serializers.ModelSerializer):
 class WebOfSciencePageSerializer(serializers.Serializer):
     title = serializers.CharField()
     subtitle = serializers.CharField()
-    metrics = WebOfScienceMetricSerializer(many=True)
+    metrics = WebOfScienceMetricSerializer(many=True, read_only=True)
     timeRanges = serializers.SerializerMethodField()
-    categories = serializers.SerializerMethodField()
-    sourceCategories = serializers.SerializerMethodField()
-    collaborations = WebOfScienceCollaborationSerializer(many=True)
-    topJournals = serializers.SerializerMethodField()
-    additionalMetrics = WebOfScienceAdditionalMetricSerializer(many=True)
+    collaborations = WebOfScienceCollaborationSerializer(many=True, read_only=True)
+    additionalMetrics = WebOfScienceAdditionalMetricSerializer(many=True, read_only=True)
 
     # Translated text fields
     categoriesTitle = serializers.CharField()
@@ -179,80 +230,5 @@ class WebOfSciencePageSerializer(serializers.Serializer):
                     "borderColor": "rgba(59, 130, 246, 1)",
                     "backgroundColor": "rgba(59, 130, 246, 0.2)",
                 },
-            ],
-        }
-
-    @extend_schema_field(serializers.DictField())
-    def get_categories(self, obj):
-        # Format for Chart.js pie chart - subject categories
-        categories = obj.get("subject_categories", [])
-        return {
-            "labels": [cat.get("name") for cat in categories],
-            "datasets": [
-                {
-                    "data": [cat.get("count") for cat in categories],
-                    "backgroundColor": [
-                        "rgba(16, 185, 129, 0.8)",
-                        "rgba(59, 130, 246, 0.8)",
-                        "rgba(99, 102, 241, 0.8)",
-                        "rgba(139, 92, 246, 0.8)",
-                        "rgba(236, 72, 153, 0.8)",
-                        "rgba(244, 63, 94, 0.8)",
-                        "rgba(234, 88, 12, 0.8)",
-                        "rgba(22, 163, 74, 0.8)",
-                        "rgba(6, 182, 212, 0.8)",
-                        "rgba(168, 85, 247, 0.8)",
-                    ][: len(categories)],
-                }
-            ],
-        }
-
-    @extend_schema_field(serializers.DictField())
-    def get_sourceCategories(self, obj):
-        # Format for Chart.js pie chart - source categories (journals)
-        categories = obj.get("source_categories", [])
-        return {
-            "labels": [cat.get("name") for cat in categories],
-            "datasets": [
-                {
-                    "data": [cat.get("count") for cat in categories],
-                    "backgroundColor": [
-                        "rgba(16, 185, 129, 0.8)",
-                        "rgba(59, 130, 246, 0.8)",
-                        "rgba(99, 102, 241, 0.8)",
-                        "rgba(139, 92, 246, 0.8)",
-                        "rgba(236, 72, 153, 0.8)",
-                        "rgba(244, 63, 94, 0.8)",
-                        "rgba(234, 88, 12, 0.8)",
-                        "rgba(22, 163, 74, 0.8)",
-                        "rgba(6, 182, 212, 0.8)",
-                        "rgba(168, 85, 247, 0.8)",
-                    ][: len(categories)],
-                }
-            ],
-        }
-
-    @extend_schema_field(serializers.DictField())
-    def get_topJournals(self, obj):
-        # Format for Chart.js bar chart - journal quartiles
-        journal_quartiles = obj.get("journal_quartiles", [])
-        return {
-            "labels": [jq.get("quartile") for jq in journal_quartiles],
-            "datasets": [
-                {
-                    "data": [jq.get("count") for jq in journal_quartiles],
-                    "backgroundColor": [
-                        "rgba(16, 185, 129, 0.8)",
-                        "rgba(59, 130, 246, 0.8)",
-                        "rgba(139, 92, 246, 0.8)",
-                        "rgba(244, 63, 94, 0.8)",
-                    ][: len(journal_quartiles)],
-                    "borderColor": [
-                        "rgba(16, 185, 129, 1)",
-                        "rgba(59, 130, 246, 1)",
-                        "rgba(139, 92, 246, 1)",
-                        "rgba(244, 63, 94, 1)",
-                    ][: len(journal_quartiles)],
-                }
             ],
         }
