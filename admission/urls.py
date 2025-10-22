@@ -5,7 +5,7 @@ from .views import (
     ProcessStepViewSet, BachelorQuotasViewSet, MasterDocumentsViewSet, 
     MasterProgramsViewSet, MasterMainDateViewSet, MasterRequirementsViewSet,
     AspirantDocumentsViewSet, AspirantProgramsViewSet, AspirantMainDateViewSet, AspirantRequirementsViewSet, DoctorAdmissionStepsViewSet, DoctorStatisticsViewSet,
-    DoctorProgramsViewSet
+    DoctorProgramsViewSet, BachelorProgramViewSet
 )
 
 # Создаем роутер для API
@@ -15,6 +15,7 @@ router.register(r'quota-stats', QuotaStatsViewSet, basename='quota-stats')
 router.register(r'additional-support', AdditionalSupportViewSet, basename='additional-support')
 router.register(r'process-steps', ProcessStepViewSet, basename='process-steps')
 router.register(r'bachelor-quotas', BachelorQuotasViewSet, basename='bachelor-quotas')
+router.register(r'bachelor-programs', BachelorProgramViewSet, basename='bachelor-programs')
 
 router.register(r'master-documents', MasterDocumentsViewSet, basename='master-documents')
 router.register(r'master-programs', MasterProgramsViewSet, basename='master-programs')

@@ -13,6 +13,7 @@ from .nts_committee import (
     NTSCommitteeRoleViewSet,
     NTSResearchDirectionViewSet,
     NTSCommitteeMemberViewSet,
+    NTSCommitteeSectionViewSet,
     NTSCommitteePageView,
 )
 from .scopus import (
@@ -21,4 +22,30 @@ from .scopus import (
     ScopusPublicationViewSet,
     ScopusStatsViewSet,
     ScopusPageView,
+    ScopusAuthorViewSet,
+    ScopusJournalViewSet,
+    ScopusPublisherViewSet,
+    ScopusPublicationAuthorViewSet,
+    ScopusSectionViewSet,
+)
+from .webofscience import (
+    WebOfScienceTimeRangeViewSet,
+    WebOfScienceMetricViewSet,
+    WebOfScienceCategoryViewSet,
+    WebOfScienceCollaborationViewSet,
+    WebOfScienceJournalQuartileViewSet,
+    WebOfScienceAdditionalMetricViewSet,
+    WebOfScienceSectionViewSet,
+    WebOfSciencePageView,
+)
+from .student_scientific_society import (
+    StudentScientificSocietyInfoViewSet,
+    StudentScientificSocietyStatViewSet,
+    StudentScientificSocietyFeatureViewSet,
+    StudentScientificSocietyProjectViewSet,
+    StudentScientificSocietyEventViewSet,
+    StudentScientificSocietyJoinStepViewSet,
+    StudentScientificSocietyLeaderViewSet,
+    StudentScientificSocietyContactViewSet,
+    StudentScientificSocietyPageView,
 )

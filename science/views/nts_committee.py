@@ -33,9 +33,16 @@ class NTSCommitteeMemberViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for retrieving NTS Committee members"""
 
     queryset = NTSCommitteeMember.objects.filter(is_active=True).order_by(
-        "order", "name_ru"
+        "order", "full_name_ru"
     )
     serializer_class = NTSCommitteeMemberSerializer
+
+
+class NTSCommitteeSectionViewSet(viewsets.ReadOnlyModelViewSet):
+    """ViewSet for retrieving NTS Committee sections"""
+
+    queryset = NTSCommitteeSection.objects.all().order_by("order", "section_key")
+    serializer_class = NTSCommitteeSectionSerializer
 
 
 @extend_schema(
@@ -78,23 +85,30 @@ class NTSCommitteePageView(generics.GenericAPIView):
         """Get all NTS Committee page content"""
         try:
             # Try to find the chairman, vice-chairman and secretary
-            chairman = NTSCommitteeMemberSerializer(
-                NTSCommitteeMember.objects.filter(
-                    role__name_ru__icontains="председатель", is_active=True
-                ).first()
-            ).data
+            chairman_obj = NTSCommitteeMember.objects.filter(
+                role__name_ru__icontains="председатель", is_active=True
+            ).first()
+            chairman = (
+                NTSCommitteeMemberSerializer(chairman_obj).data
+                if chairman_obj
+                else None
+            )
 
-            vice_chairman = NTSCommitteeMemberSerializer(
-                NTSCommitteeMember.objects.filter(
-                    role__name_ru__icontains="заместитель", is_active=True
-                ).first()
-            ).data
+            vice_obj = NTSCommitteeMember.objects.filter(
+                role__name_ru__icontains="заместитель", is_active=True
+            ).first()
+            vice_chairman = (
+                NTSCommitteeMemberSerializer(vice_obj).data if vice_obj else None
+            )
 
-            secretary = NTSCommitteeMemberSerializer(
-                NTSCommitteeMember.objects.filter(
-                    role__name_ru__icontains="секретарь", is_active=True
-                ).first()
-            ).data
+            secretary_obj = NTSCommitteeMember.objects.filter(
+                role__name_ru__icontains="секретарь", is_active=True
+            ).first()
+            secretary = (
+                NTSCommitteeMemberSerializer(secretary_obj).data
+                if secretary_obj
+                else None
+            )
 
             # Get regular members (exclude chairman, vice-chairman and secretary)
             excluded_ids = []
@@ -108,7 +122,7 @@ class NTSCommitteePageView(generics.GenericAPIView):
             members = NTSCommitteeMemberSerializer(
                 NTSCommitteeMember.objects.filter(is_active=True)
                 .exclude(id__in=excluded_ids)
-                .order_by("order", "name_ru"),
+                .order_by("order", "full_name_ru"),
                 many=True,
             ).data
 
@@ -122,7 +136,8 @@ class NTSCommitteePageView(generics.GenericAPIView):
             section_objects = NTSCommitteeSection.objects.all()
 
             for section in section_objects:
-                sections[section.section_key] = {
+                key = section.section_key or f"section_{section.id}"
+                sections[key] = {
                     "title": section.get_title(),
                     "description": section.get_description(),
                 }

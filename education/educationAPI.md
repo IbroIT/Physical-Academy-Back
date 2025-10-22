@@ -160,5 +160,3 @@ api/education/phd-programs/
     ]
 }
 ```
-
-

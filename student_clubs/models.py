@@ -3,13 +3,24 @@ from django.core.validators import URLValidator
 from django.contrib.auth.models import User
 
 # Import models from sub-directories
+from .models_instructions import (
+    InstructionCategory,
+    InstructionDocument,
+    ImportantUpdate,
+)
+from .models_ebilim import (
+    EbilimStat,
+    EbilimQuickLink,
+    EbilimSystemStatus,
+)
 from .models_disabilities import (
     DisabilitySupportService,
     DisabilityContactPerson,
     DisabilityResource,
     DisabilityEmergencyContact,
 )
-from .models_disability_page import DisabilityPage
+
+# from .models_disability_page import DisabilityPage
 
 from .models_council import CouncilMember, CouncilInitiative, CouncilEvent, CouncilStats
 
@@ -18,6 +29,17 @@ from .models_scholarship_visa import (
     ScholarshipRequiredDocument,
     VisaSupportService,
     VisaSupportContact,
+)
+
+from .models_exchange import (
+    ExchangeRegion,
+    ExchangeDurationType,
+    ExchangeProgram,
+    ExchangeProgramRequirement,
+    ExchangeProgramBenefit,
+    ExchangeProgramCourse,
+    ExchangePageStat,
+    ExchangeDeadline,
 )
 
 # Import models from the models directory

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, re_path, include
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -21,8 +21,9 @@ urlpatterns = [
     path('api/leadership-structure/', include('leadership_structure.urls')),
     path('api/admission/', include('admission.urls')),
     path('api/education/', include('education.urls')),
-
-    # Schema (JSON/YAML)
+    path('api/science/', include('science.urls')),
+    path('api/academy/', include('main_page.urls')),
+    # Schema (JSON/YAML)'
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 
     # Swagger / Redoc UI

@@ -245,28 +245,39 @@ class VestnikSerializer(serializers.ModelSerializer):
 class VestnikIssueSerializer(serializers.ModelSerializer):
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
-    vestnik = VestnikSerializer()
+    # Remove vestnik field as it doesn't appear to be in the model
+    # vestnik = VestnikSerializer()
 
     class Meta:
         model = VestnikIssue
         fields = [
             "id",
-            "vestnik",
+            "volume_number",
+            "issue_number",
             "year",
-            "volume",
-            "issue",
             "title",
             "description",
-            "file",
+            "pdf_file",
             "cover_image",
-            "is_active",
+            "is_featured",
+            "is_published",
             "publication_date",
         ]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj):
-        return obj.get_title()
+        language = self.context.get("language", "ru")
+        if language == "kg" and obj.title_kg:
+            return obj.title_kg
+        elif language == "en" and obj.title_en:
+            return obj.title_en
+        return obj.title_ru
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj):
-        return obj.get_description()
+        language = self.context.get("language", "ru")
+        if language == "kg" and obj.description_kg:
+            return obj.description_kg
+        elif language == "en" and obj.description_en:
+            return obj.description_en
+        return obj.description_ru

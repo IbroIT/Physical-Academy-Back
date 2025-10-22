@@ -18,19 +18,46 @@ from .views import (
     CouncilEventViewSet,
     CouncilStatsViewSet,
     CouncilPageDataViewSet,
+    StudentContactInfoViewSet,
+    SocialNetworkAccountViewSet,
+    SocialCommunityViewSet,
+    ContactSocialPageDataViewSet,
+)
+from .views_ebilim import (
+    EbilimStatViewSet,
+    EbilimQuickLinkViewSet,
+    EbilimSystemStatusViewSet,
+    EbilimPageDataView,
+    EbilimPageDataViewSet,
+)
+from .views_scholarship_visa import (
     ScholarshipProgramViewSet,
     ScholarshipRequiredDocumentViewSet,
     ScholarshipPageDataViewSet,
     VisaSupportServiceViewSet,
     VisaSupportContactViewSet,
     VisaSupportPageDataViewSet,
-    StudentContactInfoViewSet,
-    SocialNetworkAccountViewSet,
-    SocialCommunityViewSet,
-    ContactSocialPageDataViewSet,
+)
+from .views_exchange import (
+    ExchangeRegionViewSet,
+    ExchangeDurationTypeViewSet,
+    ExchangeProgramViewSet,
+    ExchangeProgramRequirementViewSet,
+    ExchangeProgramBenefitViewSet,
+    ExchangeProgramCourseViewSet,
+    ExchangePageStatViewSet,
+    ExchangeDeadlineViewSet,
+    ExchangePageDataViewSet,
+)
+from .views_instructions import (
+    InstructionCategoryViewSet,
+    InstructionDocumentViewSet,
+    ImportantUpdateViewSet,
+    InstructionsPageDataViewSet,
 )
 
 router = DefaultRouter()
+
 # Основные эндпоинты для клубов
 router.register(r"clubs", ClubViewSet, basename="club")
 router.register(r"categories", ClubCategoryViewSet, basename="club-category")
@@ -40,6 +67,16 @@ router.register(r"stats", ClubStatsViewSet, basename="club-stats")
 # Новые эндпоинты для студентов
 router.register(r"students", StudentProfileViewSet, basename="student-profile")
 router.register(r"memberships", ClubMembershipViewSet, basename="club-membership")
+
+# Ebilim endpoints
+router.register(r"ebilim", EbilimPageDataViewSet, basename="ebilim")
+router.register(r"ebilim/stats", EbilimStatViewSet, basename="ebilim-stats")
+router.register(
+    r"ebilim/quick-links", EbilimQuickLinkViewSet, basename="ebilim-quick-links"
+)
+router.register(
+    r"ebilim/system-status", EbilimSystemStatusViewSet, basename="ebilim-system-status"
+)
 
 # Disabilities endpoints
 router.register(
@@ -53,9 +90,7 @@ router.register(
     basename="disability-contact",
 )
 router.register(
-    r"disabilities/resources",
-    DisabilityResourceViewSet,
-    basename="disability-resource",
+    r"disabilities/resources", DisabilityResourceViewSet, basename="disability-resource"
 )
 router.register(
     r"disabilities/emergency",
@@ -63,14 +98,10 @@ router.register(
     basename="disability-emergency",
 )
 router.register(
-    r"disabilities-page",
-    DisabilitiesPageDataViewSet,
-    basename="disabilities-page",
+    r"disabilities-page", DisabilitiesPageDataViewSet, basename="disabilities-page"
 )
 router.register(
-    r"disabilities-pages",
-    DisabilityPageViewSet,
-    basename="disability-pages",
+    r"disabilities-pages", DisabilityPageViewSet, basename="disability-pages"
 )
 
 # Council endpoints
@@ -100,6 +131,49 @@ router.register(r"visa/services", VisaSupportServiceViewSet, basename="visa-serv
 router.register(r"visa/contacts", VisaSupportContactViewSet, basename="visa-contact")
 router.register(r"visa-page", VisaSupportPageDataViewSet, basename="visa-page")
 
+# Exchange programs endpoints
+router.register(r"exchange/regions", ExchangeRegionViewSet, basename="exchange-region")
+router.register(
+    r"exchange/durations", ExchangeDurationTypeViewSet, basename="exchange-duration"
+)
+router.register(
+    r"exchange/programs", ExchangeProgramViewSet, basename="exchange-program"
+)
+router.register(
+    r"exchange/requirements",
+    ExchangeProgramRequirementViewSet,
+    basename="exchange-requirement",
+)
+router.register(
+    r"exchange/benefits", ExchangeProgramBenefitViewSet, basename="exchange-benefit"
+)
+router.register(
+    r"exchange/courses", ExchangeProgramCourseViewSet, basename="exchange-course"
+)
+router.register(r"exchange/stats", ExchangePageStatViewSet, basename="exchange-stat")
+router.register(
+    r"exchange/deadlines", ExchangeDeadlineViewSet, basename="exchange-deadline"
+)
+router.register(r"exchange-page", ExchangePageDataViewSet, basename="exchange-page")
+
+# Instructions endpoints
+router.register(
+    r"instructions/categories",
+    InstructionCategoryViewSet,
+    basename="instruction-category",
+)
+router.register(
+    r"instructions/documents",
+    InstructionDocumentViewSet,
+    basename="instruction-document",
+)
+router.register(
+    r"instructions/updates", ImportantUpdateViewSet, basename="instruction-update"
+)
+router.register(
+    r"instructions-page", InstructionsPageDataViewSet, basename="instructions-page"
+)
+
 # Contact and social endpoints
 router.register(
     r"contact-info", StudentContactInfoViewSet, basename="student-contact-info"
@@ -116,4 +190,5 @@ router.register(
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("ebilim/", EbilimPageDataView.as_view(), name="ebilim-page-data"),
 ]

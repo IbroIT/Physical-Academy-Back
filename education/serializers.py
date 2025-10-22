@@ -1,6 +1,18 @@
 from rest_framework import serializers
 from .models import CollegePrograms, PhdPrograms, FacultyTeachers, MasterPrograms, Faculty, FacultyContacts, FacultyStatistics, FacultySports, FacultyPrograms, FacultySpecialization
 
+
+
+class FacultyNamesSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    class Meta:
+        model = Faculty
+        fields = ['name']
+
+    def get_name(self,obj):
+        lang = self.context.get('language', 'ru')
+        return obj.get_name(lang)
+
 class MasterProgramsSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'admission',   
     'main_page',
     'education',
+    'science', 
 ]
 
 MIDDLEWARE = [
