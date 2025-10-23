@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (
+
+# Import Publication views from views_main
+from .views_main import (
     PublicationsViewSet,
     PublicationStatsViewSet,
     PublicationsPageView,
@@ -8,6 +10,14 @@ from .views import (
     VestnikArticlesViewSet,
     VestnikStatsViewSet,
     VestnikPageView,
+)
+
+# Import other views from views package
+from .views import (
+    # VestnikIssuesViewSet,
+    # VestnikArticlesViewSet,
+    # VestnikStatsViewSet,
+    # VestnikPageView,
     ScopusMetricsViewSet,
     ScopusDocumentTypeViewSet,
     ScopusPublicationViewSet,

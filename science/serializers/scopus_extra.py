@@ -20,11 +20,10 @@ class ScopusMetricsSerializer(serializers.ModelSerializer):
     def get_publication_title(self, obj) -> str:
         if obj.publication:
             language = self.context.get("language", "ru")
-            if language == "kg" and obj.publication.title_kg:
-                return obj.publication.title_kg
-            elif language == "en" and obj.publication.title_en:
-                return obj.publication.title_en
-            return obj.publication.title_ru
+            return (
+                getattr(obj.publication, f"title_{language}", obj.publication.title_ru)
+                or obj.publication.title_ru
+            )
         return ""
 
 
@@ -38,11 +37,7 @@ class ScopusDocumentTypeSerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.STR)
     def get_label(self, obj) -> str:
         language = self.context.get("language", "ru")
-        if language == "kg" and obj.label_kg:
-            return obj.label_kg
-        elif language == "en" and obj.label_en:
-            return obj.label_en
-        return obj.label_ru
+        return getattr(obj, f"label_{language}", obj.label_ru) or obj.label_ru
 
 
 class ScopusStatsSerializer(serializers.ModelSerializer):
@@ -56,11 +51,7 @@ class ScopusStatsSerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.STR)
     def get_label(self, obj) -> str:
         language = self.context.get("language", "ru")
-        if language == "kg" and obj.label_kg:
-            return obj.label_kg
-        elif language == "en" and obj.label_en:
-            return obj.label_en
-        return obj.label_ru
+        return getattr(obj, f"label_{language}", obj.label_ru) or obj.label_ru
 
 
 class ScopusSectionSerializer(serializers.ModelSerializer):
@@ -74,17 +65,12 @@ class ScopusSectionSerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj) -> str:
         language = self.context.get("language", "ru")
-        if language == "kg" and obj.title_kg:
-            return obj.title_kg
-        elif language == "en" and obj.title_en:
-            return obj.title_en
-        return obj.title_ru
+        return getattr(obj, f"title_{language}", obj.title_ru) or obj.title_ru
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj) -> str:
         language = self.context.get("language", "ru")
-        if language == "kg" and obj.description_kg:
-            return obj.description_kg
-        elif language == "en" and obj.description_en:
-            return obj.description_en
-        return obj.description_ru
+        return (
+            getattr(obj, f"description_{language}", obj.description_ru)
+            or obj.description_ru
+        )
