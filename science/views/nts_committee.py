@@ -21,12 +21,22 @@ class NTSCommitteeRoleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = NTSCommitteeRole.objects.all()
     serializer_class = NTSCommitteeRoleSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
+
 
 class NTSResearchDirectionViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for retrieving NTS Research Directions"""
 
     queryset = NTSResearchDirection.objects.all()
     serializer_class = NTSResearchDirectionSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
 
 
 class NTSCommitteeMemberViewSet(viewsets.ReadOnlyModelViewSet):
@@ -37,12 +47,22 @@ class NTSCommitteeMemberViewSet(viewsets.ReadOnlyModelViewSet):
     )
     serializer_class = NTSCommitteeMemberSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
+
 
 class NTSCommitteeSectionViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for retrieving NTS Committee sections"""
 
     queryset = NTSCommitteeSection.objects.all().order_by("order", "section_key")
     serializer_class = NTSCommitteeSectionSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
 
 
 @extend_schema(
@@ -84,12 +104,19 @@ class NTSCommitteePageView(generics.GenericAPIView):
     def get(self, request):
         """Get all NTS Committee page content"""
         try:
+            # Prepare context with language
+            language = request.query_params.get("lang", "ru")
+            context = {
+                "request": request,
+                "language": language,
+            }
+
             # Try to find the chairman, vice-chairman and secretary
             chairman_obj = NTSCommitteeMember.objects.filter(
                 role__name_ru__icontains="председатель", is_active=True
             ).first()
             chairman = (
-                NTSCommitteeMemberSerializer(chairman_obj).data
+                NTSCommitteeMemberSerializer(chairman_obj, context=context).data
                 if chairman_obj
                 else None
             )
@@ -98,14 +125,16 @@ class NTSCommitteePageView(generics.GenericAPIView):
                 role__name_ru__icontains="заместитель", is_active=True
             ).first()
             vice_chairman = (
-                NTSCommitteeMemberSerializer(vice_obj).data if vice_obj else None
+                NTSCommitteeMemberSerializer(vice_obj, context=context).data
+                if vice_obj
+                else None
             )
 
             secretary_obj = NTSCommitteeMember.objects.filter(
                 role__name_ru__icontains="секретарь", is_active=True
             ).first()
             secretary = (
-                NTSCommitteeMemberSerializer(secretary_obj).data
+                NTSCommitteeMemberSerializer(secretary_obj, context=context).data
                 if secretary_obj
                 else None
             )
@@ -124,11 +153,12 @@ class NTSCommitteePageView(generics.GenericAPIView):
                 .exclude(id__in=excluded_ids)
                 .order_by("order", "full_name_ru"),
                 many=True,
+                context=context,
             ).data
 
             # Get research directions
             research_directions = NTSResearchDirectionSerializer(
-                NTSResearchDirection.objects.all(), many=True
+                NTSResearchDirection.objects.all(), many=True, context=context
             ).data
 
             # Get section content
@@ -138,8 +168,8 @@ class NTSCommitteePageView(generics.GenericAPIView):
             for section in section_objects:
                 key = section.section_key or f"section_{section.id}"
                 sections[key] = {
-                    "title": section.get_title(),
-                    "description": section.get_description(),
+                    "title": section.get_title(language),
+                    "description": section.get_description(language),
                 }
 
             # Get specific sections for page elements

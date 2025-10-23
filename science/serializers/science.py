@@ -235,18 +235,23 @@ class VestnikSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj):
-        return obj.get_title()
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj):
-        return obj.get_description()
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
 
 
 class VestnikIssueSerializer(serializers.ModelSerializer):
+    """Сериализатор для выпусков журнала Vestnik с поддержкой многоязычности"""
+
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
-    # Remove vestnik field as it doesn't appear to be in the model
-    # vestnik = VestnikSerializer()
+    articles_count = serializers.IntegerField(read_only=True)
+    pdf_url = serializers.SerializerMethodField()
+    cover_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = VestnikIssue
@@ -258,7 +263,12 @@ class VestnikIssueSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "pdf_file",
+            "pdf_url",
             "cover_image",
+            "cover_image_url",
+            "issn_print",
+            "issn_online",
+            "articles_count",
             "is_featured",
             "is_published",
             "publication_date",
@@ -267,17 +277,28 @@ class VestnikIssueSerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj):
         language = self.context.get("language", "ru")
-        if language == "kg" and obj.title_kg:
-            return obj.title_kg
-        elif language == "en" and obj.title_en:
-            return obj.title_en
-        return obj.title_ru
+        return obj.get_title(language)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj):
         language = self.context.get("language", "ru")
-        if language == "kg" and obj.description_kg:
-            return obj.description_kg
-        elif language == "en" and obj.description_en:
-            return obj.description_en
+        return obj.get_description(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_pdf_url(self, obj):
+        """Возвращает полный URL для PDF файла"""
+        if obj.pdf_file:
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(obj.pdf_file.url)
+        return None
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_cover_image_url(self, obj):
+        """Возвращает полный URL для обложки"""
+        if obj.cover_image:
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(obj.cover_image.url)
+        return None
         return obj.description_ru

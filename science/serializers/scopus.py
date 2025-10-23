@@ -11,19 +11,21 @@ from ..models import (
 
 
 class ScopusAuthorSerializer(serializers.ModelSerializer):
-    # Добавляем свойства для обратной совместимости
+    # Return only localized name based on ?lang= parameter
     name = serializers.SerializerMethodField()
-    first_name = serializers.SerializerMethodField()
-    last_name = serializers.SerializerMethodField()
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj):
-        return f"{obj.family_name_ru} {obj.given_name_ru}".strip()
-
-    def get_first_name(self, obj):
-        return obj.given_name_ru
-
-    def get_last_name(self, obj):
-        return obj.family_name_ru
+        language = self.context.get("language", "ru")
+        given = (
+            getattr(obj, f"given_name_{language}", obj.given_name_ru)
+            or obj.given_name_ru
+        )
+        family = (
+            getattr(obj, f"family_name_{language}", obj.family_name_ru)
+            or obj.family_name_ru
+        )
+        return f"{family} {given}".strip()
 
     class Meta:
         model = ScopusAuthor
@@ -31,47 +33,40 @@ class ScopusAuthorSerializer(serializers.ModelSerializer):
             "id",
             "scopus_id",
             "name",
-            "first_name",
-            "last_name",
-            "given_name_ru",
-            "family_name_ru",
-            "given_name_en",
-            "family_name_en",
-            "given_name_kg",
-            "family_name_kg",
         ]
 
 
 class ScopusJournalSerializer(serializers.ModelSerializer):
-    # Добавляем свойство для обратной совместимости
+    # Return only localized title based on ?lang= parameter
     title = serializers.SerializerMethodField()
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj):
-        return obj.title_ru
+        language = self.context.get("language", "ru")
+        return getattr(obj, f"title_{language}", obj.title_ru) or obj.title_ru
 
     class Meta:
         model = ScopusJournal
         fields = [
             "id",
             "title",
-            "title_ru",
-            "title_en",
-            "title_kg",
             "publisher",
             "issn",
         ]
 
 
 class ScopusPublisherSerializer(serializers.ModelSerializer):
-    # Добавляем свойство для обратной совместимости
+    # Return only localized name based on ?lang= parameter
     name = serializers.SerializerMethodField()
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj):
-        return obj.name_ru
+        language = self.context.get("language", "ru")
+        return getattr(obj, f"name_{language}", obj.name_ru) or obj.name_ru
 
     class Meta:
         model = ScopusPublisher
-        fields = ["id", "name", "name_ru", "name_en", "name_kg", "country"]
+        fields = ["id", "name", "country"]
 
 
 class ScopusPublicationAuthorSerializer(serializers.ModelSerializer):
@@ -89,8 +84,9 @@ class ScopusPublicationAuthorSerializer(serializers.ModelSerializer):
 
 
 class ScopusPublicationSerializer(serializers.ModelSerializer):
-    # Expose a localized title, computed authors list and journal display
+    # Return only localized fields based on ?lang= parameter
     title = serializers.SerializerMethodField()
+    abstract = serializers.SerializerMethodField()
     authors = serializers.SerializerMethodField()
     journal_name = serializers.SerializerMethodField()
     citation_count = serializers.SerializerMethodField()
@@ -100,9 +96,7 @@ class ScopusPublicationSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
-            "title_ru",
-            "title_en",
-            "title_kg",
+            "abstract",
             "year",
             "authors",
             "journal",
@@ -110,20 +104,28 @@ class ScopusPublicationSerializer(serializers.ModelSerializer):
             "doi",
             "url",
             "citation_count",
-            "abstract_ru",
-            "abstract_en",
-            "abstract_kg",
         ]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_title(self, obj):
+        language = self.context.get("language", "ru")
+        return getattr(obj, f"title_{language}", obj.title_ru) or obj.title_ru
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_abstract(self, obj):
+        language = self.context.get("language", "ru")
+        return getattr(obj, f"abstract_{language}", obj.abstract_ru) or obj.abstract_ru
 
     @extend_schema_field(ScopusPublicationAuthorSerializer(many=True))
     def get_authors(self, obj):
         # use related_name defined on ScopusPublicationAuthor: authors
         publication_authors = obj.authors.all().order_by("author_position")
-        return ScopusPublicationAuthorSerializer(publication_authors, many=True).data
+        context = self.context
+        return ScopusPublicationAuthorSerializer(
+            publication_authors, many=True, context=context
+        ).data
 
-    def get_title(self, obj):
-        return obj.title_ru or obj.title_en or obj.title_kg
-
+    @extend_schema_field(OpenApiTypes.INT)
     def get_citation_count(self, obj):
         # Получаем значение citation_count из связанной модели ScopusMetrics, если она существует
         try:
@@ -131,8 +133,13 @@ class ScopusPublicationSerializer(serializers.ModelSerializer):
         except:
             return 0
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_journal_name(self, obj):
         # Возвращаем название журнала из связанного объекта, если он есть
         if obj.journal:
-            return obj.journal.title_ru
+            language = self.context.get("language", "ru")
+            return (
+                getattr(obj.journal, f"title_{language}", obj.journal.title_ru)
+                or obj.journal.title_ru
+            )
         return ""

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
-from django.utils.translation import get_language
+from drf_spectacular.types import OpenApiTypes
 
 from ..models import (
     WebOfScienceTimeRange,
@@ -20,14 +20,10 @@ class WebOfScienceTimeRangeSerializer(serializers.ModelSerializer):
         model = WebOfScienceTimeRange
         fields = ["id", "key", "title", "order", "is_default"]
 
-    @extend_schema_field(serializers.CharField())
+    @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.title_en:
-            return obj.title_en
-        elif lang == "kg" and obj.title_kg:
-            return obj.title_kg
-        return obj.title_ru
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
 
 
 class WebOfScienceMetricSerializer(serializers.ModelSerializer):
@@ -38,42 +34,15 @@ class WebOfScienceMetricSerializer(serializers.ModelSerializer):
         model = WebOfScienceMetric
         fields = ["id", "key", "value", "label", "description", "icon", "order"]
 
-    @extend_schema_field(serializers.CharField())
+    @extend_schema_field(OpenApiTypes.STR)
     def get_label(self, obj):
-        # Обрабатываем как объект модели, так и словарь
-        if isinstance(obj, dict):
-            lang = get_language()
-            if lang == "en" and obj.get('label_en'):
-                return obj['label_en']
-            elif lang == "kg" and obj.get('label_kg'):
-                return obj['label_kg']
-            return obj.get('label_ru', '')
-        else:
-            # Обычная обработка для объекта модели
-            lang = get_language()
-            if lang == "en" and obj.label_en:
-                return obj.label_en
-            elif lang == "kg" and obj.label_kg:
-                return obj.label_kg
-            return obj.label_ru
+        language = self.context.get("language", "ru")
+        return obj.get_label(language)
 
-    @extend_schema_field(serializers.CharField())
+    @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj):
-        # Аналогичная обработка для description
-        if isinstance(obj, dict):
-            lang = get_language()
-            if lang == "en" and obj.get('description_en'):
-                return obj['description_en']
-            elif lang == "kg" and obj.get('description_kg'):
-                return obj['description_kg']
-            return obj.get('description_ru', '')
-        else:
-            lang = get_language()
-            if lang == "en" and obj.description_en:
-                return obj.description_en
-            elif lang == "kg" and obj.description_kg:
-                return obj.description_kg
-            return obj.description_ru
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
 
 
 class WebOfScienceCategorySerializer(serializers.ModelSerializer):
@@ -83,23 +52,10 @@ class WebOfScienceCategorySerializer(serializers.ModelSerializer):
         model = WebOfScienceCategory
         fields = ["id", "name", "count", "order"]
 
-    @extend_schema_field(serializers.CharField())
+    @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj):
-        # Аналогичное исправление для категорий
-        if isinstance(obj, dict):
-            lang = get_language()
-            if lang == "en" and obj.get('name_en'):
-                return obj['name_en']
-            elif lang == "kg" and obj.get('name_kg'):
-                return obj['name_kg']
-            return obj.get('name_ru', '')
-        else:
-            lang = get_language()
-            if lang == "en" and obj.name_en:
-                return obj.name_en
-            elif lang == "kg" and obj.name_kg:
-                return obj.name_kg
-            return obj.name_ru
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
 
 
 class WebOfScienceCollaborationSerializer(serializers.ModelSerializer):
@@ -109,23 +65,10 @@ class WebOfScienceCollaborationSerializer(serializers.ModelSerializer):
         model = WebOfScienceCollaboration
         fields = ["id", "country", "flag", "institutions", "publications", "order"]
 
-    @extend_schema_field(serializers.CharField())
+    @extend_schema_field(OpenApiTypes.STR)
     def get_country(self, obj):
-        # Аналогичное исправление для collaborations
-        if isinstance(obj, dict):
-            lang = get_language()
-            if lang == "en" and obj.get('country_en'):
-                return obj['country_en']
-            elif lang == "kg" and obj.get('country_kg'):
-                return obj['country_kg']
-            return obj.get('country_ru', '')
-        else:
-            lang = get_language()
-            if lang == "en" and obj.country_en:
-                return obj.country_en
-            elif lang == "kg" and obj.country_kg:
-                return obj.country_kg
-            return obj.country_ru
+        language = self.context.get("language", "ru")
+        return obj.get_country(language)
 
 
 class WebOfScienceJournalQuartileSerializer(serializers.ModelSerializer):
@@ -140,42 +83,25 @@ class WebOfScienceAdditionalMetricSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebOfScienceAdditionalMetric
-        fields = ['id', 'key', 'value', 'title', 'description', 'icon', 'order']  # Убрал 'time_range'
+        fields = [
+            "id",
+            "key",
+            "value",
+            "title",
+            "description",
+            "icon",
+            "order",
+        ]  # Убрал 'time_range'
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj):
-        # Обрабатываем как объект модели, так и словарь
-        if isinstance(obj, dict):
-            lang = get_language()
-            if lang == "en" and obj.get('title_en'):
-                return obj['title_en']
-            elif lang == "kg" and obj.get('title_kg'):
-                return obj['title_kg']
-            return obj.get('title_ru', '')
-        else:
-            # Обычная обработка для объекта модели
-            lang = get_language()
-            if lang == "en" and obj.title_en:
-                return obj.title_en
-            elif lang == "kg" and obj.title_kg:
-                return obj.title_kg
-            return obj.title_ru
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj):
-        # Аналогичная обработка для description
-        if isinstance(obj, dict):
-            lang = get_language()
-            if lang == "en" and obj.get('description_en'):
-                return obj['description_en']
-            elif lang == "kg" and obj.get('description_kg'):
-                return obj['description_kg']
-            return obj.get('description_ru', '')
-        else:
-            lang = get_language()
-            if lang == "en" and obj.description_en:
-                return obj.description_en
-            elif lang == "kg" and obj.description_kg:
-                return obj.description_kg
-            return obj.description_ru
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
 
 
 class WebOfScienceSectionSerializer(serializers.ModelSerializer):
@@ -185,14 +111,10 @@ class WebOfScienceSectionSerializer(serializers.ModelSerializer):
         model = WebOfScienceSection
         fields = ["id", "section_key", "text", "order"]
 
-    @extend_schema_field(serializers.CharField())
+    @extend_schema_field(OpenApiTypes.STR)
     def get_text(self, obj):
-        lang = get_language()
-        if lang == "en" and obj.text_en:
-            return obj.text_en
-        elif lang == "kg" and obj.text_kg:
-            return obj.text_kg
-        return obj.text_ru
+        language = self.context.get("language", "ru")
+        return obj.get_text(language)
 
 
 class WebOfSciencePageSerializer(serializers.Serializer):
@@ -201,7 +123,9 @@ class WebOfSciencePageSerializer(serializers.Serializer):
     metrics = WebOfScienceMetricSerializer(many=True, read_only=True)
     timeRanges = serializers.SerializerMethodField()
     collaborations = WebOfScienceCollaborationSerializer(many=True, read_only=True)
-    additionalMetrics = WebOfScienceAdditionalMetricSerializer(many=True, read_only=True)
+    additionalMetrics = WebOfScienceAdditionalMetricSerializer(
+        many=True, read_only=True
+    )
 
     # Translated text fields
     categoriesTitle = serializers.CharField()

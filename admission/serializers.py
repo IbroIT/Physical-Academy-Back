@@ -2,11 +2,30 @@ from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
 from .models import (
-    CollegeAdmissionRequirements, CollegeAdmissionSteps, CollegePrograms, CollegeSoonEvents, CollegeStatistics, DoctorSoonEvents, QuotaType, QuotaRequirement, QuotaBenefit, 
-    QuotaStats, AdditionalSupport, ProcessStep,
-    AspirantDocuments, AspirantMainDate, AspirantPrograms, AspirantRequirements,
-    MasterDocuments, MasterMainDate, MasterPrograms, MasterRequirements,
-    DoctorAdmissionSteps, DoctorStatistics, DoctorPrograms, BachelorProgram
+    CollegeAdmissionRequirements,
+    CollegeAdmissionSteps,
+    CollegePrograms,
+    CollegeSoonEvents,
+    CollegeStatistics,
+    DoctorSoonEvents,
+    QuotaType,
+    QuotaRequirement,
+    QuotaBenefit,
+    QuotaStats,
+    AdditionalSupport,
+    ProcessStep,
+    AspirantDocuments,
+    AspirantMainDate,
+    AspirantPrograms,
+    AspirantRequirements,
+    MasterDocuments,
+    MasterMainDate,
+    MasterPrograms,
+    MasterRequirements,
+    DoctorAdmissionSteps,
+    DoctorStatistics,
+    DoctorPrograms,
+    BachelorProgram,
 )
 
 
@@ -686,6 +705,7 @@ class CollegeStatisticsSerializer(serializers.ModelSerializer):
         language = self.context.get("language", "ru")
         return obj.get_description(language)
 
+
 class BachelorProgramsSerializer(serializers.ModelSerializer):
     """Сериализатор для программ бакалавриата"""
 
@@ -696,24 +716,37 @@ class BachelorProgramsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BachelorProgram
-        fields = ["id", "name", "description", "duration", "Offline","emoji" , "mainDiscipline", "CareerPerspectives"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "duration",
+            "Offline",
+            "emoji",
+            "mainDiscipline",
+            "CareerPerspectives",
+        ]
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj) -> str:
         """Получить название программы на нужном языке"""
         language = self.context.get("language", "ru")
         return obj.get_name(language)
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj) -> str:
         """Получить описание программы на нужном языке"""
         language = self.context.get("language", "ru")
         return obj.get_description(language)
 
-    def get_mainDiscipline(self, obj) -> str:
+    @extend_schema_field(OpenApiTypes.OBJECT)
+    def get_mainDiscipline(self, obj):
         """Получить основную дисциплину программы на нужном языке"""
         language = self.context.get("language", "ru")
         return obj.get_mainDiscipline(language)
 
-    def get_CareerPerspectives(self, obj) -> str:
+    @extend_schema_field(OpenApiTypes.OBJECT)
+    def get_CareerPerspectives(self, obj):
         """Получить карьерные перспективы программы на нужном языке"""
         language = self.context.get("language", "ru")
         return obj.get_CareerPerspectives(language)

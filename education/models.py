@@ -65,6 +65,22 @@ class PhdPrograms(models.Model):
     def get_features(self, language='ru'):
         return getattr(self, f'features_{language}', self.features_ru)
 
+
+class AboutPhoto(models.Model):
+    photo = models.ImageField(upload_to='about_photos/')
+    description = models.TextField()
+    
+class AboutStat(models.Model):
+    value = models.IntegerField()
+    label = models.CharField(max_length=100)
+    icon = models.CharField(max_length=50, blank=True)
+    suffix = models.CharField(max_length=10, blank=True)
+    
+class AboutFeature(models.Model):
+    icon = models.CharField(max_length=50)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+
 class CollegePrograms(models.Model):
     emoji = models.CharField(max_length=10, verbose_name="Эмодзи")
 

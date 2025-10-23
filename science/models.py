@@ -296,20 +296,21 @@ class Publication(models.Model):
     def __str__(self):
         return f"{self.title_ru} ({self.year})"
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg
+    def get_title(self, language="ru"):
+        """Получить заголовок на нужном языке"""
+        return getattr(self, f"title_{language}", self.title_ru)
 
-    def get_abstract(self):
-        return self.abstract_ru or self.abstract_en or self.abstract_kg
+    def get_abstract(self, language="ru"):
+        """Получить аннотацию на нужном языке"""
+        return getattr(self, f"abstract_{language}", self.abstract_ru)
 
-    def get_authors(self):
-        return self.author_ru or self.author_en or self.author_kg
+    def get_authors(self, language="ru"):
+        """Получить авторов на нужном языке"""
+        return getattr(self, f"author_{language}", self.author_ru)
 
-    def get_journal(self):
+    def get_journal(self, language="ru"):
+        """Получить название журнала (без переводов)"""
         return self.journal
-
-    def get_publisher(self):
-        return ""  # No publisher field in this model
 
 
 class PublicationTypeOptions:
@@ -391,11 +392,18 @@ class VestnikIssue(models.Model):
     def __str__(self):
         return f"Vestnik Vol.{self.volume_number} №{self.issue_number} ({self.year})"
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg
+    def get_title(self, language="ru"):
+        """Получить заголовок на нужном языке"""
+        return getattr(self, f"title_{language}", self.title_ru)
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg
+    def get_description(self, language="ru"):
+        """Получить описание на нужном языке"""
+        return getattr(self, f"description_{language}", self.description_ru)
+
+    @property
+    def articles_count(self):
+        """Количество статей в выпуске"""
+        return self.articles.count()
 
 
 class VestnikArticle(models.Model):
@@ -638,17 +646,18 @@ class NTSCommitteeRole(models.Model):
     def __str__(self):
         return self.name_ru
 
-    def get_name(self):
-        return self.name_ru
-
-    def get_description(self):
-        return ""  # No description field in this model
+    def get_name(self, language="ru"):
+        """Get name in specified language"""
+        return getattr(self, f"name_{language}", self.name_ru) or self.name_ru
 
 
 class NTSResearchDirection(models.Model):
     name_ru = models.CharField("Name (Russian)", max_length=255)
     name_en = models.CharField("Name (English)", max_length=255, blank=True)
     name_kg = models.CharField("Name (Kyrgyz)", max_length=255, blank=True)
+    description_ru = models.TextField("Description (Russian)", blank=True, default="")
+    description_en = models.TextField("Description (English)", blank=True, default="")
+    description_kg = models.TextField("Description (Kyrgyz)", blank=True, default="")
     is_active = models.BooleanField(default=True)
     order = models.IntegerField(default=0)
 
@@ -660,11 +669,16 @@ class NTSResearchDirection(models.Model):
     def __str__(self):
         return self.name_ru
 
-    def get_name(self):
-        return self.name_ru
+    def get_name(self, language="ru"):
+        """Get name in specified language"""
+        return getattr(self, f"name_{language}", self.name_ru) or self.name_ru
 
-    def get_description(self):
-        return ""  # No description field in this model
+    def get_description(self, language="ru"):
+        """Get description in specified language"""
+        return (
+            getattr(self, f"description_{language}", self.description_ru)
+            or self.description_ru
+        )
 
 
 class NTSCommitteeSection(models.Model):
@@ -693,11 +707,25 @@ class NTSCommitteeSection(models.Model):
     def __str__(self):
         return self.title_ru
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg or ""
+    def get_title(self, language="ru"):
+        """Get title in specified language"""
+        return (
+            getattr(self, f"title_{language}", self.title_ru)
+            or self.title_ru
+            or self.title_en
+            or self.title_kg
+            or ""
+        )
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg or ""
+    def get_description(self, language="ru"):
+        """Get description in specified language"""
+        return (
+            getattr(self, f"description_{language}", self.description_ru)
+            or self.description_ru
+            or self.description_en
+            or self.description_kg
+            or ""
+        )
 
 
 class NTSCommitteeMember(models.Model):
@@ -736,16 +764,22 @@ class NTSCommitteeMember(models.Model):
     def __str__(self):
         return self.full_name_ru
 
-    def get_name(self):
-        return self.full_name_ru
+    def get_name(self, language="ru"):
+        """Get full name in specified language"""
+        return (
+            getattr(self, f"full_name_{language}", self.full_name_ru)
+            or self.full_name_ru
+        )
 
-    def get_position(self):
+    def get_position(self, language="ru"):
+        """Get position from role in specified language"""
         if self.role:
-            return self.role.name_ru
+            return self.role.get_name(language)
         return ""
 
-    def get_bio(self):
-        return self.bio_ru
+    def get_bio(self, language="ru"):
+        """Get bio in specified language"""
+        return getattr(self, f"bio_{language}", self.bio_ru) or self.bio_ru
 
 
 # --- Scopus related models (previously in scopus.py) ---
@@ -766,6 +800,10 @@ class ScopusDocumentType(models.Model):
     def __str__(self):
         return self.label_ru
 
+    def get_label(self, language="ru"):
+        """Get label in specified language"""
+        return getattr(self, f"label_{language}", self.label_ru)
+
 
 class ScopusJournal(models.Model):
     title_ru = models.CharField("Title (Russian)", max_length=500, default="")
@@ -785,6 +823,10 @@ class ScopusJournal(models.Model):
     def __str__(self):
         return self.title_ru
 
+    def get_title(self, language="ru"):
+        """Get title in specified language"""
+        return getattr(self, f"title_{language}", self.title_ru)
+
 
 class ScopusPublisher(models.Model):
     name_ru = models.CharField("Name (Russian)", max_length=255, default="")
@@ -798,6 +840,10 @@ class ScopusPublisher(models.Model):
 
     def __str__(self):
         return self.name_ru
+
+    def get_name(self, language="ru"):
+        """Get name in specified language"""
+        return getattr(self, f"name_{language}", self.name_ru)
 
 
 class ScopusAuthor(models.Model):
@@ -821,6 +867,12 @@ class ScopusAuthor(models.Model):
 
     def __str__(self):
         return f"{self.family_name_ru} {self.given_name_ru}".strip()
+
+    def get_name(self, language="ru"):
+        """Get full name in specified language"""
+        given = getattr(self, f"given_name_{language}", self.given_name_ru) or ""
+        family = getattr(self, f"family_name_{language}", self.family_name_ru) or ""
+        return f"{family} {given}".strip()
 
 
 class ScopusPublication(models.Model):
@@ -954,8 +1006,15 @@ class WebOfScienceTimeRange(models.Model):
     def __str__(self):
         return self.title_ru
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg or ""
+    def get_title(self, language="ru"):
+        """Get title in specified language"""
+        return (
+            getattr(self, f"title_{language}", self.title_ru)
+            or self.title_ru
+            or self.title_en
+            or self.title_kg
+            or ""
+        )
 
 
 class WebOfScienceMetric(models.Model):
@@ -994,11 +1053,25 @@ class WebOfScienceMetric(models.Model):
     def __str__(self):
         return f"{self.label_ru}: {self.value} ({self.time_range})"
 
-    def get_label(self):
-        return self.label_ru or self.label_en or self.label_kg or ""
+    def get_label(self, language="ru"):
+        """Get label in specified language"""
+        return (
+            getattr(self, f"label_{language}", self.label_ru)
+            or self.label_ru
+            or self.label_en
+            or self.label_kg
+            or ""
+        )
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg or ""
+    def get_description(self, language="ru"):
+        """Get description in specified language"""
+        return (
+            getattr(self, f"description_{language}", self.description_ru)
+            or self.description_ru
+            or self.description_en
+            or self.description_kg
+            or ""
+        )
 
 
 class WebOfScienceCategory(models.Model):
@@ -1021,8 +1094,15 @@ class WebOfScienceCategory(models.Model):
     def __str__(self):
         return f"{self.name_ru}: {self.count} ({self.time_range})"
 
-    def get_name(self):
-        return self.name_ru or self.name_en or self.name_kg or ""
+    def get_name(self, language="ru"):
+        """Get name in specified language"""
+        return (
+            getattr(self, f"name_{language}", self.name_ru)
+            or self.name_ru
+            or self.name_en
+            or self.name_kg
+            or ""
+        )
 
 
 class WebOfScienceCollaboration(models.Model):
@@ -1049,8 +1129,15 @@ class WebOfScienceCollaboration(models.Model):
             f"{self.country_ru}: {self.publications} publications ({self.time_range})"
         )
 
-    def get_country(self):
-        return self.country_ru or self.country_en or self.country_kg or ""
+    def get_country(self, language="ru"):
+        """Get country name in specified language"""
+        return (
+            getattr(self, f"country_{language}", self.country_ru)
+            or self.country_ru
+            or self.country_en
+            or self.country_kg
+            or ""
+        )
 
 
 class WebOfScienceJournalQuartile(models.Model):
@@ -1112,11 +1199,25 @@ class WebOfScienceAdditionalMetric(models.Model):
     def __str__(self):
         return f"{self.title_ru}: {self.value} ({self.time_range})"
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg or ""
+    def get_title(self, language="ru"):
+        """Get title in specified language"""
+        return (
+            getattr(self, f"title_{language}", self.title_ru)
+            or self.title_ru
+            or self.title_en
+            or self.title_kg
+            or ""
+        )
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg or ""
+    def get_description(self, language="ru"):
+        """Get description in specified language"""
+        return (
+            getattr(self, f"description_{language}", self.description_ru)
+            or self.description_ru
+            or self.description_en
+            or self.description_kg
+            or ""
+        )
 
 
 class WebOfScienceSection(models.Model):
@@ -1141,8 +1242,15 @@ class WebOfScienceSection(models.Model):
     def __str__(self):
         return f"{self.section_key}: {self.text_ru[:50]}"
 
-    def get_text(self):
-        return self.text_ru or self.text_en or self.text_kg or ""
+    def get_text(self, language="ru"):
+        """Get text in specified language"""
+        return (
+            getattr(self, f"text_{language}", self.text_ru)
+            or self.text_ru
+            or self.text_en
+            or self.text_kg
+            or ""
+        )
 
 
 # --- Student Scientific Society models ---
@@ -1230,21 +1338,36 @@ class StudentScientificSocietyInfo(models.Model):
     def __str__(self):
         return self.title_ru
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg or ""
+    def get_title(self, language="ru"):
+        return getattr(self, f"title_{language}", self.title_ru)
 
-    def get_subtitle(self):
-        return self.subtitle_ru or self.subtitle_en or self.subtitle_kg or ""
+    def get_subtitle(self, language="ru"):
+        return getattr(self, f"subtitle_{language}", self.subtitle_ru)
 
-    def get_about_title(self):
-        return self.about_title_ru or self.about_title_en or self.about_title_kg or ""
+    def get_about_title(self, language="ru"):
+        return getattr(self, f"about_title_{language}", self.about_title_ru)
 
-    def get_about_description(self):
-        return (
-            self.about_description_ru
-            or self.about_description_en
-            or self.about_description_kg
-            or ""
+    def get_about_description(self, language="ru"):
+        return getattr(self, f"about_description_{language}", self.about_description_ru)
+
+    def get_projects_title(self, language="ru"):
+        return getattr(self, f"projects_title_{language}", self.projects_title_ru)
+
+    def get_events_title(self, language="ru"):
+        return getattr(self, f"events_title_{language}", self.events_title_ru)
+
+    def get_join_title(self, language="ru"):
+        return getattr(self, f"join_title_{language}", self.join_title_ru)
+
+    def get_leadership_title(self, language="ru"):
+        return getattr(self, f"leadership_title_{language}", self.leadership_title_ru)
+
+    def get_contacts_title(self, language="ru"):
+        return getattr(self, f"contacts_title_{language}", self.contacts_title_ru)
+
+    def get_upcoming_events_title(self, language="ru"):
+        return getattr(
+            self, f"upcoming_events_title_{language}", self.upcoming_events_title_ru
         )
 
 
@@ -1265,8 +1388,8 @@ class StudentScientificSocietyStat(models.Model):
     def __str__(self):
         return f"{self.label_ru}: {self.value}"
 
-    def get_label(self):
-        return self.label_ru or self.label_en or self.label_kg or ""
+    def get_label(self, language="ru"):
+        return getattr(self, f"label_{language}", self.label_ru)
 
 
 class StudentScientificSocietyFeature(models.Model):
@@ -1293,11 +1416,11 @@ class StudentScientificSocietyFeature(models.Model):
     def __str__(self):
         return self.title_ru
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg or ""
+    def get_title(self, language="ru"):
+        return getattr(self, f"title_{language}", self.title_ru)
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg or ""
+    def get_description(self, language="ru"):
+        return getattr(self, f"description_{language}", self.description_ru)
 
 
 class StudentScientificSocietyProject(models.Model):
@@ -1330,19 +1453,14 @@ class StudentScientificSocietyProject(models.Model):
     def __str__(self):
         return self.name_ru
 
-    def get_name(self):
-        return self.name_ru or self.name_en or self.name_kg or ""
+    def get_name(self, language="ru"):
+        return getattr(self, f"name_{language}", self.name_ru)
 
-    def get_short_description(self):
-        return (
-            self.short_description_ru
-            or self.short_description_en
-            or self.short_description_kg
-            or ""
-        )
+    def get_short_description(self, language="ru"):
+        return getattr(self, f"short_description_{language}", self.short_description_ru)
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg or ""
+    def get_description(self, language="ru"):
+        return getattr(self, f"description_{language}", self.description_ru)
 
 
 class StudentScientificSocietyProjectTag(models.Model):
@@ -1362,8 +1480,8 @@ class StudentScientificSocietyProjectTag(models.Model):
     def __str__(self):
         return f"{self.name_ru} - {self.project}"
 
-    def get_name(self):
-        return self.name_ru or self.name_en or self.name_kg or ""
+    def get_name(self, language="ru"):
+        return getattr(self, f"name_{language}", self.name_ru)
 
 
 class StudentScientificSocietyEvent(models.Model):
@@ -1406,11 +1524,11 @@ class StudentScientificSocietyEvent(models.Model):
     def __str__(self):
         return self.name_ru
 
-    def get_name(self):
-        return self.name_ru or self.name_en or self.name_kg or ""
+    def get_name(self, language="ru"):
+        return getattr(self, f"name_{language}", self.name_ru)
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg or ""
+    def get_description(self, language="ru"):
+        return getattr(self, f"description_{language}", self.description_ru)
 
     def days_left(self):
         from django.utils import timezone
@@ -1442,11 +1560,11 @@ class StudentScientificSocietyJoinStep(models.Model):
     def __str__(self):
         return f"Step {self.step}: {self.title_ru}"
 
-    def get_title(self):
-        return self.title_ru or self.title_en or self.title_kg or ""
+    def get_title(self, language="ru"):
+        return getattr(self, f"title_{language}", self.title_ru)
 
-    def get_description(self):
-        return self.description_ru or self.description_en or self.description_kg or ""
+    def get_description(self, language="ru"):
+        return getattr(self, f"description_{language}", self.description_ru)
 
 
 class StudentScientificSocietyLeader(models.Model):
@@ -1478,14 +1596,14 @@ class StudentScientificSocietyLeader(models.Model):
     def __str__(self):
         return self.name_ru
 
-    def get_name(self):
-        return self.name_ru or self.name_en or self.name_kg or ""
+    def get_name(self, language="ru"):
+        return getattr(self, f"name_{language}", self.name_ru)
 
-    def get_position(self):
-        return self.position_ru or self.position_en or self.position_kg or ""
+    def get_position(self, language="ru"):
+        return getattr(self, f"position_{language}", self.position_ru)
 
-    def get_department(self):
-        return self.department_ru or self.department_en or self.department_kg or ""
+    def get_department(self, language="ru"):
+        return getattr(self, f"department_{language}", self.department_ru)
 
 
 class StudentScientificSocietyContact(models.Model):
@@ -1509,5 +1627,5 @@ class StudentScientificSocietyContact(models.Model):
     def __str__(self):
         return f"{self.label_ru}: {self.value}"
 
-    def get_label(self):
-        return self.label_ru or self.label_en or self.label_kg or ""
+    def get_label(self, language="ru"):
+        return getattr(self, f"label_{language}", self.label_ru)

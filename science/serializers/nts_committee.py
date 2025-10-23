@@ -11,19 +11,15 @@ from ..models import (
 
 class NTSCommitteeRoleSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
 
     class Meta:
         model = NTSCommitteeRole
-        fields = ["id", "name", "description"]
+        fields = ["id", "name"]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj):
-        return obj.get_name()
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj):
-        return obj.get_description()
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
 
 
 class NTSResearchDirectionSerializer(serializers.ModelSerializer):
@@ -36,20 +32,20 @@ class NTSResearchDirectionSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj):
-        return obj.get_name()
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj):
-        return obj.get_description()
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
 
 
 class NTSCommitteeMemberSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     position = serializers.SerializerMethodField()
     bio = serializers.SerializerMethodField()
-    role = NTSCommitteeRoleSerializer(allow_null=True, read_only=True)
-    # Убираем неиспользуемое поле research_direction
-    # research_direction = NTSResearchDirectionSerializer()
+    role = serializers.SerializerMethodField()
 
     class Meta:
         model = NTSCommitteeMember
@@ -62,22 +58,31 @@ class NTSCommitteeMemberSerializer(serializers.ModelSerializer):
             "phone",
             "photo",
             "role",
-            # "research_direction", # Убираем поле, которого нет в модели
             "is_active",
             "order",
         ]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj):
-        return obj.get_name()
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_position(self, obj):
-        return obj.get_position()
+        language = self.context.get("language", "ru")
+        return obj.get_position(language)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_bio(self, obj):
-        return obj.get_bio()
+        language = self.context.get("language", "ru")
+        return obj.get_bio(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_role(self, obj):
+        language = self.context.get("language", "ru")
+        if obj.role:
+            return obj.role.get_name(language)
+        return ""
 
 
 class NTSCommitteeSectionSerializer(serializers.ModelSerializer):
@@ -90,8 +95,10 @@ class NTSCommitteeSectionSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj):
-        return obj.get_title()
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj):
-        return obj.get_description()
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)

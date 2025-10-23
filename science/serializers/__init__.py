@@ -1,15 +1,15 @@
-from .science import (
-    ScientificDirectionSerializer,
-    DissertationSpecializationSerializer,
-    DissertationSecretarySerializer,
-    DissertationCouncilSerializer,
-    DissertationCouncilDocumentsSerializer,
-    DissertationCouncilAdminStaffSerializer,
-    DissertationDefenseSerializer,
-    ConferenceNoticeSerializer,
-    VestnikSerializer,
-    VestnikIssueSerializer,
-)
+# from .science import (
+#     ScientificDirectionSerializer,
+#     DissertationSpecializationSerializer,
+#     DissertationSecretarySerializer,
+#     DissertationCouncilSerializer,
+#     DissertationCouncilDocumentsSerializer,
+#     DissertationCouncilAdminStaffSerializer,
+#     DissertationDefenseSerializer,
+#     ConferenceNoticeSerializer,
+#     VestnikSerializer,
+#     VestnikIssueSerializer,
+# )
 from .nts_committee import (
     NTSCommitteeRoleSerializer,
     NTSResearchDirectionSerializer,
@@ -29,14 +29,14 @@ from .scopus_extra import (
     ScopusStatsSerializer,
     ScopusSectionSerializer,
 )
-from .publication import PublicationSerializer
-from .vestnik_stats import (
-    PublicationStatsSerializer,
-    VestnikArticleSerializer,
-    VestnikStatsSerializer,
-    PublicationsPageSerializer,
-    VestnikPageSerializer,
-)
+# from .publication import PublicationSerializer
+# from .vestnik_stats import (
+#     PublicationStatsSerializer,
+#     VestnikArticleSerializer,
+#     VestnikStatsSerializer,
+#     PublicationsPageSerializer,
+#     VestnikPageSerializer,
+# )
 from .webofscience import (
     WebOfScienceTimeRangeSerializer,
     WebOfScienceMetricSerializer,
