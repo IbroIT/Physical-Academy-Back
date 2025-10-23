@@ -4,33 +4,74 @@ from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from .models import (
-    CollegeAdmissionSteps, CollegePrograms, CollegeSoonEvents, CollegeStatistics, DoctorPrograms, DoctorSoonEvents, DoctorStatistics, QuotaType, QuotaRequirement, QuotaBenefit, 
-    QuotaStats, AdditionalSupport, ProcessStep,
-    MasterDocuments, MasterPrograms, MasterMainDate, MasterRequirements,
-    AspirantDocuments, AspirantPrograms, AspirantMainDate, AspirantRequirements,
-    DoctorAdmissionSteps, BachelorProgram
-
+    CollegeAdmissionSteps,
+    CollegePrograms,
+    CollegeSoonEvents,
+    CollegeStatistics,
+    DoctorPrograms,
+    DoctorSoonEvents,
+    DoctorStatistics,
+    QuotaType,
+    QuotaRequirement,
+    QuotaBenefit,
+    QuotaStats,
+    AdditionalSupport,
+    ProcessStep,
+    MasterDocuments,
+    MasterPrograms,
+    MasterMainDate,
+    MasterRequirements,
+    AspirantDocuments,
+    AspirantPrograms,
+    AspirantMainDate,
+    AspirantRequirements,
+    DoctorAdmissionSteps,
+    BachelorProgram,
 )
 from .serializers import (
-    CollegeAdmissionStepsSerializer, CollegeProgramsFullSerializer, CollegeProgramsShortSerializer, CollegeSoonEventsSerializer, CollegeStatisticsSerializer, DoctorProgramsFullSerializer, DoctorProgramsShortSerializer, DoctorSoonEventsSerializer, DoctorStatisticsSerializer, DoctorStatisticsSerializer, QuotaTypeSerializer, QuotaRequirementSerializer, QuotaBenefitSerializer,
-    QuotaStatsSerializer, AdditionalSupportSerializer, ProcessStepSerializer,
-    BachelorQuotasDataSerializer, MasterDocumentsSerializer, MasterProgramsSerializer, 
-    MasterMainDateSerializer, MasterRequirementsSerializer,
-    AspirantDocumentsSerializer, AspirantProgramsSerializer, AspirantMainDateSerializer, 
-    AspirantRequirementsSerializer, DoctorAdmissionStepsSerializer, BachelorProgramsSerializer
+    CollegeAdmissionStepsSerializer,
+    CollegeProgramsFullSerializer,
+    CollegeProgramsShortSerializer,
+    CollegeSoonEventsSerializer,
+    CollegeStatisticsSerializer,
+    DoctorProgramsFullSerializer,
+    DoctorProgramsShortSerializer,
+    DoctorSoonEventsSerializer,
+    DoctorStatisticsSerializer,
+    DoctorStatisticsSerializer,
+    QuotaTypeSerializer,
+    QuotaRequirementSerializer,
+    QuotaBenefitSerializer,
+    QuotaStatsSerializer,
+    AdditionalSupportSerializer,
+    ProcessStepSerializer,
+    BachelorQuotasDataSerializer,
+    MasterDocumentsSerializer,
+    MasterProgramsSerializer,
+    MasterMainDateSerializer,
+    MasterRequirementsSerializer,
+    AspirantDocumentsSerializer,
+    AspirantProgramsSerializer,
+    AspirantMainDateSerializer,
+    AspirantRequirementsSerializer,
+    DoctorAdmissionStepsSerializer,
+    BachelorProgramsSerializer,
 )
+
 
 class BachelorProgramViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet для программ бакалавриата
     """
-    serializer_class = BachelorQuotasDataSerializer  # You'll need to create this serializer
+
+    serializer_class = BachelorProgramsSerializer
+    queryset = BachelorProgram.objects.all()
 
     def get_queryset(self):
         # Check for swagger schema generation
         if getattr(self, "swagger_fake_view", False):
             return BachelorProgram.objects.none()
-        return BachelorProgram.objects.filter(is_active=True).order_by("order")
+        return BachelorProgram.objects.all()
 
     def get_serializer_context(self):
         """Передаём язык в контекст сериализатора"""
@@ -38,7 +79,8 @@ class BachelorProgramViewSet(viewsets.ReadOnlyModelViewSet):
         language = self.request.query_params.get("lang", "ru")
         context["language"] = language
         return context
-    
+
+
 class QuotaTypeViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для типов квот"""
 
@@ -125,7 +167,7 @@ class BachelorQuotasViewSet(viewsets.GenericViewSet):
         Получить все данные для страницы бакалаврских квот (по умолчанию)
 
         Параметры:
-        - lang: язык (ru, ky, en) - по умолчанию ru
+        - lang: язык (ru, kg, en) - по умолчанию ru
 
         Возвращает структуру данных:
         {
@@ -138,7 +180,7 @@ class BachelorQuotasViewSet(viewsets.GenericViewSet):
         language = request.query_params.get("lang", "ru")
 
         # Валидируем язык
-        if language not in ["ru", "ky", "en"]:
+        if language not in ["ru", "kg", "en"]:
             language = "ru"
 
         serializer = BachelorQuotasDataSerializer({}, context={"language": language})
@@ -152,7 +194,7 @@ class BachelorQuotasViewSet(viewsets.GenericViewSet):
         Получить все данные для страницы бакалаврских квот
 
         Параметры:
-        - lang: язык (ru, ky, en) - по умолчанию ru
+        - lang: язык (ru, kg, en) - по умолчанию ru
 
         Возвращает структуру данных:
         {
@@ -165,7 +207,7 @@ class BachelorQuotasViewSet(viewsets.GenericViewSet):
         language = request.query_params.get("lang", "ru")
 
         # Валидируем язык
-        if language not in ["ru", "ky", "en"]:
+        if language not in ["ru", "kg", "en"]:
             language = "ru"
 
         serializer = BachelorQuotasDataSerializer({}, context={"language": language})
@@ -177,7 +219,7 @@ class BachelorQuotasViewSet(viewsets.GenericViewSet):
         """Получить только данные о квотах"""
         language = request.query_params.get("lang", "ru")
 
-        if language not in ["ru", "ky", "en"]:
+        if language not in ["ru", "kg", "en"]:
             language = "ru"
 
         quotas = (
@@ -197,7 +239,7 @@ class BachelorQuotasViewSet(viewsets.GenericViewSet):
         """Получить только статистические данные"""
         language = request.query_params.get("lang", "ru")
 
-        if language not in ["ru", "ky", "en"]:
+        if language not in ["ru", "kg", "en"]:
             language = "ru"
 
         stats = QuotaStats.objects.filter(is_active=True).order_by("order")
@@ -232,6 +274,7 @@ class MasterDocumentsViewSet(viewsets.ReadOnlyModelViewSet):
 
 class MasterProgramsViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для программ магистратуры"""
+
     queryset = MasterPrograms.objects.filter(is_active=True)
     serializer_class = MasterProgramsSerializer
 
@@ -589,7 +632,8 @@ class CollegeStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
         language = self.request.query_params.get("lang", "ru")
         context["language"] = language
         return context
-    
+
+
 class BachelorProgramViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для программ бакалавриата"""
 
