@@ -26,15 +26,11 @@ class MultiLanguageSerializerMixin:
         """Get language from request context"""
         request = self.context.get("request")
         if request:
-            # Check query parameter first
+            # Only use explicit lang parameter, default to Russian
             language = request.GET.get("lang", "ru")
-            if not request.GET.get("lang"):
-                # Check Accept-Language header
-                accept_language = request.META.get("HTTP_ACCEPT_LANGUAGE", "ru")
-                if "en" in accept_language.lower():
-                    language = "en"
-                elif "ky" in accept_language.lower() or "kg" in accept_language.lower():
-                    language = "kg"
+            # Normalize language code (ky -> kg for consistency)
+            if language == "ky":
+                language = "kg"
             return language
         return "ru"
 
@@ -44,11 +40,15 @@ class MultiLanguageSerializerMixin:
 
         if language == "kg":
             translated_value = getattr(obj, f"{field_name}_kg", None)
-            if translated_value:
+            if (
+                translated_value and translated_value.strip()
+            ):  # Check for non-empty string
                 return translated_value
         elif language == "en":
             translated_value = getattr(obj, f"{field_name}_en", None)
-            if translated_value:
+            if (
+                translated_value and translated_value.strip()
+            ):  # Check for non-empty string
                 return translated_value
 
         # Fallback to Russian

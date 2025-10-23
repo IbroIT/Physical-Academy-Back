@@ -1,10 +1,31 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import AcademyInfrastructure, Mission, aboutStatistics, AboutPhotos, HistoryStep, ImportantDates, Accreditation, AcademyAchievements, AcademyStatistics
+from .models import (
+    AcademyInfrastructure,
+    Mission,
+    aboutStatistics,
+    AboutPhotos,
+    HistoryStep,
+    ImportantDates,
+    Accreditation,
+    AcademyAchievements,
+    AcademyStatistics,
+)
 
-from .serializers import AboutPhotosSerializer, AboutStatisticsSerializer, HistoryStepSerializer, ImportantDatesSerializer, MissionSerializer, AccreditationSerializer, AcademyAchievementsSerializer, AcademyStatisticsSerializer, AcademyInfrastructureSerializer
+from .serializers import (
+    AboutPhotosSerializer,
+    AboutStatisticsSerializer,
+    HistoryStepSerializer,
+    ImportantDatesSerializer,
+    MissionSerializer,
+    AccreditationSerializer,
+    AcademyAchievementsSerializer,
+    AcademyStatisticsSerializer,
+    AcademyInfrastructureSerializer,
+)
 
 # Create your views here.
+
 
 class AboutStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = aboutStatistics.objects.all()
@@ -12,8 +33,9 @@ class AboutStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.headers.get('Accept-Language', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
+
 
 class AboutPhotosViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AboutPhotos.objects.all()
@@ -21,27 +43,29 @@ class AboutPhotosViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.headers.get('Accept-Language', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
-    
+
 
 class HistoryStepViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = HistoryStep.objects.all().order_by('year')
+    queryset = HistoryStep.objects.all().order_by("year")
     serializer_class = HistoryStepSerializer
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.headers.get('Accept-Language', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
 
+
 class ImportantDatesViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ImportantDates.objects.all().order_by('year')
+    queryset = ImportantDates.objects.all().order_by("year")
     serializer_class = ImportantDatesSerializer
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.headers.get('Accept-Language', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
+
 
 class MissionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Mission.objects.all()
@@ -49,17 +73,19 @@ class MissionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.query_params.get('lang', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
-    
+
+
 class AccreditationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Accreditation.objects.all()
     serializer_class = AccreditationSerializer
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.query_params.get('lang', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
+
 
 class AcademyStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AcademyStatistics.objects.all()
@@ -67,8 +93,9 @@ class AcademyStatisticsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.query_params.get('lang', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
+
 
 class AcademyAchievementsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AcademyAchievements.objects.all()
@@ -76,8 +103,9 @@ class AcademyAchievementsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.query_params.get('lang', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
+
 
 class AcademyInfrastructureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AcademyInfrastructure.objects.all()
@@ -85,6 +113,5 @@ class AcademyInfrastructureViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['language'] = self.request.query_params.get('lang', 'ru')
+        context["language"] = self.request.query_params.get("lang", "ru")
         return context
-
