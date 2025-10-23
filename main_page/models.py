@@ -5,7 +5,7 @@ class aboutStatistics(models.Model):
     titleInt = models.CharField(max_length=200, verbose_name='цифры типа 15+')
     description_ru = models.CharField(max_length=500, verbose_name='Описание на русском')
     description_en = models.CharField(max_length=500, verbose_name='Описание на английском')
-    description_ky = models.CharField(max_length=500, verbose_name='Описание на кыргызском')
+    description_kg = models.CharField(max_length=500, verbose_name='Описание на кыргызском')
     emoji = models.CharField(max_length=50, verbose_name='эмодзи')
 
     class Meta:
@@ -21,7 +21,7 @@ class AboutPhotos(models.Model):
     photo = models.ImageField(upload_to='about_photos/', verbose_name='Фото для секции о нас')
     description_ru = models.CharField(max_length=500, verbose_name='Описание на русском', blank=True)
     description_en = models.CharField(max_length=500, verbose_name='Описание на английском', blank=True)
-    description_ky = models.CharField(max_length=500, verbose_name='Описание на кыргызском', blank=True)
+    description_kg = models.CharField(max_length=500, verbose_name='Описание на кыргызском', blank=True)
 
     class Meta:
         verbose_name = 'Фото для секции о нас'
@@ -38,10 +38,10 @@ class HistoryStep(models.Model):
     year = models.PositiveBigIntegerField(verbose_name='Год')
     title_ru = models.CharField(max_length=200, verbose_name='Заголовок шага истории(русский)')
     title_en = models.CharField(max_length=200, verbose_name='Заголовок шага истории(английский)')
-    title_ky = models.CharField(max_length=200, verbose_name='Заголовок шага истории(киргизский)')
+    title_kg = models.CharField(max_length=200, verbose_name='Заголовок шага истории(киргизский)')
     description_ru = models.TextField(verbose_name='Описание на русском')
     description_en = models.TextField(verbose_name='Описание на английском')
-    description_ky = models.TextField(verbose_name='Описание на кыргызском')
+    description_kg = models.TextField(verbose_name='Описание на кыргызском')
 
     buildings = models.PositiveBigIntegerField(verbose_name='количество корпусов')
     students = models.PositiveBigIntegerField(verbose_name='количество студентов')
@@ -49,7 +49,7 @@ class HistoryStep(models.Model):
 
     achievements_ru = models.JSONField(verbose_name='Достижения на русском', blank=True)
     achievements_en = models.JSONField(verbose_name='Достижения на английском', blank=True)
-    achievements_ky = models.JSONField(verbose_name='Достижения на кыргызском', blank=True)
+    achievements_kg = models.JSONField(verbose_name='Достижения на кыргызском', blank=True)
 
     class Meta:
         verbose_name = 'Шаг истории'
@@ -72,7 +72,7 @@ class ImportantDates(models.Model):
         titleInt = models.CharField(max_length=200, verbose_name='Заголовок важной даты типа 15+')
         description_ru = models.TextField(verbose_name='Описание на русском')
         description_en = models.TextField(verbose_name='Описание на английском')
-        description_ky = models.TextField(verbose_name='Описание на кыргызском')
+        description_kg = models.TextField(verbose_name='Описание на кыргызском')
 
         class Meta:
             verbose_name = 'Важная веха'
@@ -88,7 +88,7 @@ class ImportantDates(models.Model):
 class MissionCategory(models.Model):
     name_ru = models.CharField(max_length=200, verbose_name='категории name(русский)')
     name_en = models.CharField(max_length=200, verbose_name='категории name(английский)')
-    name_ky = models.CharField(max_length=200, verbose_name='категории name(киргизский)')
+    name_kg = models.CharField(max_length=200, verbose_name='категории name(киргизский)')
 
     class Meta:
         verbose_name = 'Категория миссии'
@@ -103,10 +103,10 @@ class Mission(models.Model):
     category = models.ForeignKey(MissionCategory, on_delete=models.CASCADE, related_name='missions', verbose_name='Категория миссии')
     title_ru = models.CharField(max_length=200, verbose_name='Заголовок миссии(русский)')
     title_en = models.CharField(max_length=200, verbose_name='Заголовок миссии(английский)')
-    title_ky = models.CharField(max_length=200, verbose_name='Заголовок миссии(киргизский)')
+    title_kg = models.CharField(max_length=200, verbose_name='Заголовок миссии(киргизский)')
     description_ru = models.TextField(verbose_name='Описание на русском')
     description_en = models.TextField(verbose_name='Описание на английском')
-    description_ky = models.TextField(verbose_name='Описание на кыргызском')
+    description_kg = models.TextField(verbose_name='Описание на кыргызском')
 
     class Meta:
         verbose_name = 'Миссия'
@@ -126,7 +126,7 @@ class AccreditationType(models.Model):
   
     name_ru = models.CharField(max_length=200, verbose_name='Название (русский)')
     name_en = models.CharField(max_length=200, verbose_name='Название (английский)')
-    name_ky = models.CharField(max_length=200, verbose_name='Название (киргизский)')
+    name_kg = models.CharField(max_length=200, verbose_name='Название (киргизский)')
 
     class Meta:
         verbose_name = 'Тип аккредитации'
@@ -143,17 +143,17 @@ class Accreditation(models.Model):
     # Основная информация — три языка для текстов
     organization_ru = models.CharField(max_length=255)
     organization_en = models.CharField(max_length=255)
-    organization_ky = models.CharField(max_length=255)
+    organization_kg = models.CharField(max_length=255)
 
     logo = models.ImageField(upload_to='accreditation_logos/', blank=True, null=True)
 
     validity_ru = models.CharField(max_length=255)
     validity_en = models.CharField(max_length=255)
-    validity_ky = models.CharField(max_length=255)
+    validity_kg = models.CharField(max_length=255)
 
     description_ru = models.TextField()
     description_en = models.TextField()
-    description_ky = models.TextField()
+    description_kg = models.TextField()
 
     # Ссылка на тип аккредитации (модель с переводами)
     accreditation_type = models.ForeignKey(
@@ -192,10 +192,10 @@ class AcademyStatistics(models.Model):
     titleInt = models.CharField(max_length=100, verbose_name='заголовок-цифры типа 15+')
     title_ru = models.CharField(max_length=250, verbose_name='заголовок на русском')
     title_en = models.CharField(max_length=250, verbose_name='заголовок на английском')
-    title_ky = models.CharField(max_length=250, verbose_name='заголовок на киргизском')
+    title_kg = models.CharField(max_length=250, verbose_name='заголовок на киргизском')
     description_ru = models.TextField(verbose_name='описание на русском')
     description_en = models.TextField(verbose_name='описание на английском')
-    description_ky = models.TextField(verbose_name='описание на киргизском')
+    description_kg = models.TextField(verbose_name='описание на киргизском')
     emoji = models.CharField(max_length=5, verbose_name='эмодзи', )
 
     class Meta:
@@ -211,10 +211,10 @@ class AcademyAchievements(models.Model):
     year = models.PositiveBigIntegerField(verbose_name='год ')
     title_ru = models.CharField(max_length=500, verbose_name='заголовок на русском')
     title_en = models.CharField(max_length=500, verbose_name='заголовок на английском')
-    title_ky = models.CharField(max_length=500, verbose_name='заголовок на киргизском')
+    title_kg = models.CharField(max_length=500, verbose_name='заголовок на киргизском')
     description_ru = models.TextField(verbose_name='описание на русском')
     description_en = models.TextField(verbose_name='описание на английском')
-    description_ky = models.TextField(verbose_name='описание на киргизском')
+    description_kg = models.TextField(verbose_name='описание на киргизском')
 
     class Meta:
         verbose_name = 'Достижение'
@@ -233,7 +233,7 @@ class AcademyInfrastructure(models.Model):
 
     description_ru = models.CharField(max_length=250, verbose_name='описание на русском')
     description_en = models.CharField(max_length=250, verbose_name='описание на английском')
-    description_ky = models.CharField(max_length=250, verbose_name='описание на киргизском')
+    description_kg = models.CharField(max_length=250, verbose_name='описание на киргизском')
 
     class Meta:
         verbose_name = 'Инфраструктура'
