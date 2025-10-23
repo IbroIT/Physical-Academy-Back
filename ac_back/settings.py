@@ -50,6 +50,13 @@ INSTALLED_APPS = [
     'main_page',
     'education',
     'science', 
+    'banner',
+    'news',
+    'announcements',
+    'events',
+    'quotes',
+    'facts',
+    
 ]
 
 MIDDLEWARE = [
