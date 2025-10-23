@@ -1,14 +1,14 @@
-from .publication import (
-    PublicationsViewSet,
-    PublicationStatsViewSet,
-    PublicationsPageView,
-)
-from .vestnik import (
-    VestnikIssuesViewSet,
-    VestnikArticlesViewSet,
-    VestnikStatsViewSet,
-    VestnikPageView,
-)
+# from .publication import (
+#     PublicationsViewSet,
+#     PublicationStatsViewSet,
+#     PublicationsPageView,
+# )
+# from .vestnik import (
+#     VestnikIssuesViewSet,
+#     VestnikArticlesViewSet,
+#     VestnikStatsViewSet,
+#     VestnikPageView,
+# )
 from .nts_committee import (
     NTSCommitteeRoleViewSet,
     NTSResearchDirectionViewSet,

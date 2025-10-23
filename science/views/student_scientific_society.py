@@ -32,12 +32,22 @@ class StudentScientificSocietyInfoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = StudentScientificSocietyInfo.objects.all()
     serializer_class = StudentScientificSocietyInfoSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
+
 
 class StudentScientificSocietyStatViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoint for Student Scientific Society statistics."""
 
     queryset = StudentScientificSocietyStat.objects.all().order_by("order")
     serializer_class = StudentScientificSocietyStatSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
 
 
 class StudentScientificSocietyFeatureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -46,12 +56,22 @@ class StudentScientificSocietyFeatureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = StudentScientificSocietyFeature.objects.all().order_by("order")
     serializer_class = StudentScientificSocietyFeatureSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
+
 
 class StudentScientificSocietyProjectViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoint for Student Scientific Society projects."""
 
     queryset = StudentScientificSocietyProject.objects.all().order_by("order")
     serializer_class = StudentScientificSocietyProjectSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
 
 
 class StudentScientificSocietyEventViewSet(viewsets.ReadOnlyModelViewSet):
@@ -69,12 +89,22 @@ class StudentScientificSocietyEventViewSet(viewsets.ReadOnlyModelViewSet):
 
         return queryset
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
+
 
 class StudentScientificSocietyJoinStepViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoint for Student Scientific Society join steps."""
 
     queryset = StudentScientificSocietyJoinStep.objects.all().order_by("order", "step")
     serializer_class = StudentScientificSocietyJoinStepSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
 
 
 class StudentScientificSocietyLeaderViewSet(viewsets.ReadOnlyModelViewSet):
@@ -83,6 +113,11 @@ class StudentScientificSocietyLeaderViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = StudentScientificSocietyLeader.objects.all().order_by("order")
     serializer_class = StudentScientificSocietyLeaderSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
+
 
 class StudentScientificSocietyContactViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoint for Student Scientific Society contacts."""
@@ -90,11 +125,21 @@ class StudentScientificSocietyContactViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = StudentScientificSocietyContact.objects.all().order_by("order")
     serializer_class = StudentScientificSocietyContactSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
+
 
 class StudentScientificSocietyPageView(generics.RetrieveAPIView):
     """API endpoint for the complete Student Scientific Society page."""
 
     serializer_class = StudentScientificSocietyPageSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["language"] = self.request.query_params.get("lang", "ru")
+        return context
 
     def get_object(self):
         # Get or create the info object (should only be one)
