@@ -111,6 +111,31 @@ class InstructionsPageDataSerializer(serializers.Serializer):
 
         return documents_data
 
+    def get_categories(self, obj):
+        """Return localized categories for frontend filters."""
+        language = self.context.get("language", "en")
+        categories = InstructionCategory.objects.all().order_by("order")
+        serialized = InstructionCategorySerializer(categories, many=True).data
+
+        formatted = []
+        for cat in serialized:
+            if language == "ru":
+                name = cat["name_ru"]
+            elif language == "kg":
+                name = cat["name_kg"]
+            else:
+                name = cat["name_en"]
+
+            formatted.append(
+                {
+                    "id": cat["id"],
+                    "name": name,
+                    "code": cat["code"],
+                }
+            )
+
+        return formatted
+
     def get_importantUpdates(self, obj):
         language = self.context.get("language", "en")
         updates = ImportantUpdate.objects.filter(is_active=True).order_by(
