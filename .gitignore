@@ -100,3 +100,6 @@ staticfiles/
 
 # Backup files
 *.bak
+
+__pycache__/
+*.pyc
