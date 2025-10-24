@@ -32,12 +32,14 @@ class BaseLanguageViewSet(viewsets.ModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        # Получаем язык из query параметров или заголовков
-        language = self.request.query_params.get(
-            "lang", self.request.headers.get("Accept-Language", "ru")
-        )
+        # Only use explicit ?lang= query parameter. Default to Russian.
+        language = self.request.query_params.get("lang", "ru")
 
-        # Поддерживаем только ru, en, kg
+        # Normalize old code 'ky' to 'kg'
+        if language == "ky":
+            language = "kg"
+
+        # Support only ru, en, kg
         if language not in ["ru", "en", "kg"]:
             language = "ru"
 

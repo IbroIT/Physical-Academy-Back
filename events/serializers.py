@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Event
 
 class EventSerializer(serializers.ModelSerializer):
-    # Динамические поля для текущего языка
+    # Мультиязычные поля - возвращаем все языки
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     full_description = serializers.SerializerMethodField()
@@ -37,54 +37,67 @@ class EventSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at']
 
     def get_title(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_title(language)
+        return {
+            'ru': obj.title_ru,
+            'en': obj.title_en,
+            'kg': obj.title_ky  # Используем код kg для кыргызского
+        }
 
     def get_description(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_description(language)
+        return {
+            'ru': obj.description_ru,
+            'en': obj.description_en,
+            'kg': obj.description_ky
+        }
 
     def get_full_description(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        full_desc = obj.get_full_description(language)
-        return full_desc if full_desc else obj.get_description(language)
+        return {
+            'ru': obj.full_description_ru or obj.description_ru,
+            'en': obj.full_description_en or obj.description_en,
+            'kg': obj.full_description_ky or obj.description_ky
+        }
 
     def get_location(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_location(language)
+        return {
+            'ru': obj.location_ru,
+            'en': obj.location_en,
+            'kg': obj.location_ky
+        }
 
     def get_audience(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_audience(language)
+        return {
+            'ru': obj.audience_ru,
+            'en': obj.audience_en,
+            'kg': obj.audience_ky
+        }
 
     def get_format(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_format(language)
+        return {
+            'ru': obj.format_ru,
+            'en': obj.format_en,
+            'kg': obj.format_ky
+        }
 
     def get_duration(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_duration(language)
+        return {
+            'ru': obj.duration_ru,
+            'en': obj.duration_en,
+            'kg': obj.duration_ky
+        }
 
     def get_organizer(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        
-        organizer_name = obj.get_organizer_name(language)
-        organizer_contact = obj.get_organizer_contact(language)
-        
-        if organizer_name or organizer_contact:
-            return {
-                'name': organizer_name,
-                'contact': organizer_contact
+        return {
+            'name': {
+                'ru': obj.organizer_name_ru,
+                'en': obj.organizer_name_en,
+                'kg': obj.organizer_name_ky
+            },
+            'contact': {
+                'ru': obj.organizer_contact_ru,
+                'en': obj.organizer_contact_en,
+                'kg': obj.organizer_contact_ky
             }
-        return None
+        }
 
 class EventListSerializer(serializers.ModelSerializer):
     title = serializers.SerializerMethodField()
@@ -108,16 +121,22 @@ class EventListSerializer(serializers.ModelSerializer):
         ]
 
     def get_title(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_title(language)
+        return {
+            'ru': obj.title_ru,
+            'en': obj.title_en,
+            'kg': obj.title_ky
+        }
 
     def get_description(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_description(language)
+        return {
+            'ru': obj.description_ru,
+            'en': obj.description_en,
+            'kg': obj.description_ky
+        }
 
     def get_location(self, obj):
-        request = self.context.get('request')
-        language = getattr(request, 'LANGUAGE_CODE', 'ru') if request else 'ru'
-        return obj.get_location(language)
+        return {
+            'ru': obj.location_ru,
+            'en': obj.location_en,
+            'kg': obj.location_ky
+        }

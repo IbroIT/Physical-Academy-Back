@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from .models import Event
 from .serializers import EventSerializer, EventListSerializer
 
@@ -38,22 +39,117 @@ class EventCategoryListAPIView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         categories = []
         for choice in Event.CATEGORY_CHOICES:
+            # Создаем переводы для каждого языка
+            category_name = str(choice[1])
             categories.append({
                 'id': choice[0],
-                'name_ru': str(choice[1]),
-                'name_en': choice[1],
-                'name_ky': choice[1],
+                'name': {
+                    'ru': category_name,
+                    'en': self._translate_category(choice[0], 'en'),
+                    'kg': self._translate_category(choice[0], 'kg')
+                }
             })
         return Response(categories)
+    
+    def _translate_category(self, category_id, lang):
+        """Перевод категорий на разные языки"""
+        translations = {
+            'conference': {
+                'en': 'Conference',
+                'kg': 'Конференция'
+            },
+            'seminar': {
+                'en': 'Seminar', 
+                'kg': 'Семинар'
+            },
+            'workshop': {
+                'en': 'Workshop',
+                'kg': 'Воркшоп'
+            },
+            'lecture': {
+                'en': 'Lecture',
+                'kg': 'Лекция'
+            },
+            'exhibition': {
+                'en': 'Exhibition',
+                'kg': 'Выставка'
+            },
+            'competition': {
+                'en': 'Competition',
+                'kg': 'Соревнование'
+            },
+            'festival': {
+                'en': 'Festival',
+                'kg': 'Фестиваль'
+            },
+            'sports': {
+                'en': 'Sports',
+                'kg': 'Спорт'
+            },
+            'cultural': {
+                'en': 'Cultural Event',
+                'kg': 'Маданий иш-чара'
+            },
+            'other': {
+                'en': 'Other',
+                'kg': 'Башка'
+            }
+        }
+        return translations.get(category_id, {}).get(lang, category_id)
 
 class EventDepartmentListAPIView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         departments = []
         for choice in Event.DEPARTMENT_CHOICES:
+            department_name = str(choice[1])
             departments.append({
                 'id': choice[0],
-                'name_ru': str(choice[1]),
-                'name_en': choice[1],
-                'name_ky': choice[1],
+                'name': {
+                    'ru': department_name,
+                    'en': self._translate_department(choice[0], 'en'),
+                    'kg': self._translate_department(choice[0], 'kg')
+                }
             })
         return Response(departments)
+    
+    def _translate_department(self, department_id, lang):
+        """Перевод отделов на разные языки"""
+        translations = {
+            'computer_science': {
+                'en': 'Faculty of Computer Science',
+                'kg': 'Компьютердик илимдер факультети'
+            },
+            'engineering': {
+                'en': 'Engineering Faculty',
+                'kg': 'Инженердик факультет'
+            },
+            'business': {
+                'en': 'Business Faculty', 
+                'kg': 'Бизнес факультети'
+            },
+            'medicine': {
+                'en': 'Medical Faculty',
+                'kg': 'Медицина факультети'
+            },
+            'arts': {
+                'en': 'Faculty of Arts',
+                'kg': 'Искусство факультети'
+            },
+            'science': {
+                'en': 'Science Faculty',
+                'kg': 'Илим факультети'
+            },
+            'law': {
+                'en': 'Law Faculty',
+                'kg': 'Укук факультети'
+            },
+            'international': {
+                'en': 'International Department',
+                'kg': 'Эл аралык бөлүм'
+            },
+            'student_union': {
+                'en': 'Student Union',
+                'kg': 'Студенттик союз'
+            }
+        }
+        return translations.get(department_id, {}).get(lang, department_id)

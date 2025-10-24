@@ -11,7 +11,6 @@ from drf_spectacular.views import (
 )
 
 
-
 # Создание schema_view
 schema_view = SpectacularAPIView.as_view()
 
