@@ -25,12 +25,12 @@ class QuotaType(models.Model):
 
     # Многоязычные поля для названия
     title_ru = models.CharField(max_length=200, verbose_name=_("Title (Russian)"))
-    title_ky = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
+    title_kg = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
     title_en = models.CharField(max_length=200, verbose_name=_("Title (English)"))
 
     # Многоязычные поля для описания
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     icon = models.CharField(max_length=10, verbose_name=_("Icon (emoji)"))
@@ -56,11 +56,13 @@ class QuotaType(models.Model):
 
     def get_title(self, language="ru"):
         """Получить название на указанном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class QuotaRequirement(models.Model):
@@ -75,7 +77,7 @@ class QuotaRequirement(models.Model):
 
     # Многоязычные поля для требований
     requirement_ru = models.TextField(verbose_name=_("Requirement (Russian)"))
-    requirement_ky = models.TextField(verbose_name=_("Requirement (Kyrgyz)"))
+    requirement_kg = models.TextField(verbose_name=_("Requirement (Kyrgyz)"))
     requirement_en = models.TextField(verbose_name=_("Requirement (English)"))
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
@@ -94,7 +96,8 @@ class QuotaRequirement(models.Model):
 
     def get_requirement(self, language="ru"):
         """Получить требование на указанном языке"""
-        return getattr(self, f"requirement_{language}", self.requirement_ru)
+        value = getattr(self, f"requirement_{language}", None)
+        return value if value else self.requirement_ru
 
 
 class QuotaBenefit(models.Model):
@@ -109,7 +112,7 @@ class QuotaBenefit(models.Model):
 
     # Многоязычные поля для преимуществ
     benefit_ru = models.TextField(verbose_name=_("Benefit (Russian)"))
-    benefit_ky = models.TextField(verbose_name=_("Benefit (Kyrgyz)"))
+    benefit_kg = models.TextField(verbose_name=_("Benefit (Kyrgyz)"))
     benefit_en = models.TextField(verbose_name=_("Benefit (English)"))
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
@@ -128,7 +131,8 @@ class QuotaBenefit(models.Model):
 
     def get_benefit(self, language="ru"):
         """Получить преимущество на указанном языке"""
-        return getattr(self, f"benefit_{language}", self.benefit_ru)
+        value = getattr(self, f"benefit_{language}", None)
+        return value if value else self.benefit_ru
 
 
 class QuotaStats(models.Model):
@@ -149,12 +153,12 @@ class QuotaStats(models.Model):
 
     # Многоязычные поля для подписи
     label_ru = models.CharField(max_length=200, verbose_name=_("Label (Russian)"))
-    label_ky = models.CharField(max_length=200, verbose_name=_("Label (Kyrgyz)"))
+    label_kg = models.CharField(max_length=200, verbose_name=_("Label (Kyrgyz)"))
     label_en = models.CharField(max_length=200, verbose_name=_("Label (English)"))
 
     # Многоязычные поля для описания
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
@@ -173,11 +177,13 @@ class QuotaStats(models.Model):
 
     def get_label(self, language="ru"):
         """Получить подпись на указанном языке"""
-        return getattr(self, f"label_{language}", self.label_ru)
+        value = getattr(self, f"label_{language}", None)
+        return value if value else self.label_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class AdditionalSupport(models.Model):
@@ -185,7 +191,7 @@ class AdditionalSupport(models.Model):
 
     # Многоязычные поля для поддержки
     support_ru = models.TextField(verbose_name=_("Support (Russian)"))
-    support_ky = models.TextField(verbose_name=_("Support (Kyrgyz)"))
+    support_kg = models.TextField(verbose_name=_("Support (Kyrgyz)"))
     support_en = models.TextField(verbose_name=_("Support (English)"))
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
@@ -204,7 +210,8 @@ class AdditionalSupport(models.Model):
 
     def get_support(self, language="ru"):
         """Получить поддержку на указанном языке"""
-        return getattr(self, f"support_{language}", self.support_ru)
+        value = getattr(self, f"support_{language}", None)
+        return value if value else self.support_ru
 
 
 class ProcessStep(models.Model):
@@ -214,12 +221,12 @@ class ProcessStep(models.Model):
 
     # Многоязычные поля для названия шага
     title_ru = models.CharField(max_length=200, verbose_name=_("Title (Russian)"))
-    title_ky = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
+    title_kg = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
     title_en = models.CharField(max_length=200, verbose_name=_("Title (English)"))
 
     # Многоязычные поля для описания шага
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     color_scheme = models.CharField(
@@ -243,11 +250,13 @@ class ProcessStep(models.Model):
 
     def get_title(self, language="ru"):
         """Получить название на указанном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class MasterDocuments(models.Model):
@@ -257,7 +266,7 @@ class MasterDocuments(models.Model):
     document_name_ru = models.CharField(
         max_length=200, verbose_name=_("Document Name (Russian)")
     )
-    document_name_ky = models.CharField(
+    document_name_kg = models.CharField(
         max_length=200, verbose_name=_("Document Name (Kyrgyz)")
     )
     document_name_en = models.CharField(
@@ -282,7 +291,8 @@ class MasterDocuments(models.Model):
 
     def get_document_name(self, language="ru"):
         """Получить название документа на указанном языке"""
-        return getattr(self, f"document_name_{language}", self.document_name_ru)
+        value = getattr(self, f"document_name_{language}", None)
+        return value if value else self.document_name_ru
 
 
 class MasterMainDate(models.Model):
@@ -292,7 +302,7 @@ class MasterMainDate(models.Model):
     event_name_ru = models.CharField(
         max_length=200, verbose_name=_("Event Name (Russian)")
     )
-    event_name_ky = models.CharField(
+    event_name_kg = models.CharField(
         max_length=200, verbose_name=_("Event Name (Kyrgyz)")
     )
     event_name_en = models.CharField(
@@ -317,23 +327,30 @@ class MasterMainDate(models.Model):
 
     def get_event_name(self, language="ru"):
         """Получить название события на указанном языке"""
-        return getattr(self, f"event_name_{language}", self.event_name_ru)
+        value = getattr(self, f"event_name_{language}", None)
+        return value if value else self.event_name_ru
 
 
 class MasterPrograms(models.Model):
     """Модель для программ магистратуры"""
 
     program_name_ru = models.CharField(max_length=200, verbose_name=_("Program Name"))
-    program_name_ky = models.CharField(max_length=200, verbose_name=_("Program Name"))
+    program_name_kg = models.CharField(max_length=200, verbose_name=_("Program Name"))
     program_name_en = models.CharField(max_length=200, verbose_name=_("Program Name"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
-    features_ru = models.JSONField(verbose_name=_("Features (Russian)"))
-    features_ky = models.JSONField(verbose_name=_("Features (Kyrgyz)"))
-    features_en = models.JSONField(verbose_name=_("Features (English)"))
+    features_ru = models.JSONField(
+        verbose_name=_("Features (Russian, default=list, null=True, blank=True)")
+    )
+    features_kg = models.JSONField(
+        verbose_name=_("Features (Kyrgyz, default=list, null=True, blank=True)")
+    )
+    features_en = models.JSONField(
+        verbose_name=_("Features (English, default=list, null=True, blank=True)")
+    )
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
     is_active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -351,24 +368,27 @@ class MasterPrograms(models.Model):
 
     def get_program_name(self, language="ru"):
         """Получить название программы на указанном языке"""
-        return getattr(self, f"program_name_{language}", self.program_name_ru)
+        value = getattr(self, f"program_name_{language}", None)
+        return value if value else self.program_name_ru
 
     def get_description(self, language="ru"):
         """Получить описание программы на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
     def get_features(self, language="ru"):
         """Получить особенности программы на указанном языке"""
-        return getattr(self, f"features_{language}", self.features_ru)
+        value = getattr(self, f"features_{language}", None)
+        return value if value else self.features_ru
 
 
 class MasterRequirements(models.Model):
     title_ru = models.CharField(max_length=200, verbose_name=_("Title (Russian)"))
-    title_ky = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
+    title_kg = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
     title_en = models.CharField(max_length=200, verbose_name=_("Title (English)"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
@@ -384,11 +404,13 @@ class MasterRequirements(models.Model):
 
     def get_title(self, language="ru"):
         """Получить название на указанном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class AspirantMainDate(models.Model):
@@ -398,7 +420,7 @@ class AspirantMainDate(models.Model):
     event_name_ru = models.CharField(
         max_length=200, verbose_name=_("Event Name (Russian)")
     )
-    event_name_ky = models.CharField(
+    event_name_kg = models.CharField(
         max_length=200, verbose_name=_("Event Name (Kyrgyz)")
     )
     event_name_en = models.CharField(
@@ -423,23 +445,30 @@ class AspirantMainDate(models.Model):
 
     def get_event_name(self, language="ru"):
         """Получить название события на указанном языке"""
-        return getattr(self, f"event_name_{language}", self.event_name_ru)
+        value = getattr(self, f"event_name_{language}", None)
+        return value if value else self.event_name_ru
 
 
 class AspirantPrograms(models.Model):
     """Модель для программ аспирантуры"""
 
     program_name_ru = models.CharField(max_length=200, verbose_name=_("Program Name"))
-    program_name_ky = models.CharField(max_length=200, verbose_name=_("Program Name"))
+    program_name_kg = models.CharField(max_length=200, verbose_name=_("Program Name"))
     program_name_en = models.CharField(max_length=200, verbose_name=_("Program Name"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
-    features_ru = models.JSONField(verbose_name=_("Features (Russian)"))
-    features_ky = models.JSONField(verbose_name=_("Features (Kyrgyz)"))
-    features_en = models.JSONField(verbose_name=_("Features (English)"))
+    features_ru = models.JSONField(
+        verbose_name=_("Features (Russian, default=list, null=True, blank=True)")
+    )
+    features_kg = models.JSONField(
+        verbose_name=_("Features (Kyrgyz, default=list, null=True, blank=True)")
+    )
+    features_en = models.JSONField(
+        verbose_name=_("Features (English, default=list, null=True, blank=True)")
+    )
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
     is_active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -457,24 +486,27 @@ class AspirantPrograms(models.Model):
 
     def get_program_name(self, language="ru"):
         """Получить название программы на указанном языке"""
-        return getattr(self, f"program_name_{language}", self.program_name_ru)
+        value = getattr(self, f"program_name_{language}", None)
+        return value if value else self.program_name_ru
 
     def get_description(self, language="ru"):
         """Получить описание программы на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
     def get_features(self, language="ru"):
         """Получить особенности программы на указанном языке"""
-        return getattr(self, f"features_{language}", self.features_ru)
+        value = getattr(self, f"features_{language}", None)
+        return value if value else self.features_ru
 
 
 class AspirantRequirements(models.Model):
     title_ru = models.CharField(max_length=200, verbose_name=_("Title (Russian)"))
-    title_ky = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
+    title_kg = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
     title_en = models.CharField(max_length=200, verbose_name=_("Title (English)"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
@@ -490,11 +522,13 @@ class AspirantRequirements(models.Model):
 
     def get_title(self, language="ru"):
         """Получить название на указанном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class AspirantDocuments(models.Model):
@@ -504,7 +538,7 @@ class AspirantDocuments(models.Model):
     document_name_ru = models.CharField(
         max_length=200, verbose_name=_("Document Name (Russian)")
     )
-    document_name_ky = models.CharField(
+    document_name_kg = models.CharField(
         max_length=200, verbose_name=_("Document Name (Kyrgyz)")
     )
     document_name_en = models.CharField(
@@ -529,26 +563,27 @@ class AspirantDocuments(models.Model):
 
     def get_document_name(self, language="ru"):
         """Получить название документа на указанном языке"""
-        return getattr(self, f"document_name_{language}", self.document_name_ru)
+        value = getattr(self, f"document_name_{language}", None)
+        return value if value else self.document_name_ru
 
 
 class DoctorAdmissionSteps(models.Model):
     """Модель для информации о приеме в докторантуру"""
 
     title_ru = models.TextField(verbose_name=_("Title (Russian)"))
-    title_ky = models.TextField(verbose_name=_("Title (Kyrgyz)"))
+    title_kg = models.TextField(verbose_name=_("Title (Kyrgyz)"))
     title_en = models.TextField(verbose_name=_("Title (English)"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     deadline_ru = models.TextField(verbose_name=_("Deadline (Russian)"))
-    deadline_ky = models.TextField(verbose_name=_("Deadline (Kyrgyz)"))
+    deadline_kg = models.TextField(verbose_name=_("Deadline (Kyrgyz)"))
     deadline_en = models.TextField(verbose_name=_("Deadline (English)"))
 
     requirement_ru = models.TextField(verbose_name=_("Requirement (Russian)"))
-    requirement_ky = models.TextField(verbose_name=_("Requirement (Kyrgyz)"))
+    requirement_kg = models.TextField(verbose_name=_("Requirement (Kyrgyz)"))
     requirement_en = models.TextField(verbose_name=_("Requirement (English)"))
 
     order = models.PositiveIntegerField(verbose_name=_("Display order"))
@@ -567,26 +602,30 @@ class DoctorAdmissionSteps(models.Model):
 
     def get_title(self, language="ru"):
         """Получить название на указанном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
     def get_deadline(self, language="ru"):
         """Получить дедлайн на указанном языке"""
-        return getattr(self, f"deadline_{language}", self.deadline_ru)
+        value = getattr(self, f"deadline_{language}", None)
+        return value if value else self.deadline_ru
 
     def get_requirement(self, language="ru"):
         """Получить требование на указанном языке"""
-        return getattr(self, f"requirement_{language}", self.requirement_ru)
+        value = getattr(self, f"requirement_{language}", None)
+        return value if value else self.requirement_ru
 
 
 class DoctorStatistics(models.Model):
     titleInt = models.CharField(max_length=200, verbose_name=_("Title (Russian)"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     class Meta:
@@ -598,7 +637,8 @@ class DoctorStatistics(models.Model):
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class DoctorPrograms(models.Model):
@@ -607,7 +647,7 @@ class DoctorPrograms(models.Model):
     program_name_ru = models.CharField(
         max_length=200, verbose_name=_("Program Name(russian)")
     )
-    program_name_ky = models.CharField(
+    program_name_kg = models.CharField(
         max_length=200, verbose_name=_("Program Name(kyrgyz)")
     )
     program_name_en = models.CharField(
@@ -617,7 +657,7 @@ class DoctorPrograms(models.Model):
     short_description_ru = models.CharField(
         max_length=300, verbose_name=_("Short Description (Russian)")
     )
-    short_description_ky = models.CharField(
+    short_description_kg = models.CharField(
         max_length=300, verbose_name=_("Short   Description (Kyrgyz)")
     )
     short_description_en = models.CharField(
@@ -625,12 +665,21 @@ class DoctorPrograms(models.Model):
     )
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
-    features_ru = models.JSONField(verbose_name=_("Features (Russian)"), default=list)
-    features_ky = models.JSONField(verbose_name=_("Features (Kyrgyz)"), default=list)
-    features_en = models.JSONField(verbose_name=_("Features (English)"), default=list)
+    features_ru = models.JSONField(
+        verbose_name=_("Features (Russian, default=list, null=True, blank=True)"),
+        default=list,
+    )
+    features_kg = models.JSONField(
+        verbose_name=_("Features (Kyrgyz, default=list, null=True, blank=True)"),
+        default=list,
+    )
+    features_en = models.JSONField(
+        verbose_name=_("Features (English, default=list, null=True, blank=True)"),
+        default=list,
+    )
 
     duration = models.PositiveBigIntegerField(verbose_name=_("Duration (years)"))
 
@@ -650,24 +699,28 @@ class DoctorPrograms(models.Model):
 
     def get_program_name(self, language="ru"):
         """Получить название программы на указанном языке"""
-        return getattr(self, f"program_name_{language}", self.program_name_ru)
+        value = getattr(self, f"program_name_{language}", None)
+        return value if value else self.program_name_ru
 
     def get_description(self, language="ru"):
         """Получить описание программы на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
     def get_features(self, language="ru"):
         """Получить особенности программы на указанном языке"""
-        return getattr(self, f"features_{language}", self.features_ru)
+        value = getattr(self, f"features_{language}", None)
+        return value if value else self.features_ru
 
     def get_short_description(self, language="ru"):
         """Получить краткое описание программы на указанном языке"""
-        return getattr(self, f"short_description_{language}", self.short_description_ru)
+        value = getattr(self, f"short_description_{language}", None)
+        return value if value else self.short_description_ru
 
 
 class DoctorSoonEvents(models.Model):
     event_ru = models.CharField(max_length=200, verbose_name=_("Event (Russian)"))
-    event_ky = models.CharField(max_length=200, verbose_name=_("Event (Kyrgyz)"))
+    event_kg = models.CharField(max_length=200, verbose_name=_("Event (Kyrgyz)"))
     event_en = models.CharField(max_length=200, verbose_name=_("Event (English)"))
     date = models.CharField(max_length=100, verbose_name=_("Date/Period"))
     is_active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -682,12 +735,13 @@ class DoctorSoonEvents(models.Model):
 
     def get_event(self, language="ru"):
         """Получить событие на указанном языке"""
-        return getattr(self, f"event_{language}", self.event_ru)
+        value = getattr(self, f"event_{language}", None)
+        return value if value else self.event_ru
 
 
 class CollegeSoonEvents(models.Model):
     event_ru = models.CharField(max_length=200, verbose_name=_("Event (Russian)"))
-    event_ky = models.CharField(max_length=200, verbose_name=_("Event (Kyrgyz)"))
+    event_kg = models.CharField(max_length=200, verbose_name=_("Event (Kyrgyz)"))
     event_en = models.CharField(max_length=200, verbose_name=_("Event (English)"))
     date = models.CharField(max_length=100, verbose_name=_("Date/Period"))
     is_active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -702,7 +756,8 @@ class CollegeSoonEvents(models.Model):
 
     def get_event(self, language="ru"):
         """Получить событие на указанном языке"""
-        return getattr(self, f"event_{language}", self.event_ru)
+        value = getattr(self, f"event_{language}", None)
+        return value if value else self.event_ru
 
 
 class CollegePrograms(models.Model):
@@ -711,7 +766,7 @@ class CollegePrograms(models.Model):
     program_name_ru = models.CharField(
         max_length=200, verbose_name=_("Program Name(russian)")
     )
-    program_name_ky = models.CharField(
+    program_name_kg = models.CharField(
         max_length=200, verbose_name=_("Program Name(kyrgyz)")
     )
     program_name_en = models.CharField(
@@ -721,7 +776,7 @@ class CollegePrograms(models.Model):
     short_description_ru = models.CharField(
         max_length=300, verbose_name=_("Short Description (Russian)")
     )
-    short_description_ky = models.CharField(
+    short_description_kg = models.CharField(
         max_length=300, verbose_name=_("Short   Description (Kyrgyz)")
     )
     short_description_en = models.CharField(
@@ -729,12 +784,21 @@ class CollegePrograms(models.Model):
     )
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
-    features_ru = models.JSONField(verbose_name=_("Features (Russian)"), default=list)
-    features_ky = models.JSONField(verbose_name=_("Features (Kyrgyz)"), default=list)
-    features_en = models.JSONField(verbose_name=_("Features (English)"), default=list)
+    features_ru = models.JSONField(
+        verbose_name=_("Features (Russian, default=list, null=True, blank=True)"),
+        default=list,
+    )
+    features_kg = models.JSONField(
+        verbose_name=_("Features (Kyrgyz, default=list, null=True, blank=True)"),
+        default=list,
+    )
+    features_en = models.JSONField(
+        verbose_name=_("Features (English, default=list, null=True, blank=True)"),
+        default=list,
+    )
 
     duration = models.PositiveBigIntegerField(verbose_name=_("Duration (years)"))
 
@@ -754,32 +818,36 @@ class CollegePrograms(models.Model):
 
     def get_program_name(self, language="ru"):
         """Получить название программы на указанном языке"""
-        return getattr(self, f"program_name_{language}", self.program_name_ru)
+        value = getattr(self, f"program_name_{language}", None)
+        return value if value else self.program_name_ru
 
     def get_description(self, language="ru"):
         """Получить описание программы на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
     def get_features(self, language="ru"):
         """Получить особенности программы на указанном языке"""
-        return getattr(self, f"features_{language}", self.features_ru)
+        value = getattr(self, f"features_{language}", None)
+        return value if value else self.features_ru
 
     def get_short_description(self, language="ru"):
         """Получить краткое описание программы на указанном языке"""
-        return getattr(self, f"short_description_{language}", self.short_description_ru)
+        value = getattr(self, f"short_description_{language}", None)
+        return value if value else self.short_description_ru
 
 
 class CollegeAdmissionSteps(models.Model):
     title_ru = models.TextField(verbose_name=_("Title (Russian)"))
-    title_ky = models.TextField(verbose_name=_("Title (Kyrgyz)"))
+    title_kg = models.TextField(verbose_name=_("Title (Kyrgyz)"))
     title_en = models.TextField(verbose_name=_("Title (English)"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     duration_ru = models.TextField(verbose_name=_("Duration (Russian) date and month"))
-    duration_ky = models.TextField(verbose_name=_("Duration (Kyrgyz) date and month"))
+    duration_kg = models.TextField(verbose_name=_("Duration (Kyrgyz) date and month"))
     duration_en = models.TextField(verbose_name=_("Duration (English) date and month"))
 
     order = models.PositiveIntegerField(verbose_name=_("Display order"))
@@ -795,24 +863,27 @@ class CollegeAdmissionSteps(models.Model):
 
     def get_title(self, language="ru"):
         """Получить название на указанном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
     def get_duration(self, language="ru"):
         """Получить продолжительность на указанном языке"""
-        return getattr(self, f"duration_{language}", self.duration_ru)
+        value = getattr(self, f"duration_{language}", None)
+        return value if value else self.duration_ru
 
 
 class CollegeAdmissionRequirements(models.Model):
     title_ru = models.CharField(max_length=200, verbose_name=_("Title (Russian)"))
-    title_ky = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
+    title_kg = models.CharField(max_length=200, verbose_name=_("Title (Kyrgyz)"))
     title_en = models.CharField(max_length=200, verbose_name=_("Title (English)"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     is_active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -827,18 +898,20 @@ class CollegeAdmissionRequirements(models.Model):
 
     def get_title(self, language="ru"):
         """Получить название на указанном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class CollegeStatistics(models.Model):
     titleInt = models.CharField(max_length=200, verbose_name=_("Title (Russian)"))
 
     description_ru = models.TextField(verbose_name=_("Description (Russian)"))
-    description_ky = models.TextField(verbose_name=_("Description (Kyrgyz)"))
+    description_kg = models.TextField(verbose_name=_("Description (Kyrgyz)"))
     description_en = models.TextField(verbose_name=_("Description (English)"))
 
     class Meta:
@@ -850,7 +923,8 @@ class CollegeStatistics(models.Model):
 
     def get_description(self, language="ru"):
         """Получить описание на указанном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class BachelorProgram(models.Model):
@@ -860,13 +934,13 @@ class BachelorProgram(models.Model):
     name_en = models.CharField(
         max_length=200, verbose_name="Название программы (английский)"
     )
-    name_ky = models.CharField(
+    name_kg = models.CharField(
         max_length=200, verbose_name="Название программы (киргизский)"
     )
 
     description_ru = models.TextField(verbose_name="Описание программы (русский)")
     description_en = models.TextField(verbose_name="Описание программы (английский)")
-    description_ky = models.TextField(verbose_name="Описание программы (киргизский)")
+    description_kg = models.TextField(verbose_name="Описание программы (киргизский)")
 
     duration = models.PositiveBigIntegerField(
         verbose_name="Продолжительность программы (в годах)"
@@ -877,23 +951,47 @@ class BachelorProgram(models.Model):
     emoji = models.CharField(max_length=5, verbose_name="эмодзи", blank=True)
 
     mainDiscipline_ru = models.JSONField(
-        max_length=200, verbose_name="Основные дисциплины (русский)"
+        max_length=200,
+        verbose_name="Основные дисциплины (русский)",
+        default=list,
+        null=True,
+        blank=True,
     )
     mainDiscipline_en = models.JSONField(
-        max_length=200, verbose_name="Основные дисциплины (английский)"
+        max_length=200,
+        verbose_name="Основные дисциплины (английский)",
+        default=list,
+        null=True,
+        blank=True,
     )
-    mainDiscipline_ky = models.JSONField(
-        max_length=200, verbose_name="Основные дисциплины (киргизский)"
+    mainDiscipline_kg = models.JSONField(
+        max_length=200,
+        verbose_name="Основные дисциплины (киргизский)",
+        default=list,
+        null=True,
+        blank=True,
     )
 
     CareerPerspectives_ru = models.JSONField(
-        max_length=200, verbose_name="Перспективы карьеры (русский)"
+        max_length=200,
+        verbose_name="Перспективы карьеры (русский)",
+        default=list,
+        null=True,
+        blank=True,
     )
     CareerPerspectives_en = models.JSONField(
-        max_length=200, verbose_name="Перспективы карьеры (английский)"
+        max_length=200,
+        verbose_name="Перспективы карьеры (английский)",
+        default=list,
+        null=True,
+        blank=True,
     )
-    CareerPerspectives_ky = models.JSONField(
-        max_length=200, verbose_name="Перспективы карьеры (киргизский)"
+    CareerPerspectives_kg = models.JSONField(
+        max_length=200,
+        verbose_name="Перспективы карьеры (киргизский)",
+        default=list,
+        null=True,
+        blank=True,
     )
 
     class Meta:
@@ -904,21 +1002,18 @@ class BachelorProgram(models.Model):
         return self.name_ru
 
     def get_name(self, language="ru"):
-        # Преобразуем 'kg' в 'ky' для совместимости
-        lang = "ky" if language == "kg" else language
-        return getattr(self, f"name_{lang}", self.name_ru)
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
 
     def get_description(self, language="ru"):
-        # Преобразуем 'kg' в 'ky' для совместимости
-        lang = "ky" if language == "kg" else language
-        return getattr(self, f"description_{lang}", self.description_ru)
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
     def get_mainDiscipline(self, language="ru"):
-        # Преобразуем 'kg' в 'ky' для совместимости
-        lang = "ky" if language == "kg" else language
-        return getattr(self, f"mainDiscipline_{lang}", self.mainDiscipline_ru)
+        value = getattr(self, f"mainDiscipline_{language}", None)
+        return value if value else self.mainDiscipline_ru
 
     def get_CareerPerspectives(self, language="ru"):
-        # Преобразуем 'kg' в 'ky' для совместимости
-        lang = "ky" if language == "kg" else language
-        return getattr(self, f"CareerPerspectives_{lang}", self.CareerPerspectives_ru)
+        return getattr(
+            self, f"CareerPerspectives_{language}", self.CareerPerspectives_ru
+        )
