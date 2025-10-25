@@ -1,15 +1,30 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import MasterProgramsViewSet, FacultyViewSet, PhdProgramsViewSet, CollegeProgramsViewSet,FacultyNamesViewSet
+from .views import (
+    MasterProgramsViewSet,
+    FacultyViewSet,
+    PhdProgramsViewSet,
+    CollegeProgramsViewSet,
+    FacultyNamesViewSet,
+    FacultyPublicPageAPIView,
+)
 
 router = DefaultRouter()
-router.register(r'master-programs', MasterProgramsViewSet, basename='master-programs')
-router.register(r'faculties', FacultyViewSet)
-router.register(r'faculties-names', FacultyNamesViewSet, basename='faculty-names')
-router.register(r'phd-programs', PhdProgramsViewSet, basename='phd-programs')
-router.register(r'college-programs', CollegeProgramsViewSet, basename='college-programs')
+router.register(r"master-programs", MasterProgramsViewSet, basename="master-programs")
+router.register(r"faculties", FacultyViewSet)
+router.register(r"faculties-names", FacultyNamesViewSet, basename="faculty-names")
+router.register(r"phd-programs", PhdProgramsViewSet, basename="phd-programs")
+router.register(
+    r"college-programs", CollegeProgramsViewSet, basename="college-programs"
+)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
+    # Faculty public page endpoint
+    path(
+        "faculties/<slug:slug>/",
+        FacultyPublicPageAPIView.as_view(),
+        name="faculty-public-page",
+    ),
 ]
