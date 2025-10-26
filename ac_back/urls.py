@@ -30,6 +30,7 @@ urlpatterns = [
      path('api/events/', include('events.urls')), 
     path('api/quotes/', include('quotes.urls')),
     path('api/facts/', include('facts.urls')),
+    
     # Schema (JSON/YAML)'
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 

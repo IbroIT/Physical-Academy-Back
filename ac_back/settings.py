@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'events',
     'quotes',
     'facts',
-    
 ]
 
 MIDDLEWARE = [
