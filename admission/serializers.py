@@ -347,6 +347,7 @@ class MasterMainDateSerializer(serializers.ModelSerializer):
     """Сериализатор для основных дат магистратуры"""
 
     event_name = serializers.SerializerMethodField()
+    date = serializers.SerializerMethodField()
 
     class Meta:
         model = MasterMainDate
@@ -357,6 +358,12 @@ class MasterMainDateSerializer(serializers.ModelSerializer):
         """Получить название события на нужном языке"""
         language = self.context.get("language", "ru")
         return obj.get_event_name(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_date(self, obj) -> str:
+        """Получить дату на нужном языке"""
+        language = self.context.get("language", "ru")
+        return obj.get_date(language)
 
 
 class MasterProgramsSerializer(serializers.ModelSerializer):

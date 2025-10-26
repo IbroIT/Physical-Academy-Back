@@ -309,7 +309,14 @@ class MasterMainDate(models.Model):
         max_length=200, verbose_name=_("Event Name (English)")
     )
 
-    date = models.CharField(max_length=100, verbose_name=_("Date/Period"))
+    # Многоязычные поля для даты/периода
+    date = models.CharField(max_length=100, verbose_name=_("Date/Period (Russian)"))
+    date_kg = models.CharField(
+        max_length=100, verbose_name=_("Date/Period (Kyrgyz)"), blank=True
+    )
+    date_en = models.CharField(
+        max_length=100, verbose_name=_("Date/Period (English)"), blank=True
+    )
 
     order = models.PositiveIntegerField(default=0, verbose_name=_("Display order"))
     is_active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -329,6 +336,13 @@ class MasterMainDate(models.Model):
         """Получить название события на указанном языке"""
         value = getattr(self, f"event_name_{language}", None)
         return value if value else self.event_name_ru
+
+    def get_date(self, language="ru"):
+        """Получить дату на указанном языке"""
+        if language == "ru":
+            return self.date
+        value = getattr(self, f"date_{language}", None)
+        return value if value else self.date
 
 
 class MasterPrograms(models.Model):
