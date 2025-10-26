@@ -423,9 +423,20 @@ class CommissionSerializer(MultiLanguageSerializerMixin, serializers.ModelSerial
     description = serializers.SerializerMethodField()
     members = serializers.SerializerMethodField()
     responsibilities = serializers.SerializerMethodField()
-    category_display = serializers.CharField(
-        source="get_category_display", read_only=True
-    )
+    category_display = serializers.SerializerMethodField()
+
+    # Category translations
+    CATEGORY_TRANSLATIONS = {
+        "academic": {"ru": "Академические", "en": "Academic", "kg": "Академиялык"},
+        "quality": {
+            "ru": "Качество образования",
+            "en": "Quality of Education",
+            "kg": "Билим берүүнүн сапаты",
+        },
+        "student": {"ru": "Студенческие", "en": "Student", "kg": "Студенттик"},
+        "methodical": {"ru": "Методические", "en": "Methodical", "kg": "Методикалык"},
+        "all": {"ru": "Все", "en": "All", "kg": "Баары"},
+    }
 
     class Meta:
         model = Commission
@@ -473,6 +484,16 @@ class CommissionSerializer(MultiLanguageSerializerMixin, serializers.ModelSerial
     @extend_schema_field(OpenApiTypes.STR)
     def get_responsibilities(self, obj) -> str:
         return self.get_translated_json_field(obj, "responsibilities")
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_category_display(self, obj) -> str:
+        """Get localized category display name"""
+        lang = self.context.get("language", "ru")
+        category = obj.category
+
+        # Get translation from CATEGORY_TRANSLATIONS
+        translations = self.CATEGORY_TRANSLATIONS.get(category, {})
+        return translations.get(lang, translations.get("ru", category))
 
 
 class AdministrativeDepartmentSerializer(
@@ -595,6 +616,34 @@ class LeadershipSerializer(MultiLanguageSerializerMixin, serializers.ModelSerial
     bio = serializers.SerializerMethodField()
     achievements = serializers.SerializerMethodField()
     education = serializers.SerializerMethodField()
+    leadership_type_display = serializers.SerializerMethodField()
+
+    # Leadership type translations
+    LEADERSHIP_TYPE_TRANSLATIONS = {
+        "rector": {"ru": "Ректор", "en": "Rector", "kg": "Ректор"},
+        "vice_rector": {
+            "ru": "Проректор",
+            "en": "Vice-Rector",
+            "kg": "Проректордун орун басары",
+        },
+        "director": {"ru": "Директор", "en": "Director", "kg": "Директор"},
+        "deputy_director": {
+            "ru": "Заместитель директора",
+            "en": "Deputy Director",
+            "kg": "Директордун орун басары",
+        },
+        "department_head": {
+            "ru": "Заведующий кафедрой",
+            "en": "Department Head",
+            "kg": "Кафедра башчысы",
+        },
+        "dean": {"ru": "Декан", "en": "Dean", "kg": "Декан"},
+        "vice_dean": {
+            "ru": "Заместитель декана",
+            "en": "Vice Dean",
+            "kg": "Декандын орун басары",
+        },
+    }
 
     class Meta:
         model = Leadership
@@ -603,6 +652,7 @@ class LeadershipSerializer(MultiLanguageSerializerMixin, serializers.ModelSerial
             "name",
             "position",
             "leadership_type",
+            "leadership_type_display",
             "department",
             "bio",
             "achievements",
@@ -640,6 +690,16 @@ class LeadershipSerializer(MultiLanguageSerializerMixin, serializers.ModelSerial
     def get_education(self, obj) -> str:
         return self.get_translated_field(obj, "education")
 
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_leadership_type_display(self, obj) -> str:
+        """Get localized leadership type display name"""
+        lang = self.context.get("language", "ru")
+        leadership_type = obj.leadership_type
+
+        # Get translation from LEADERSHIP_TYPE_TRANSLATIONS
+        translations = self.LEADERSHIP_TYPE_TRANSLATIONS.get(leadership_type, {})
+        return translations.get(lang, translations.get("ru", leadership_type))
+
 
 class OrganizationStructureSerializer(
     MultiLanguageSerializerMixin, serializers.ModelSerializer
@@ -652,6 +712,16 @@ class OrganizationStructureSerializer(
     responsibilities = serializers.SerializerMethodField()
     location = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
+    structure_type_display = serializers.SerializerMethodField()
+
+    # Structure type translations
+    STRUCTURE_TYPE_TRANSLATIONS = {
+        "faculty": {"ru": "Факультет", "en": "Faculty", "kg": "Факультет"},
+        "department": {"ru": "Кафедра", "en": "Department", "kg": "Кафедра"},
+        "unit": {"ru": "Подразделение", "en": "Unit", "kg": "Бөлүм"},
+        "service": {"ru": "Служба", "en": "Service", "kg": "Кызмат"},
+        "center": {"ru": "Центр", "en": "Center", "kg": "Борбор"},
+    }
 
     class Meta:
         model = OrganizationStructure
@@ -659,6 +729,7 @@ class OrganizationStructureSerializer(
             "id",
             "name",
             "structure_type",
+            "structure_type_display",
             "description",
             "head",
             "parent",
@@ -705,6 +776,16 @@ class OrganizationStructureSerializer(
             children, many=True, context=self.context
         ).data
 
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_structure_type_display(self, obj) -> str:
+        """Get localized structure type display name"""
+        lang = self.context.get("language", "ru")
+        structure_type = obj.structure_type
+
+        # Get translation from STRUCTURE_TYPE_TRANSLATIONS
+        translations = self.STRUCTURE_TYPE_TRANSLATIONS.get(structure_type, {})
+        return translations.get(lang, translations.get("ru", structure_type))
+
 
 class DocumentSerializer(MultiLanguageSerializerMixin, serializers.ModelSerializer):
     """Сериалайзер для Document (для /documents/)"""
@@ -713,6 +794,18 @@ class DocumentSerializer(MultiLanguageSerializerMixin, serializers.ModelSerializ
     description = serializers.SerializerMethodField()
     file_url = serializers.SerializerMethodField()
     file_size_formatted = serializers.SerializerMethodField()
+    document_type_display = serializers.SerializerMethodField()
+
+    # Document type translations
+    DOCUMENT_TYPE_TRANSLATIONS = {
+        "regulation": {"ru": "Положение", "en": "Regulation", "kg": "Жобо"},
+        "order": {"ru": "Приказ", "en": "Order", "kg": "Буйрук"},
+        "instruction": {"ru": "Инструкция", "en": "Instruction", "kg": "Нускама"},
+        "charter": {"ru": "Устав", "en": "Charter", "kg": "Устав"},
+        "plan": {"ru": "План", "en": "Plan", "kg": "План"},
+        "report": {"ru": "Отчет", "en": "Report", "kg": "Отчет"},
+        "other": {"ru": "Другое", "en": "Other", "kg": "Башка"},
+    }
 
     class Meta:
         model = Document
@@ -720,6 +813,7 @@ class DocumentSerializer(MultiLanguageSerializerMixin, serializers.ModelSerializ
             "id",
             "title",
             "document_type",
+            "document_type_display",
             "description",
             "file",
             "file_url",
@@ -763,3 +857,13 @@ class DocumentSerializer(MultiLanguageSerializerMixin, serializers.ModelSerializ
             else:
                 return f"{obj.file_size / (1024 * 1024):.1f} MB"
         return "N/A"
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_document_type_display(self, obj) -> str:
+        """Get localized document type display name"""
+        lang = self.context.get("language", "ru")
+        document_type = obj.document_type
+
+        # Get translation from DOCUMENT_TYPE_TRANSLATIONS
+        translations = self.DOCUMENT_TYPE_TRANSLATIONS.get(document_type, {})
+        return translations.get(lang, translations.get("ru", document_type))

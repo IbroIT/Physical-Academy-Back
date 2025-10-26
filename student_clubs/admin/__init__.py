@@ -5,6 +5,3 @@ from .disabilities import *
 from .scholarship_visa import *
 from .exchange_programs import *
 from .instructions import *
-
-# COMMENTED OUT: Ebilim admin not needed
-# from .ebilim import *
