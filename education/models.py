@@ -339,7 +339,6 @@ class Faculty(models.Model):
     achievements_kg = models.JSONField(verbose_name="Достижения (KG)")
     achievements_en = models.JSONField(verbose_name="Достижения (EN)")
 
-    # Добавляем метаданные для управления
     is_active = models.BooleanField(default=True, verbose_name="Активен")
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок отображения")
     created_at = models.DateTimeField(
