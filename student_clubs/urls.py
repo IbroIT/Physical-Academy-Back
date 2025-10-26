@@ -23,13 +23,15 @@ from .views import (
     SocialCommunityViewSet,
     ContactSocialPageDataViewSet,
 )
-from .views_ebilim import (
-    EbilimStatViewSet,
-    EbilimQuickLinkViewSet,
-    EbilimSystemStatusViewSet,
-    EbilimPageDataView,
-    EbilimPageDataViewSet,
-)
+
+# COMMENTED OUT: Ebilim backend not needed - using i18n translations on frontend
+# from .views_ebilim import (
+#     EbilimStatViewSet,
+#     EbilimQuickLinkViewSet,
+#     EbilimSystemStatusViewSet,
+#     EbilimPageDataView,
+#     EbilimPageDataViewSet,
+# )
 from .views_scholarship_visa import (
     ScholarshipProgramViewSet,
     ScholarshipRequiredDocumentViewSet,
@@ -68,15 +70,15 @@ router.register(r"stats", ClubStatsViewSet, basename="club-stats")
 router.register(r"students", StudentProfileViewSet, basename="student-profile")
 router.register(r"memberships", ClubMembershipViewSet, basename="club-membership")
 
-# Ebilim endpoints
-router.register(r"ebilim", EbilimPageDataViewSet, basename="ebilim")
-router.register(r"ebilim/stats", EbilimStatViewSet, basename="ebilim-stats")
-router.register(
-    r"ebilim/quick-links", EbilimQuickLinkViewSet, basename="ebilim-quick-links"
-)
-router.register(
-    r"ebilim/system-status", EbilimSystemStatusViewSet, basename="ebilim-system-status"
-)
+# COMMENTED OUT: Ebilim endpoints - using i18n translations on frontend
+# router.register(r"ebilim", EbilimPageDataViewSet, basename="ebilim")
+# router.register(r"ebilim/stats", EbilimStatViewSet, basename="ebilim-stats")
+# router.register(
+#     r"ebilim/quick-links", EbilimQuickLinkViewSet, basename="ebilim-quick-links"
+# )
+# router.register(
+#     r"ebilim/system-status", EbilimSystemStatusViewSet, basename="ebilim-system-status"
+# )
 
 # Disabilities endpoints
 router.register(
@@ -190,5 +192,6 @@ router.register(
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("ebilim/", EbilimPageDataView.as_view(), name="ebilim-page-data"),
+    # COMMENTED OUT: Ebilim endpoint - using i18n translations on frontend
+    # path("ebilim/", EbilimPageDataView.as_view(), name="ebilim-page-data"),
 ]

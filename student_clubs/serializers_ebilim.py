@@ -1,3 +1,6 @@
+# COMMENTED OUT: Ebilim backend not needed - using i18n translations on frontend instead
+
+"""
 from rest_framework import serializers
 from .models_ebilim import EbilimStat, EbilimQuickLink, EbilimSystemStatus
 from django.utils.translation import get_language
@@ -63,3 +66,4 @@ class EbilimPageDataSerializer(serializers.Serializer):
     stats = EbilimStatSerializer(many=True)
     quick_links = EbilimQuickLinkSerializer(many=True)
     system_status = EbilimSystemStatusSerializer()
+"""

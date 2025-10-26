@@ -8,11 +8,13 @@ from .models_instructions import (
     InstructionDocument,
     ImportantUpdate,
 )
-from .models_ebilim import (
-    EbilimStat,
-    EbilimQuickLink,
-    EbilimSystemStatus,
-)
+
+# COMMENTED OUT: Ebilim models not needed - using i18n translations on frontend
+# from .models_ebilim import (
+#     EbilimStat,
+#     EbilimQuickLink,
+#     EbilimSystemStatus,
+# )
 from .models_disabilities import (
     DisabilitySupportService,
     DisabilityContactPerson,

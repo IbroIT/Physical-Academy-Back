@@ -1,3 +1,6 @@
+# COMMENTED OUT: Ebilim admin not needed - using i18n translations on frontend
+
+"""
 from django.contrib import admin
 from ..models_ebilim import EbilimStat, EbilimQuickLink, EbilimSystemStatus
 
@@ -25,3 +28,4 @@ class EbilimSystemStatusAdmin(admin.ModelAdmin):
     list_filter = ["status"]
     search_fields = ["message_en", "message_ru", "message_kg"]
     readonly_fields = ["last_update"]
+"""

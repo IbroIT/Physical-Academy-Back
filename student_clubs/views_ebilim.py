@@ -1,3 +1,6 @@
+# COMMENTED OUT: Ebilim backend not needed - using i18n translations on frontend instead
+
+"""
 from rest_framework import viewsets, views
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
@@ -48,11 +51,10 @@ class EbilimPageDataView(views.APIView):
 
 
 class EbilimPageDataViewSet(viewsets.ViewSet):
-    """
-    ViewSet wrapper so ebilim appears in router URLs.
-    Delegates to existing EbilimPageDataView.
-    """
+    # ViewSet wrapper so ebilim appears in router URLs.
+    # Delegates to existing EbilimPageDataView.
 
     def list(self, request, *args, **kwargs):
         view = EbilimPageDataView.as_view()
         return view(request, *args, **kwargs)
+"""

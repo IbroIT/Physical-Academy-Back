@@ -1,3 +1,6 @@
+# COMMENTED OUT: Ebilim backend not needed - using i18n translations on frontend instead
+
+"""
 from django.db import models
 from django.core.validators import URLValidator
 from django.utils.translation import gettext_lazy as _
@@ -61,3 +64,4 @@ class EbilimSystemStatus(models.Model):
 
     def __str__(self):
         return f"System Status: {self.get_status_display()}"
+"""
