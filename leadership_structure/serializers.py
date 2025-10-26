@@ -716,8 +716,8 @@ class OrganizationStructureSerializer(
 
     # Structure type translations
     STRUCTURE_TYPE_TRANSLATIONS = {
-        "faculty": {"ru": "Факультет", "en": "Faculty", "kg": "Факультет"},
-        "department": {"ru": "Кафедра", "en": "Department", "kg": "Кафедра"},
+        "faculty": {"ru": "Факультет", "en": "Faculty", "kg": "Факультети"},
+        "department": {"ru": "Кафедра", "en": "Department", "kg": "Кафедрасы"},
         "unit": {"ru": "Подразделение", "en": "Unit", "kg": "Бөлүм"},
         "service": {"ru": "Служба", "en": "Service", "kg": "Кызмат"},
         "center": {"ru": "Центр", "en": "Center", "kg": "Борбор"},
