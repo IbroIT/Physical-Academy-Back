@@ -24,37 +24,78 @@ class ExchangeDurationTypeSerializer(serializers.ModelSerializer):
 
 
 class ExchangeProgramRequirementSerializer(serializers.ModelSerializer):
+    text = serializers.SerializerMethodField()
+
     class Meta:
         model = ExchangeProgramRequirement
-        fields = ["id", "text_ru", "text_en", "text_kg", "order"]
+        fields = ["id", "text", "text_ru", "text_en", "text_kg", "order"]
+
+    def get_text(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.text_ru
+        elif language == "kg":
+            return obj.text_kg
+        return obj.text_en
 
 
 class ExchangeProgramBenefitSerializer(serializers.ModelSerializer):
+    text = serializers.SerializerMethodField()
+
     class Meta:
         model = ExchangeProgramBenefit
-        fields = ["id", "text_ru", "text_en", "text_kg", "order"]
+        fields = ["id", "text", "text_ru", "text_en", "text_kg", "order"]
+
+    def get_text(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.text_ru
+        elif language == "kg":
+            return obj.text_kg
+        return obj.text_en
 
 
 class ExchangeProgramCourseSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta:
         model = ExchangeProgramCourse
-        fields = ["id", "name_ru", "name_en", "name_kg"]
+        fields = ["id", "name", "name_ru", "name_en", "name_kg"]
+
+    def get_name(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.name_ru
+        elif language == "kg":
+            return obj.name_kg
+        return obj.name_en
 
 
 class ExchangeProgramSerializer(serializers.ModelSerializer):
-    requirements = ExchangeProgramRequirementSerializer(many=True, read_only=True)
-    benefits = ExchangeProgramBenefitSerializer(many=True, read_only=True)
-    available_courses = ExchangeProgramCourseSerializer(many=True, read_only=True)
+    requirements = serializers.SerializerMethodField()
+    benefits = serializers.SerializerMethodField()
+    available_courses = serializers.SerializerMethodField()
     region_name = serializers.SerializerMethodField()
     duration_type_name = serializers.SerializerMethodField()
+
+    # Add localized fields
+    university = serializers.SerializerMethodField()
+    country = serializers.SerializerMethodField()
+    duration = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    language = serializers.SerializerMethodField()
+    grants_available = serializers.SerializerMethodField()
+    difficulty_label = serializers.SerializerMethodField()
 
     class Meta:
         model = ExchangeProgram
         fields = [
             "id",
+            "university",
             "university_ru",
             "university_en",
             "university_kg",
+            "country",
             "country_ru",
             "country_en",
             "country_kg",
@@ -62,16 +103,20 @@ class ExchangeProgramSerializer(serializers.ModelSerializer):
             "region_name",
             "duration_type",
             "duration_type_name",
+            "duration",
             "duration_ru",
             "duration_en",
             "duration_kg",
+            "description",
             "description_ru",
             "description_en",
             "description_kg",
             "cost",
+            "language",
             "language_ru",
             "language_en",
             "language_kg",
+            "grants_available",
             "grants_available_ru",
             "grants_available_en",
             "grants_available_kg",
@@ -80,6 +125,7 @@ class ExchangeProgramSerializer(serializers.ModelSerializer):
             "icon",
             "website",
             "difficulty",
+            "difficulty_label",
             "difficulty_label_ru",
             "difficulty_label_en",
             "difficulty_label_kg",
@@ -90,6 +136,77 @@ class ExchangeProgramSerializer(serializers.ModelSerializer):
             "benefits",
             "available_courses",
         ]
+
+    def get_requirements(self, obj):
+        return ExchangeProgramRequirementSerializer(
+            obj.requirements.all(), many=True, context=self.context
+        ).data
+
+    def get_benefits(self, obj):
+        return ExchangeProgramBenefitSerializer(
+            obj.benefits.all(), many=True, context=self.context
+        ).data
+
+    def get_available_courses(self, obj):
+        return ExchangeProgramCourseSerializer(
+            obj.available_courses.all(), many=True, context=self.context
+        ).data
+
+    def get_university(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.university_ru
+        elif language == "kg":
+            return obj.university_kg
+        return obj.university_en
+
+    def get_country(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.country_ru
+        elif language == "kg":
+            return obj.country_kg
+        return obj.country_en
+
+    def get_duration(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.duration_ru
+        elif language == "kg":
+            return obj.duration_kg
+        return obj.duration_en
+
+    def get_description(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.description_ru
+        elif language == "kg":
+            return obj.description_kg
+        return obj.description_en
+
+    def get_language(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.language_ru
+        elif language == "kg":
+            return obj.language_kg
+        return obj.language_en
+
+    def get_grants_available(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.grants_available_ru
+        elif language == "kg":
+            return obj.grants_available_kg
+        return obj.grants_available_en
+
+    def get_difficulty_label(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.difficulty_label_ru
+        elif language == "kg":
+            return obj.difficulty_label_kg
+        return obj.difficulty_label_en
 
     def get_region_name(self, obj):
         language = self.context.get("language", "en")
@@ -109,11 +226,16 @@ class ExchangeProgramSerializer(serializers.ModelSerializer):
 
 
 class ExchangePageStatSerializer(serializers.ModelSerializer):
+    value = serializers.SerializerMethodField()
+    label = serializers.SerializerMethodField()
+
     class Meta:
         model = ExchangePageStat
         fields = [
             "id",
             "icon",
+            "value",
+            "label",
             "value_ru",
             "value_en",
             "value_kg",
@@ -122,6 +244,22 @@ class ExchangePageStatSerializer(serializers.ModelSerializer):
             "label_kg",
             "order",
         ]
+
+    def get_value(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.value_ru
+        elif language == "kg":
+            return obj.value_kg
+        return obj.value_en
+
+    def get_label(self, obj):
+        language = self.context.get("language", "en")
+        if language == "ru":
+            return obj.label_ru
+        elif language == "kg":
+            return obj.label_kg
+        return obj.label_en
 
 
 class ExchangeDeadlineSerializer(serializers.ModelSerializer):
