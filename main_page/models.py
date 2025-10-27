@@ -247,7 +247,7 @@ class AcademyStatistics(models.Model):
     description_en = models.TextField(verbose_name="описание на английском")
     description_kg = models.TextField(verbose_name="описание на киргизском")
     emoji = models.CharField(
-        max_length=5,
+        max_length=50,
         verbose_name="эмодзи",
     )
 
@@ -284,7 +284,7 @@ class AcademyAchievements(models.Model):
 
 class AcademyInfrastructure(models.Model):
     emoji = models.CharField(
-        max_length=5,
+        max_length=50,
         verbose_name="эмодзи",
     )
     titleInt = models.CharField(

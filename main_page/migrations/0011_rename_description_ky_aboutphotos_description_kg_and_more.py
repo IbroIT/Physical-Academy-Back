@@ -31,11 +31,6 @@ class Migration(migrations.Migration):
             new_name="title_kg",
         ),
         migrations.RenameField(
-            model_name="academyinfrastructure",
-            old_name="description_ky",
-            new_name="description_kg",
-        ),
-        migrations.RenameField(
             model_name="academystatistics",
             old_name="description_ky",
             new_name="description_kg",
