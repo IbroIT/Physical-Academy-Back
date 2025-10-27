@@ -40,49 +40,49 @@ class EventSerializer(serializers.ModelSerializer):
         return {
             'ru': obj.title_ru,
             'en': obj.title_en,
-            'kg': obj.title_ky  # Используем код kg для кыргызского
+            'kg': obj.title_kg  # Используем код kg для кыргызского
         }
 
     def get_description(self, obj):
         return {
             'ru': obj.description_ru,
             'en': obj.description_en,
-            'kg': obj.description_ky
+            'kg': obj.description_kg
         }
 
     def get_full_description(self, obj):
         return {
             'ru': obj.full_description_ru or obj.description_ru,
             'en': obj.full_description_en or obj.description_en,
-            'kg': obj.full_description_ky or obj.description_ky
+            'kg': obj.full_description_kg or obj.description_kg
         }
 
     def get_location(self, obj):
         return {
             'ru': obj.location_ru,
             'en': obj.location_en,
-            'kg': obj.location_ky
+            'kg': obj.location_kg
         }
 
     def get_audience(self, obj):
         return {
             'ru': obj.audience_ru,
             'en': obj.audience_en,
-            'kg': obj.audience_ky
+            'kg': obj.audience_kg
         }
 
     def get_format(self, obj):
         return {
             'ru': obj.format_ru,
             'en': obj.format_en,
-            'kg': obj.format_ky
+            'kg': obj.format_kg
         }
 
     def get_duration(self, obj):
         return {
             'ru': obj.duration_ru,
             'en': obj.duration_en,
-            'kg': obj.duration_ky
+            'kg': obj.duration_kg
         }
 
     def get_organizer(self, obj):
@@ -90,12 +90,12 @@ class EventSerializer(serializers.ModelSerializer):
             'name': {
                 'ru': obj.organizer_name_ru,
                 'en': obj.organizer_name_en,
-                'kg': obj.organizer_name_ky
+                'kg': obj.organizer_name_kg
             },
             'contact': {
                 'ru': obj.organizer_contact_ru,
                 'en': obj.organizer_contact_en,
-                'kg': obj.organizer_contact_ky
+                'kg': obj.organizer_contact_kg
             }
         }
 
@@ -124,19 +124,19 @@ class EventListSerializer(serializers.ModelSerializer):
         return {
             'ru': obj.title_ru,
             'en': obj.title_en,
-            'kg': obj.title_ky
+            'kg': obj.title_kg
         }
 
     def get_description(self, obj):
         return {
             'ru': obj.description_ru,
             'en': obj.description_en,
-            'kg': obj.description_ky
+            'kg': obj.description_kg
         }
 
     def get_location(self, obj):
         return {
             'ru': obj.location_ru,
             'en': obj.location_en,
-            'kg': obj.location_ky
+            'kg': obj.location_kg
         }

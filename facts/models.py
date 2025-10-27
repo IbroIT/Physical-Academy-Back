@@ -49,7 +49,7 @@ class FactTranslation(models.Model):
     LANGUAGES = [
         ('ru', 'Русский'),
         ('en', 'English'),
-        ('ky', 'Кыргызча'),
+        ('kg', 'Кыргызча'),
     ]
 
     fact = models.ForeignKey(Fact, on_delete=models.CASCADE, related_name='translations')

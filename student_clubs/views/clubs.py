@@ -35,7 +35,7 @@ class BaseLanguageViewSet(viewsets.ModelViewSet):
         # Only use explicit ?lang= query parameter. Default to Russian.
         language = self.request.query_params.get("lang", "ru")
 
-        # Normalize old code 'ky' to 'kg'
+        # Normalize legacy code 'ky' to 'kg' for backward compatibility
         if language == "ky":
             language = "kg"
 

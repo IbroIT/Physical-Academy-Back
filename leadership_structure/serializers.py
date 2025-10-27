@@ -28,7 +28,7 @@ class MultiLanguageSerializerMixin:
         if request:
             # Only use explicit lang parameter, default to Russian
             language = request.GET.get("lang", "ru")
-            # Normalize language code (ky -> kg for consistency)
+            # Normalize legacy code 'ky' to 'kg' for backward compatibility
             if language == "ky":
                 language = "kg"
             return language

@@ -23,8 +23,8 @@ class EventAdmin(admin.ModelAdmin):
     )
     list_editable = ('is_active', 'is_featured', 'order')
     search_fields = (
-        'title_ru', 'title_en', 'title_ky',
-        'description_ru', 'description_en', 'description_ky'
+        'title_ru', 'title_en', 'title_kg',
+        'description_ru', 'description_en', 'description_kg'
     )
     readonly_fields = ('created_at', 'updated_at')
     date_hierarchy = 'date'
@@ -32,9 +32,9 @@ class EventAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('Основная информация'), {
             'fields': (
-                ('title_ru', 'title_en', 'title_ky'),
-                ('description_ru', 'description_en', 'description_ky'),
-                ('full_description_ru', 'full_description_en', 'full_description_ky'),
+                ('title_ru', 'title_en', 'title_kg'),
+                ('description_ru', 'description_en', 'description_kg'),
+                ('full_description_ru', 'full_description_en', 'full_description_kg'),
                 'image',
             )
         }),
@@ -44,21 +44,21 @@ class EventAdmin(admin.ModelAdmin):
                 'department',
                 'date',
                 'time',
-                ('location_ru', 'location_en', 'location_ky'),
+                ('location_ru', 'location_en', 'location_kg'),
             )
         }),
         (_('Дополнительная информация'), {
             'fields': (
-                ('audience_ru', 'audience_en', 'audience_ky'),
-                ('format_ru', 'format_en', 'format_ky'),
-                ('duration_ru', 'duration_en', 'duration_ky'),
+                ('audience_ru', 'audience_en', 'audience_kg'),
+                ('format_ru', 'format_en', 'format_kg'),
+                ('duration_ru', 'duration_en', 'duration_kg'),
             ),
             'classes': ('collapse',)
         }),
         (_('Организатор'), {
             'fields': (
-                ('organizer_name_ru', 'organizer_name_en', 'organizer_name_ky'),
-                ('organizer_contact_ru', 'organizer_contact_en', 'organizer_contact_ky'),
+                ('organizer_name_ru', 'organizer_name_en', 'organizer_name_kg'),
+                ('organizer_contact_ru', 'organizer_contact_en', 'organizer_contact_kg'),
             ),
             'classes': ('collapse',)
         }),
@@ -86,6 +86,6 @@ class EventAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         # Добавляем CSS классы для лучшего отображения полей
         for field_name in form.base_fields:
-            if field_name.endswith(('_ru', '_en', '_ky')):
+            if field_name.endswith(('_ru', '_en', '_kg')):
                 form.base_fields[field_name].widget.attrs['style'] = 'width: 95%;'
         return form

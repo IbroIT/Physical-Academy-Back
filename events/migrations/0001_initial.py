@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
             name='EventTranslation',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language', models.CharField(choices=[('ru', 'Русский'), ('en', 'English'), ('ky', 'Кыргызча')], max_length=2, verbose_name='Язык')),
+                ('language', models.CharField(choices=[('ru', 'Русский'), ('en', 'English'), ('kg', 'Кыргызча')], max_length=2, verbose_name='Язык')),
                 ('title', models.CharField(max_length=200, verbose_name='Заголовок')),
                 ('description', models.TextField(verbose_name='Краткое описание')),
                 ('full_description', models.TextField(blank=True, verbose_name='Полное описание')),

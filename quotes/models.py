@@ -26,7 +26,7 @@ class QuoteTranslation(models.Model):
     LANGUAGES = [
         ('ru', 'Русский'),
         ('en', 'English'),
-        ('ky', 'Кыргызча'),
+        ('kg', 'Кыргызча'),
     ]
 
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE, related_name='translations')

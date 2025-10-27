@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             name='QuoteTranslation',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language', models.CharField(choices=[('ru', 'Русский'), ('en', 'English'), ('ky', 'Кыргызча')], max_length=2, verbose_name='Язык')),
+                ('language', models.CharField(choices=[('ru', 'Русский'), ('en', 'English'), ('kg', 'Кыргызча')], max_length=2, verbose_name='Язык')),
                 ('text', models.TextField(verbose_name='Текст цитаты')),
                 ('author', models.CharField(max_length=200, verbose_name='Автор')),
                 ('author_title', models.CharField(blank=True, max_length=200, verbose_name='Должность/титул автора')),

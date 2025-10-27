@@ -56,22 +56,22 @@ class Command(BaseCommand):
         sports_requirements = [
             {
                 'ru': 'Документы, подтверждающие спортивные достижения',
-                'ky': 'Спорттук жетишкендиктерди ырастаган документтер',
+                'kg': 'Спорттук жетишкендиктерди ырастаган документтер',
                 'en': 'Documents confirming sports achievements'
             },
             {
                 'ru': 'Рекомендация от спортивной федерации',
-                'ky': 'Спорт федерациясынан сунуш',
+                'kg': 'Спорт федерациясынан сунуш',
                 'en': 'Recommendation from sports federation'
             },
             {
                 'ru': 'Медицинская справка о допуске к занятиям',
-                'ky': 'Машыгууларга уруксат берүү тууралуу медициналык справка',
+                'kg': 'Машыгууларга уруксат берүү тууралуу медициналык справка',
                 'en': 'Medical certificate for training admission'
             },
             {
                 'ru': 'Аттестат о среднем образовании',
-                'ky': 'Орто билим тууралуу аттестат',
+                'kg': 'Орто билим тууралуу аттестат',
                 'en': 'Secondary education certificate'
             }
         ]
@@ -80,7 +80,7 @@ class Command(BaseCommand):
             QuotaRequirement.objects.create(
                 quota_type=sports_quota,
                 requirement_ru=req['ru'],
-                requirement_ky=req['ky'],
+                requirement_kg=req['ky'],
                 requirement_en=req['en'],
                 order=idx + 1
             )
@@ -89,22 +89,22 @@ class Command(BaseCommand):
         sports_benefits = [
             {
                 'ru': 'Индивидуальный учебный план',
-                'ky': 'Жеке окуу планы',
+                'kg': 'Жеке окуу планы',
                 'en': 'Individual study plan'
             },
             {
                 'ru': 'Совмещение тренировок и учебы',
-                'ky': 'Машыгуулар менен окууну айкалыштыруу',
+                'kg': 'Машыгуулар менен окууну айкалыштыруу',
                 'en': 'Combining training and studies'
             },
             {
                 'ru': 'Спортивная стипендия',
-                'ky': 'Спорттук стипендия',
+                'kg': 'Спорттук стипендия',
                 'en': 'Sports scholarship'
             },
             {
                 'ru': 'Проживание в спортивном общежитии',
-                'ky': 'Спорттук жатаканада жашоо',
+                'kg': 'Спорттук жатаканада жашоо',
                 'en': 'Accommodation in sports dormitory'
             }
         ]
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             QuotaBenefit.objects.create(
                 quota_type=sports_quota,
                 benefit_ru=benefit['ru'],
-                benefit_ky=benefit['ky'],
+                benefit_kg=benefit['ky'],
                 benefit_en=benefit['en'],
                 order=idx + 1
             )
@@ -138,17 +138,17 @@ class Command(BaseCommand):
         health_requirements = [
             {
                 'ru': 'Медико-социальная экспертиза',
-                'ky': 'Медициналык-социалдык экспертиза',
+                'kg': 'Медициналык-социалдык экспертиза',
                 'en': 'Medical-social examination'
             },
             {
                 'ru': 'Индивидуальная программа реабилитации',
-                'ky': 'Жеке реабилитация программасы',
+                'kg': 'Жеке реабилитация программасы',
                 'en': 'Individual rehabilitation program'
             },
             {
                 'ru': 'Заключение врачебной комиссии академии',
-                'ky': 'Академиянын дарыгер комиссиясынын корутундусу',
+                'kg': 'Академиянын дарыгер комиссиясынын корутундусу',
                 'en': 'Conclusion of academy medical commission'
             }
         ]
@@ -157,7 +157,7 @@ class Command(BaseCommand):
             QuotaRequirement.objects.create(
                 quota_type=health_quota,
                 requirement_ru=req['ru'],
-                requirement_ky=req['ky'],
+                requirement_kg=req['ky'],
                 requirement_en=req['en'],
                 order=idx + 1
             )
@@ -166,22 +166,22 @@ class Command(BaseCommand):
         health_benefits = [
             {
                 'ru': 'Адаптированная программа обучения',
-                'ky': 'Адаптацияланган окуу программасы',
+                'kg': 'Адаптацияланган окуу программасы',
                 'en': 'Adapted learning program'
             },
             {
                 'ru': 'Доступная среда',
-                'ky': 'Жеткиликтүү чөйрө',
+                'kg': 'Жеткиликтүү чөйрө',
                 'en': 'Accessible environment'
             },
             {
                 'ru': 'Персональный тьютор',
-                'ky': 'Жеке тьютор',
+                'kg': 'Жеке тьютор',
                 'en': 'Personal tutor'
             },
             {
                 'ru': 'Социальная поддержка',
-                'ky': 'Социалдык колдоо',
+                'kg': 'Социалдык колдоо',
                 'en': 'Social support'
             }
         ]
@@ -190,7 +190,7 @@ class Command(BaseCommand):
             QuotaBenefit.objects.create(
                 quota_type=health_quota,
                 benefit_ru=benefit['ru'],
-                benefit_ky=benefit['ky'],
+                benefit_kg=benefit['ky'],
                 benefit_en=benefit['en'],
                 order=idx + 1
             )
@@ -215,17 +215,17 @@ class Command(BaseCommand):
         target_requirements = [
             {
                 'ru': 'Направление от спортивной организации',
-                'ky': 'Спорттук уюмдан багыт',
+                'kg': 'Спорттук уюмдан багыт',
                 'en': 'Referral from sports organization'
             },
             {
                 'ru': 'Трехсторонний договор',
-                'ky': 'Үч тараптуу келишим',
+                'kg': 'Үч тараптуу келишим',
                 'en': 'Tripartite agreement'
             },
             {
                 'ru': 'Обязательство отработать 3 года',
-                'ky': '3 жыл иштөө милдеттенмеси',
+                'kg': '3 жыл иштөө милдеттенмеси',
                 'en': 'Commitment to work for 3 years'
             }
         ]
@@ -234,7 +234,7 @@ class Command(BaseCommand):
             QuotaRequirement.objects.create(
                 quota_type=target_quota,
                 requirement_ru=req['ru'],
-                requirement_ky=req['ky'],
+                requirement_kg=req['ky'],
                 requirement_en=req['en'],
                 order=idx + 1
             )
@@ -243,17 +243,17 @@ class Command(BaseCommand):
         target_benefits = [
             {
                 'ru': 'Гарантированное трудоустройство',
-                'ky': 'Кепилдик берилген жумуш орду',
+                'kg': 'Кепилдик берилген жумуш орду',
                 'en': 'Guaranteed employment'
             },
             {
                 'ru': 'Стажировка в профильных организациях',
-                'ky': 'Профилдик уюмдарда стажировка',
+                'kg': 'Профилдик уюмдарда стажировка',
                 'en': 'Internship in specialized organizations'
             },
             {
                 'ru': 'Дополнительная стипендия',
-                'ky': 'Кошумча стипендия',
+                'kg': 'Кошумча стипендия',
                 'en': 'Additional scholarship'
             }
         ]
@@ -262,7 +262,7 @@ class Command(BaseCommand):
             QuotaBenefit.objects.create(
                 quota_type=target_quota,
                 benefit_ru=benefit['ru'],
-                benefit_ky=benefit['ky'],
+                benefit_kg=benefit['ky'],
                 benefit_en=benefit['en'],
                 order=idx + 1
             )
