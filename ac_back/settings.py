@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import dj_database_url
+import dj_database_url 
 from dotenv import load_dotenv
 import os
+import cloudinary  # type: ignore
+import cloudinary.uploader  # type: ignore
+import cloudinary.api  # type: ignore
 
 # Загружаем переменные из .env
 load_dotenv()
@@ -44,6 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Third party apps
+    "cloudinary_storage",  # Должен быть перед django.contrib.staticfiles
+    "cloudinary",          # Cloudinary основной пакет
     "rest_framework",
     "corsheaders",
     "drf_spectacular",
@@ -145,9 +150,29 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# Cloudinary Configuration
+cloudinary.config( 
+    cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key = os.getenv('CLOUDINARY_API_KEY'),
+    api_secret = os.getenv('CLOUDINARY_API_SECRET'),
+    secure = True
+)
+
+# Cloudinary Storage Settings (Django 4.2+ format)
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+# Media files configuration
+MEDIA_URL = '/media/'
+
+# Legacy setting для обратной совместимости
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -234,3 +259,4 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
