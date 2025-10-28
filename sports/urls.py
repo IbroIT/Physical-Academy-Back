@@ -1,4 +1,6 @@
 from django.urls import path
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .views import (
     SportSectionListAPIView,
     SportSectionDetailAPIView,
@@ -10,7 +12,25 @@ from .views import (
 
 app_name = "sports"
 
+
+@api_view(["GET"])
+def api_root(request, format=None):
+    base = request.build_absolute_uri(request.path)
+    # Ensure base ends with '/'
+    if not base.endswith("/"):
+        base += "/"
+    return Response(
+        {
+            "sections": base + "sections/",
+            "achievements": base + "achievements/",
+            "infrastructure": base + "infrastructure/",
+            "statistics": base + "statistics/",
+        }
+    )
+
+
 urlpatterns = [
+    path("", api_root, name="sports-root"),
     # Sport Sections
     path("sections/", SportSectionListAPIView.as_view(), name="section-list"),
     path(

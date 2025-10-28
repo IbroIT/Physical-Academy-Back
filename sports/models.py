@@ -54,6 +54,10 @@ class SportSection(models.Model):
 
     # Информация о тренере
     coach_name = models.CharField(_("ФИО тренера"), max_length=200)
+    # Переводы для имени тренера (опционально)
+    coach_name_ru = models.CharField(_("ФИО тренера (RU)"), max_length=200, blank=True)
+    coach_name_kg = models.CharField(_("ФИО тренера (KG)"), max_length=200, blank=True)
+    coach_name_en = models.CharField(_("ФИО тренера (EN)"), max_length=200, blank=True)
     coach_rank = models.CharField(
         _("Звание тренера"),
         max_length=200,
@@ -132,6 +136,11 @@ class SportSection(models.Model):
         value = getattr(self, f"coach_rank_{language}", None)
         return value if value else self.coach_rank
 
+    def get_coach_name(self, language="ru"):
+        """Получить имя тренера на указанном языке"""
+        value = getattr(self, f"coach_name_{language}", None)
+        return value if value else self.coach_name
+
 
 class TrainingSchedule(models.Model):
     """
@@ -183,6 +192,14 @@ class TrainingSchedule(models.Model):
         value = getattr(self, f"location_{language}", None)
         return value if value else self.location
 
+    def get_day_display_for_language(self, language="ru"):
+        """Return localized day label using Django's choices display.
+
+        Note: this uses the built-in get_day_of_week_display which relies on
+        the active translation; callers may need to activate language.
+        """
+        return self.get_day_of_week_display()
+
 
 class Achievement(models.Model):
     """
@@ -199,6 +216,16 @@ class Achievement(models.Model):
 
     # Базовая информация
     athlete_name = models.CharField(_("Имя спортсмена/команды"), max_length=200)
+    # Переводы для имени спортсмена / команды
+    athlete_name_ru = models.CharField(
+        _("Имя спортсмена/команды (RU)"), max_length=200, blank=True
+    )
+    athlete_name_kg = models.CharField(
+        _("Имя спортсмена/команды (KG)"), max_length=200, blank=True
+    )
+    athlete_name_en = models.CharField(
+        _("Имя спортсмена/команды (EN)"), max_length=200, blank=True
+    )
     sport = models.CharField(_("Вид спорта"), max_length=100)
     competition = models.CharField(_("Соревнование"), max_length=200)
     result = models.CharField(
@@ -259,6 +286,10 @@ class Achievement(models.Model):
         """Получить описание достижения на указанном языке"""
         value = getattr(self, f"description_{language}", None)
         return value if value else self.description_ru
+
+    def get_name(self, language="ru"):
+        value = getattr(self, f"athlete_name_{language}", None)
+        return value if value else self.athlete_name
 
 
 class Infrastructure(models.Model):

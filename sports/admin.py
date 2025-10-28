@@ -66,7 +66,23 @@ class SportSectionAdmin(admin.ModelAdmin):
         ),
         (
             "Информация о тренере",
-            {"fields": ("coach_name", "coach_rank", "coach_contacts", "schedule")},
+            {
+                "fields": (
+                    "coach_name",
+                    "coach_name_ru",
+                    "coach_name_kg",
+                    "coach_name_en",
+                    "coach_rank",
+                    "coach_rank_ru",
+                    "coach_rank_kg",
+                    "coach_rank_en",
+                    "coach_contacts",
+                    "schedule",
+                    "schedule_ru",
+                    "schedule_kg",
+                    "schedule_en",
+                )
+            },
         ),
     )
 
@@ -93,6 +109,9 @@ class AchievementAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "athlete_name",
+                    "athlete_name_ru",
+                    "athlete_name_kg",
+                    "athlete_name_en",
                     "sport",
                     "competition",
                     "result",

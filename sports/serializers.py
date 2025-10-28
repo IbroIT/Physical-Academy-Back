@@ -10,13 +10,14 @@ from .models import (
     InfrastructureCategory,
     InfrastructureObject,
 )
+from django.utils import translation
 
 
 # ==================== Sport Sections ====================
 
 
 class TrainingScheduleSerializer(serializers.ModelSerializer):
-    day = serializers.CharField(source="get_day_of_week_display", read_only=True)
+    day = serializers.SerializerMethodField()
     location = serializers.SerializerMethodField()
 
     class Meta:
@@ -29,6 +30,18 @@ class TrainingScheduleSerializer(serializers.ModelSerializer):
             request.query_params.get("language") if request else "ru"
         )
         return obj.get_location(language)
+
+    def get_day(self, obj):
+        request = self.context.get("request")
+        language = self.context.get("language") or (
+            request.query_params.get("language") if request else "ru"
+        )
+        prev = translation.get_language()
+        try:
+            translation.activate(language)
+            return obj.get_day_of_week_display()
+        finally:
+            translation.activate(prev)
 
 
 class SportSectionSerializer(serializers.ModelSerializer):
@@ -92,8 +105,8 @@ class SportSectionSerializer(serializers.ModelSerializer):
             request.query_params.get("language") if request else "ru"
         )
         return {
-            "name": obj.coach_name,
-            "full_name": obj.coach_name,
+            "name": obj.get_coach_name(language),
+            "full_name": obj.get_coach_name(language),
             "rank": obj.get_coach_rank(language),
             "title": obj.get_coach_rank(language),
             "contacts": obj.coach_contacts,
@@ -117,8 +130,8 @@ class SportSectionSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
 
         # Добавляем альтернативные имена полей
-        data["coach"] = instance.coach_name
-        data["trainer"] = instance.coach_name
+        data["coach"] = instance.get_coach_name(language)
+        data["trainer"] = instance.get_coach_name(language)
         # Локализованное расписание
         data["schedule"] = instance.get_schedule(language)
 
