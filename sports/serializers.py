@@ -15,11 +15,19 @@ from django.utils import translation
 # Map known seeded Russian placeholder strings to localized labels.
 # This avoids showing untranslated placeholder text coming from demo data.
 _PLACEHOLDER_MAP = {
-    "Имя спортсмена/команды:": {"ru": "Имя спортсмена/команды:", "en": "Athlete name:", "kg": "Спортчу аты:"},
+    "Имя спортсмена/команды:": {
+        "ru": "Имя спортсмена/команды:",
+        "en": "Athlete name:",
+        "kg": "Спортчу аты:",
+    },
     "Вид спорта:": {"ru": "Вид спорта:", "en": "Sport:", "kg": "Спорт:"},
     "Соревнование:": {"ru": "Соревнование:", "en": "Competition:", "kg": "Мелдешүү:"},
     "Результат:": {"ru": "Результат:", "en": "Result:", "kg": "Жыйынтык:"},
-    "Описание достижения (RU):": {"ru": "Описание достижения (RU):", "en": "Achievement description:", "kg": "Сипаттамасы:"},
+    "Описание достижения (RU):": {
+        "ru": "Описание достижения (RU):",
+        "en": "Achievement description:",
+        "kg": "Сипаттамасы:",
+    },
 }
 
 
@@ -211,40 +219,54 @@ class AchievementSerializer(serializers.ModelSerializer):
     def get_description(self, obj) -> str:
         """Return localized description (handles seeded placeholder values)."""
         request = self.context.get("request")
-        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
         raw = obj.get_description(language)
         return _localize_placeholder(raw, language)
 
     def get_name(self, obj):
         request = self.context.get("request")
-        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
         raw = obj.get_name(language)
         return _localize_placeholder(raw, language)
 
     def get_athlete_name(self, obj):
         request = self.context.get("request")
-        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
         raw = obj.get_name(language)
         return _localize_placeholder(raw, language)
 
     def get_sport_type(self, obj):
         request = self.context.get("request")
-        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
         return _localize_placeholder(obj.sport, language)
 
     def get_event(self, obj):
         request = self.context.get("request")
-        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
         return _localize_placeholder(obj.competition, language)
 
     def get_place(self, obj):
         request = self.context.get("request")
-        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
         return _localize_placeholder(obj.result, language)
 
     def get_achievement(self, obj):
         request = self.context.get("request")
-        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
         return _localize_placeholder(obj.result, language)
 
     def get_event_date(self, obj):
@@ -277,7 +299,9 @@ class AchievementSerializer(serializers.ModelSerializer):
         data["event"] = data.get("event") or data.get("competition")
         data["place"] = data.get("place") or data.get("result")
         data["achievement"] = data.get("achievement") or data.get("result")
-        data["event_date"] = data.get("event_date") or (data.get("date") if data.get("date") else None)
+        data["event_date"] = data.get("event_date") or (
+            data.get("date") if data.get("date") else None
+        )
         data["photo"] = data.get("photo") or data.get("image")
 
         return data
