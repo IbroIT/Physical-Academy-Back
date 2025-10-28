@@ -286,36 +286,25 @@ class InfrastructureSerializer(serializers.ModelSerializer):
         """Формируем массив статистики"""
         language = self.context.get("language", "ru")
 
-        # Получаем перевод для подписей статистики
-        translation = obj.translations.filter(language=language).first()
-
-        if not translation:
-            translation = obj.translations.filter(language="ru").first()
-
-        if not translation:
-            translation = obj.translations.first()
-
-        if translation:
-            return [
-                {
-                    "label": translation.stat_1_label,
-                    "value": obj.stat_1_value,
-                    "icon": obj.stat_1_icon,
-                },
-                {
-                    "label": translation.stat_2_label,
-                    "value": obj.stat_2_value,
-                    "icon": obj.stat_2_icon,
-                },
-                {
-                    "label": translation.stat_3_label,
-                    "value": obj.stat_3_value,
-                    "icon": obj.stat_3_icon,
-                },
-                {
-                    "label": translation.stat_4_label,
-                    "value": obj.stat_4_value,
-                    "icon": obj.stat_4_icon,
-                },
-            ]
-        return []
+        return [
+            {
+                "label": obj.get_stat_label(1, language),
+                "value": obj.stat_1_value,
+                "icon": obj.stat_1_icon,
+            },
+            {
+                "label": obj.get_stat_label(2, language),
+                "value": obj.stat_2_value,
+                "icon": obj.stat_2_icon,
+            },
+            {
+                "label": obj.get_stat_label(3, language),
+                "value": obj.stat_3_value,
+                "icon": obj.stat_3_icon,
+            },
+            {
+                "label": obj.get_stat_label(4, language),
+                "value": obj.stat_4_value,
+                "icon": obj.stat_4_icon,
+            },
+        ]
