@@ -146,13 +146,13 @@ class AchievementSerializer(serializers.ModelSerializer):
 
     description = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
-    name = serializers.CharField(source="athlete_name", read_only=True)
-    # Compatibility field expected by frontend — map to model.sport
-    sport_type = serializers.CharField(source="sport", read_only=True)
-    # Compatibility aliases for frontend
-    event = serializers.CharField(source="competition", read_only=True)
-    place = serializers.CharField(source="result", read_only=True)
-    achievement = serializers.CharField(source="result", read_only=True)
+    name = serializers.SerializerMethodField()
+    athlete_name = serializers.SerializerMethodField()
+    # Compatibility fields - these are added in to_representation
+    sport_type = serializers.SerializerMethodField()
+    event = serializers.SerializerMethodField()
+    place = serializers.SerializerMethodField()
+    achievement = serializers.SerializerMethodField()
     photo = serializers.SerializerMethodField()
     event_date = serializers.SerializerMethodField()
 
@@ -183,6 +183,29 @@ class AchievementSerializer(serializers.ModelSerializer):
         language = self.context.get("language", "ru")
         return obj.get_description(language)
 
+    def get_name(self, obj):
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
+
+    def get_athlete_name(self, obj):
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
+
+    def get_sport_type(self, obj):
+        return obj.sport
+
+    def get_event(self, obj):
+        return obj.competition
+
+    def get_place(self, obj):
+        return obj.result
+
+    def get_achievement(self, obj):
+        return obj.result
+
+    def get_event_date(self, obj):
+        return obj.date.isoformat() if getattr(obj, "date", None) else None
+
     def get_image(self, obj):
         if obj.image:
             request = self.context.get("request")
@@ -195,28 +218,13 @@ class AchievementSerializer(serializers.ModelSerializer):
         # reuse same logic as image
         return self.get_image(obj)
 
-    def get_event_date(self, obj):
-        return obj.date.isoformat() if getattr(obj, "date", None) else None
-
     def to_representation(self, instance):
         # Получаем язык из контекста
         request = self.context.get("request")
         language = request.query_params.get("language", "ru") if request else "ru"
         self.context["language"] = language
 
-        data = super().to_representation(instance)
-
-        # Добавляем альтернативные имена полей для совместимости с фронтендом
-        data["name"] = instance.athlete_name
-        data["athlete_name"] = instance.athlete_name
-        data["sport_type"] = instance.sport
-        data["event"] = instance.competition
-        data["place"] = instance.result
-        data["achievement"] = instance.result
-        data["event_date"] = instance.date.isoformat() if instance.date else None
-        data["photo"] = data["image"]
-
-        return data
+        return super().to_representation(instance)
 
 
 # ==================== Infrastructure ====================
