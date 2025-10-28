@@ -1,23 +1,30 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .views import (
-    SportSectionViewSet,
-    AchievementViewSet,
-    InfrastructureViewSet,
+    SportSectionListAPIView,
+    SportSectionDetailAPIView,
+    AchievementListAPIView,
+    AchievementDetailAPIView,
+    InfrastructureAPIView,
     SportStatisticsAPIView,
 )
 
 app_name = "sports"
 
-# Создаем роутер для ViewSets
-router = DefaultRouter()
-router.register(r"sections", SportSectionViewSet, basename="section")
-router.register(r"achievements", AchievementViewSet, basename="achievement")
-router.register(r"infrastructure", InfrastructureViewSet, basename="infrastructure")
-
 urlpatterns = [
-    # ViewSet URLs
-    path("", include(router.urls)),
+    # Sport Sections
+    path("sections/", SportSectionListAPIView.as_view(), name="section-list"),
+    path(
+        "sections/<int:id>/", SportSectionDetailAPIView.as_view(), name="section-detail"
+    ),
+    # Achievements
+    path("achievements/", AchievementListAPIView.as_view(), name="achievement-list"),
+    path(
+        "achievements/<int:id>/",
+        AchievementDetailAPIView.as_view(),
+        name="achievement-detail",
+    ),
+    # Infrastructure
+    path("infrastructure/", InfrastructureAPIView.as_view(), name="infrastructure"),
     # Statistics
     path("statistics/", SportStatisticsAPIView.as_view(), name="statistics"),
 ]

@@ -1,13 +1,16 @@
 from rest_framework import serializers
-from drf_spectacular.utils import extend_schema_field
-from drf_spectacular.types import OpenApiTypes
 from .models import (
     SportSection,
+    SportSectionTranslation,
     TrainingSchedule,
     Achievement,
+    AchievementTranslation,
     Infrastructure,
+    InfrastructureTranslation,
     InfrastructureCategory,
+    InfrastructureCategoryTranslation,
     InfrastructureObject,
+    InfrastructureObjectTranslation,
 )
 
 
@@ -28,11 +31,10 @@ class SportSectionSerializer(serializers.ModelSerializer):
         source="training_schedules", many=True, read_only=True
     )
 
-    # Поля, которые будут заполнены через SerializerMethodField
-    coach_info = serializers.SerializerMethodField()
-    name = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
-    contact_info = serializers.SerializerMethodField()
+    # Поля, которые будут заполнены из переводов
+    name = serializers.CharField(read_only=True)
+    description = serializers.CharField(read_only=True)
+    contact_info = serializers.CharField(read_only=True)
 
     class Meta:
         model = SportSection
@@ -41,6 +43,8 @@ class SportSectionSerializer(serializers.ModelSerializer):
             "name",
             "sport_type",
             "image",
+            "coach",
+            "trainer",
             "schedule",
             "description",
             "contact_info",
@@ -53,39 +57,38 @@ class SportSectionSerializer(serializers.ModelSerializer):
             return obj.image.url
         return None
 
-    def get_coach_info(self, obj):
-        return {
-            "name": obj.coach_name,
-            "full_name": obj.coach_name,
-            "rank": obj.coach_rank,
-            "title": obj.coach_rank,
-            "contacts": obj.coach_contacts,
-            "phone": obj.coach_contacts,
-        }
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_name(self, obj) -> str:
-        """Получить название секции на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_name(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj) -> str:
-        """Получить описание секции на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_description(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_contact_info(self, obj) -> str:
-        """Получить контактную информацию на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_contact_info(language)
-
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        # Добавляем дополнительные поля для совместимости
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
+
+        # Получаем перевод
+        translation = instance.translations.filter(language=language).first()
+
+        if not translation:
+            # Fallback на русский
+            translation = instance.translations.filter(language="ru").first()
+
+        if not translation:
+            # Fallback на первый доступный
+            translation = instance.translations.first()
+
+        if translation:
+            data["name"] = translation.name
+            data["description"] = translation.description
+            data["contact_info"] = translation.contact_info
+
+        # Добавляем информацию о тренере
         data["coach"] = instance.coach_name
-        data["trainer"] = instance.coach_name
+        data["trainer"] = instance.coach_name  # Альтернативное имя
+        data["coach_info"] = {
+            "name": instance.coach_name,
+            "full_name": instance.coach_name,
+            "rank": instance.coach_rank,
+            "title": instance.coach_rank,
+            "contacts": instance.coach_contacts,
+            "phone": instance.coach_contacts,
+        }
 
         # Форматируем расписание тренировок
         schedules = instance.training_schedules.all()
@@ -109,18 +112,25 @@ class SportSectionSerializer(serializers.ModelSerializer):
 
 class AchievementSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
-    photo = serializers.SerializerMethodField()
+    name = serializers.CharField(source="athlete_name", read_only=True)
+    description = serializers.CharField(read_only=True)
+    details = serializers.JSONField(read_only=True)  # Используем JSONField напрямую
 
     class Meta:
         model = Achievement
         fields = [
             "id",
+            "name",
             "athlete_name",
             "sport",
+            "sport_type",
             "competition",
+            "event",
             "result",
+            "place",
+            "achievement",
             "date",
+            "event_date",
             "image",
             "photo",
             "description",
@@ -133,18 +143,22 @@ class AchievementSerializer(serializers.ModelSerializer):
             return obj.image.url
         return None
 
-    def get_photo(self, obj):
-        # Альтернативное имя для image
-        return self.get_image(obj)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj) -> str:
-        """Получить описание достижения на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_description(language)
-
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
+
+        # Получаем перевод
+        translation = instance.translations.filter(language=language).first()
+
+        if not translation:
+            translation = instance.translations.filter(language="ru").first()
+
+        if not translation:
+            translation = instance.translations.first()
+
+        if translation:
+            data["description"] = translation.description
 
         # Добавляем альтернативные имена полей для совместимости
         data["name"] = instance.athlete_name
@@ -160,16 +174,26 @@ class AchievementSerializer(serializers.ModelSerializer):
         data["details"] = instance.details or {}
 
         return data
+        data["event_date"] = instance.date.isoformat() if instance.date else None
+        data["photo"] = data["image"]
+
+        return data
 
 
 # ==================== Infrastructure ====================
 
 
+class InfrastructureObjectTranslationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InfrastructureObjectTranslation
+        fields = ["name", "description"]
+
+
 class InfrastructureObjectSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
-    name = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
-    features = serializers.JSONField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    description = serializers.CharField(read_only=True)
+    features = serializers.JSONField(read_only=True)  # Используем JSONField напрямую
     amenities = serializers.SerializerMethodField()
 
     class Meta:
@@ -181,27 +205,28 @@ class InfrastructureObjectSerializer(serializers.ModelSerializer):
             return obj.image.url
         return None
 
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_name(self, obj) -> str:
-        """Получить название объекта на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_name(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj) -> str:
-        """Получить описание объекта на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_description(language)
-
     def get_amenities(self, obj):
         """Альтернативное название для features"""
         return obj.features or []
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
 
-        # Добавляем альтернативное имя для name
-        data["title"] = data["name"]
+        # Получаем перевод
+        translation = instance.translations.filter(language=language).first()
+
+        if not translation:
+            translation = instance.translations.filter(language="ru").first()
+
+        if not translation:
+            translation = instance.translations.first()
+
+        if translation:
+            data["name"] = translation.name
+            data["title"] = translation.name
+            data["description"] = translation.description
 
         # features уже в формате JSON
         data["features"] = instance.features or []
@@ -209,9 +234,16 @@ class InfrastructureObjectSerializer(serializers.ModelSerializer):
 
         return data
 
+        if translation:
+            data["name"] = translation.name
+            data["title"] = translation.name
+            data["description"] = translation.description
+
+        return data
+
 
 class InfrastructureCategorySerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
+    name = serializers.CharField(read_only=True)
     objects = InfrastructureObjectSerializer(many=True, read_only=True)
     items = serializers.SerializerMethodField()
 
@@ -219,41 +251,46 @@ class InfrastructureCategorySerializer(serializers.ModelSerializer):
         model = InfrastructureCategory
         fields = ["id", "slug", "name", "icon", "color", "objects", "items"]
 
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_name(self, obj) -> str:
-        """Получить название категории на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_name(language)
-
     def get_items(self, obj):
         """Альтернативное название для objects"""
-        language = self.context.get("language", "ru")
+        request = self.context.get("request")
         objects = obj.objects.filter(is_active=True)
         serializer = InfrastructureObjectSerializer(
-            objects, many=True, context={"language": language}
+            objects, many=True, context={"request": request}
         )
         return serializer.data
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        language = self.context.get("language", "ru")
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
 
-        # Добавляем альтернативное имя для name
-        data["title"] = data["name"]
+        # Получаем перевод
+        translation = instance.translations.filter(language=language).first()
+
+        if not translation:
+            translation = instance.translations.filter(language="ru").first()
+
+        if not translation:
+            translation = instance.translations.first()
+
+        if translation:
+            data["name"] = translation.name
+            data["title"] = translation.name
 
         # Фильтруем активные объекты
         objects = instance.objects.filter(is_active=True)
         data["objects"] = InfrastructureObjectSerializer(
-            objects, many=True, context={"language": language}
+            objects, many=True, context={"request": request}
         ).data
 
         return data
 
 
 class InfrastructureSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
-    title = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
+    name = serializers.CharField(read_only=True)
+    title = serializers.CharField(read_only=True)
+    description = serializers.CharField(read_only=True)
     stats = serializers.SerializerMethodField()
     categories = InfrastructureCategorySerializer(many=True, read_only=True)
 
@@ -261,47 +298,62 @@ class InfrastructureSerializer(serializers.ModelSerializer):
         model = Infrastructure
         fields = ["name", "title", "description", "badge", "stats", "categories"]
 
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_name(self, obj) -> str:
-        """Получить название инфраструктуры на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_name(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_title(self, obj) -> str:
-        """Получить название инфраструктуры на нужном языке (альтернатива)"""
-        language = self.context.get("language", "ru")
-        return obj.get_name(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj) -> str:
-        """Получить описание инфраструктуры на нужном языке"""
-        language = self.context.get("language", "ru")
-        return obj.get_description(language)
-
     def get_stats(self, obj):
         """Формируем массив статистики"""
-        language = self.context.get("language", "ru")
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
 
-        return [
-            {
-                "label": obj.get_stat_label(1, language),
-                "value": obj.stat_1_value,
-                "icon": obj.stat_1_icon,
-            },
-            {
-                "label": obj.get_stat_label(2, language),
-                "value": obj.stat_2_value,
-                "icon": obj.stat_2_icon,
-            },
-            {
-                "label": obj.get_stat_label(3, language),
-                "value": obj.stat_3_value,
-                "icon": obj.stat_3_icon,
-            },
-            {
-                "label": obj.get_stat_label(4, language),
-                "value": obj.stat_4_value,
-                "icon": obj.stat_4_icon,
-            },
-        ]
+        # Получаем перевод
+        translation = obj.translations.filter(language=language).first()
+
+        if not translation:
+            translation = obj.translations.filter(language="ru").first()
+
+        if not translation:
+            translation = obj.translations.first()
+
+        if translation:
+            return [
+                {
+                    "label": translation.stat_1_label,
+                    "value": obj.stat_1_value,
+                    "icon": obj.stat_1_icon,
+                },
+                {
+                    "label": translation.stat_2_label,
+                    "value": obj.stat_2_value,
+                    "icon": obj.stat_2_icon,
+                },
+                {
+                    "label": translation.stat_3_label,
+                    "value": obj.stat_3_value,
+                    "icon": obj.stat_3_icon,
+                },
+                {
+                    "label": translation.stat_4_label,
+                    "value": obj.stat_4_value,
+                    "icon": obj.stat_4_icon,
+                },
+            ]
+        return []
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
+
+        # Получаем перевод
+        translation = instance.translations.filter(language=language).first()
+
+        if not translation:
+            translation = instance.translations.filter(language="ru").first()
+
+        if not translation:
+            translation = instance.translations.first()
+
+        if translation:
+            data["name"] = translation.name
+            data["title"] = translation.name
+            data["description"] = translation.description
+
+        return data
