@@ -233,6 +233,24 @@ class Achievement(models.Model):
         max_length=100,
         help_text=_("Например: 1 место, Золото, Участник"),
     )
+    # Переводы для полей sport/competition/result (опционально)
+    sport_ru = models.CharField(_("Вид спорта (RU)"), max_length=200, blank=True)
+    sport_kg = models.CharField(_("Вид спорта (KG)"), max_length=200, blank=True)
+    sport_en = models.CharField(_("Вид спорта (EN)"), max_length=200, blank=True)
+
+    competition_ru = models.CharField(
+        _("Соревнование (RU)"), max_length=200, blank=True
+    )
+    competition_kg = models.CharField(
+        _("Соревнование (KG)"), max_length=200, blank=True
+    )
+    competition_en = models.CharField(
+        _("Соревнование (EN)"), max_length=200, blank=True
+    )
+
+    result_ru = models.CharField(_("Результат (RU)"), max_length=100, blank=True)
+    result_kg = models.CharField(_("Результат (KG)"), max_length=100, blank=True)
+    result_en = models.CharField(_("Результат (EN)"), max_length=100, blank=True)
     date = models.DateField(_("Дата достижения"))
     image = models.ImageField(
         _("Изображение"), upload_to="sports/achievements/", blank=True, null=True
@@ -290,6 +308,18 @@ class Achievement(models.Model):
     def get_name(self, language="ru"):
         value = getattr(self, f"athlete_name_{language}", None)
         return value if value else self.athlete_name
+
+    def get_sport(self, language="ru"):
+        value = getattr(self, f"sport_{language}", None)
+        return value if value else self.sport
+
+    def get_competition(self, language="ru"):
+        value = getattr(self, f"competition_{language}", None)
+        return value if value else self.competition
+
+    def get_result(self, language="ru"):
+        value = getattr(self, f"result_{language}", None)
+        return value if value else self.result
 
 
 class Infrastructure(models.Model):

@@ -246,28 +246,37 @@ class AchievementSerializer(serializers.ModelSerializer):
         language = self.context.get("language", None) or (
             request.query_params.get("language") if request else "ru"
         )
-        return _localize_placeholder(obj.sport, language)
+        # Prefer model-level translated field if present
+        raw = obj.get_sport(language) if hasattr(obj, "get_sport") else obj.sport
+        return _localize_placeholder(raw, language)
 
     def get_event(self, obj):
         request = self.context.get("request")
         language = self.context.get("language", None) or (
             request.query_params.get("language") if request else "ru"
         )
-        return _localize_placeholder(obj.competition, language)
+        raw = (
+            obj.get_competition(language)
+            if hasattr(obj, "get_competition")
+            else obj.competition
+        )
+        return _localize_placeholder(raw, language)
 
     def get_place(self, obj):
         request = self.context.get("request")
         language = self.context.get("language", None) or (
             request.query_params.get("language") if request else "ru"
         )
-        return _localize_placeholder(obj.result, language)
+        raw = obj.get_result(language) if hasattr(obj, "get_result") else obj.result
+        return _localize_placeholder(raw, language)
 
     def get_achievement(self, obj):
         request = self.context.get("request")
         language = self.context.get("language", None) or (
             request.query_params.get("language") if request else "ru"
         )
-        return _localize_placeholder(obj.result, language)
+        raw = obj.get_result(language) if hasattr(obj, "get_result") else obj.result
+        return _localize_placeholder(raw, language)
 
     def get_event_date(self, obj):
         return obj.date.isoformat() if getattr(obj, "date", None) else None
