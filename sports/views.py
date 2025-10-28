@@ -26,8 +26,10 @@ class SportSectionViewSet(viewsets.ReadOnlyModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             return SportSection.objects.none()
 
+        # Начиная с текущей модели переводы хранятся в полях name_ru/name_en/name_kg и т.д.
+        # Поэтому relation 'translations' не существует — убираем prefetch для него.
         queryset = SportSection.objects.filter(is_active=True).prefetch_related(
-            "translations", "training_schedules"
+            "training_schedules"
         )
 
         # Фильтрация по типу спорта
@@ -61,9 +63,8 @@ class AchievementViewSet(viewsets.ReadOnlyModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             return Achievement.objects.none()
 
-        queryset = Achievement.objects.filter(is_active=True).prefetch_related(
-            "translations"
-        )
+        # Achievement хранит переводы в полях description_ru/description_en/description_kg
+        queryset = Achievement.objects.filter(is_active=True)
 
         # Фильтрация по категории
         category = self.request.query_params.get("category", None)
@@ -99,11 +100,12 @@ class InfrastructureViewSet(viewsets.ViewSet):
 
         # Получаем первую активную запись инфраструктуры
         infrastructure = (
+            # Infrastructure also uses language-specific fields (name_ru, description_ru, etc.)
+            # so there are no translation relation managers. Prefetch categories and objects.
             Infrastructure.objects.filter(is_active=True)
             .prefetch_related(
-                "translations",
-                "categories__translations",
-                "categories__objects__translations",
+                "categories",
+                "categories__objects",
             )
             .first()
         )
