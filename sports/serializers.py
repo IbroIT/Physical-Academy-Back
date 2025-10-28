@@ -28,12 +28,8 @@ class SportSectionSerializer(serializers.ModelSerializer):
         source="training_schedules", many=True, read_only=True
     )
 
-    # Дополнительные выходные поля, не лежащие в модели напрямую
-    coach = serializers.CharField(source="coach_name", read_only=True)
-    trainer = serializers.CharField(source="coach_name", read_only=True)
-    coach_info = serializers.SerializerMethodField()
-
     # Поля, которые будут заполнены через SerializerMethodField
+    coach_info = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     contact_info = serializers.SerializerMethodField()
