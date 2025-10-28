@@ -149,6 +149,12 @@ class AchievementSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="athlete_name", read_only=True)
     # Compatibility field expected by frontend — map to model.sport
     sport_type = serializers.CharField(source="sport", read_only=True)
+    # Compatibility aliases for frontend
+    event = serializers.CharField(source="competition", read_only=True)
+    place = serializers.CharField(source="result", read_only=True)
+    achievement = serializers.CharField(source="result", read_only=True)
+    photo = serializers.SerializerMethodField()
+    event_date = serializers.SerializerMethodField()
 
     class Meta:
         model = Achievement
@@ -184,6 +190,13 @@ class AchievementSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.image.url)
             return obj.image.url
         return None
+
+    def get_photo(self, obj):
+        # reuse same logic as image
+        return self.get_image(obj)
+
+    def get_event_date(self, obj):
+        return obj.date.isoformat() if getattr(obj, "date", None) else None
 
     def to_representation(self, instance):
         # Получаем язык из контекста
@@ -255,8 +268,34 @@ class InfrastructureObjectSerializer(serializers.ModelSerializer):
         return None
 
     def get_amenities(self, obj):
-        """Альтернативное название для features"""
-        return obj.features or []
+        """Альтернативное название для features.
+
+        Supports two formats stored in `features` JSONField:
+        - list of strings (legacy): ["Вместимость: 1500", ...]
+        - list of dicts with language keys (new): [{"ru": "...", "en": "...", "kg": "..."}, ...]
+
+        This method returns a list of strings localized for the requested language.
+        """
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
+
+        raw = obj.features or []
+        out = []
+        for item in raw:
+            if isinstance(item, dict):
+                # try exact language, then fallbacks
+                val = (
+                    item.get(language)
+                    or item.get("ru")
+                    or next(iter(item.values()), None)
+                )
+                if val:
+                    out.append(val)
+                    continue
+            # fallback: string value
+            out.append(item)
+
+        return out
 
     def to_representation(self, instance):
         # Получаем язык из контекста
