@@ -28,6 +28,11 @@ class SportSectionSerializer(serializers.ModelSerializer):
         source="training_schedules", many=True, read_only=True
     )
 
+    # Дополнительные выходные поля, не лежащие в модели напрямую
+    coach = serializers.CharField(source="coach_name", read_only=True)
+    trainer = serializers.CharField(source="coach_name", read_only=True)
+    coach_info = serializers.SerializerMethodField()
+
     # Поля, которые будут заполнены через SerializerMethodField
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
@@ -40,8 +45,6 @@ class SportSectionSerializer(serializers.ModelSerializer):
             "name",
             "sport_type",
             "image",
-            "coach",
-            "trainer",
             "schedule",
             "description",
             "contact_info",
@@ -53,6 +56,16 @@ class SportSectionSerializer(serializers.ModelSerializer):
         if obj.image:
             return obj.image.url
         return None
+
+    def get_coach_info(self, obj):
+        return {
+            "name": obj.coach_name,
+            "full_name": obj.coach_name,
+            "rank": obj.coach_rank,
+            "title": obj.coach_rank,
+            "contacts": obj.coach_contacts,
+            "phone": obj.coach_contacts,
+        }
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj) -> str:
@@ -74,18 +87,9 @@ class SportSectionSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-
-        # Добавляем информацию о тренере
+        # Добавляем дополнительные поля для совместимости
         data["coach"] = instance.coach_name
-        data["trainer"] = instance.coach_name  # Альтернативное имя
-        data["coach_info"] = {
-            "name": instance.coach_name,
-            "full_name": instance.coach_name,
-            "rank": instance.coach_rank,
-            "title": instance.coach_rank,
-            "contacts": instance.coach_contacts,
-            "phone": instance.coach_contacts,
-        }
+        data["trainer"] = instance.coach_name
 
         # Форматируем расписание тренировок
         schedules = instance.training_schedules.all()
@@ -109,25 +113,18 @@ class SportSectionSerializer(serializers.ModelSerializer):
 
 class AchievementSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
-    name = serializers.CharField(source="athlete_name", read_only=True)
     description = serializers.SerializerMethodField()
-    details = serializers.JSONField(read_only=True)
+    photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Achievement
         fields = [
             "id",
-            "name",
             "athlete_name",
             "sport",
-            "sport_type",
             "competition",
-            "event",
             "result",
-            "place",
-            "achievement",
             "date",
-            "event_date",
             "image",
             "photo",
             "description",
@@ -139,6 +136,10 @@ class AchievementSerializer(serializers.ModelSerializer):
         if obj.image:
             return obj.image.url
         return None
+
+    def get_photo(self, obj):
+        # Альтернативное имя для image
+        return self.get_image(obj)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj) -> str:
