@@ -185,6 +185,10 @@ class AchievementSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     athlete_name = serializers.SerializerMethodField()
+    # These provide the API-stable keys while using per-language fields in the model
+    sport = serializers.SerializerMethodField()
+    competition = serializers.SerializerMethodField()
+    result = serializers.SerializerMethodField()
     # Compatibility fields - these are added in to_representation
     sport_type = serializers.SerializerMethodField()
     event = serializers.SerializerMethodField()
@@ -247,7 +251,33 @@ class AchievementSerializer(serializers.ModelSerializer):
             request.query_params.get("language") if request else "ru"
         )
         # Prefer model-level translated field if present
-        raw = obj.get_sport(language) if hasattr(obj, "get_sport") else obj.sport
+        # Prefer model-level translated field if present
+        raw = obj.get_sport(language) if hasattr(obj, "get_sport") else None
+        return _localize_placeholder(raw, language)
+
+    # Provide explicit SerializerMethodFields for the now-removed plain model fields
+    def get_sport(self, obj):
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
+        raw = obj.get_sport(language) if hasattr(obj, "get_sport") else None
+        return _localize_placeholder(raw, language)
+
+    def get_competition(self, obj):
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
+        raw = obj.get_competition(language) if hasattr(obj, "get_competition") else None
+        return _localize_placeholder(raw, language)
+
+    def get_result(self, obj):
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
+        raw = obj.get_result(language) if hasattr(obj, "get_result") else None
         return _localize_placeholder(raw, language)
 
     def get_event(self, obj):

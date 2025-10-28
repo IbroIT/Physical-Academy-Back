@@ -214,8 +214,8 @@ class Achievement(models.Model):
         ("coaching", _("Тренерские")),
     ]
 
-    # Базовая информация
-    athlete_name = models.CharField(_("Имя спортсмена/команды"), max_length=200)
+    # Переводимое имя спортсмена/команды. Canonical (non-language) column removed
+    # Use per-language fields `athlete_name_ru/_en/_kg` instead.
     # Переводы для имени спортсмена / команды
     athlete_name_ru = models.CharField(
         _("Имя спортсмена/команды (RU)"), max_length=200, blank=True
@@ -225,13 +225,6 @@ class Achievement(models.Model):
     )
     athlete_name_en = models.CharField(
         _("Имя спортсмена/команды (EN)"), max_length=200, blank=True
-    )
-    sport = models.CharField(_("Вид спорта"), max_length=100)
-    competition = models.CharField(_("Соревнование"), max_length=200)
-    result = models.CharField(
-        _("Результат"),
-        max_length=100,
-        help_text=_("Например: 1 место, Золото, Участник"),
     )
     # Переводы для полей sport/competition/result (опционально)
     sport_ru = models.CharField(_("Вид спорта (RU)"), max_length=200, blank=True)
@@ -298,7 +291,26 @@ class Achievement(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.athlete_name} - {self.competition} ({self.result})"
+        # Use localized getters (which read per-language fields).
+        # Avoid referencing removed plain fields directly.
+        try:
+            name = self.get_name()
+        except Exception:
+            name = (
+                getattr(self, "athlete_name_ru", None)
+                or getattr(self, "athlete_name_en", None)
+                or getattr(self, "athlete_name_kg", "")
+                or ""
+            )
+        try:
+            competition = self.get_competition()
+        except Exception:
+            competition = getattr(self, "competition_ru", "") or ""
+        try:
+            result = self.get_result()
+        except Exception:
+            result = getattr(self, "result_ru", "") or ""
+        return f"{name} - {competition} ({result})"
 
     def get_description(self, language="ru"):
         """Получить описание достижения на указанном языке"""
@@ -306,20 +318,51 @@ class Achievement(models.Model):
         return value if value else self.description_ru
 
     def get_name(self, language="ru"):
+        # Return the athlete/team name in requested language, falling back through translations.
         value = getattr(self, f"athlete_name_{language}", None)
-        return value if value else self.athlete_name
+        if value:
+            return value
+        return (
+            getattr(self, "athlete_name_ru", None)
+            or getattr(self, "athlete_name_en", None)
+            or getattr(self, "athlete_name_kg", None)
+            or ""
+        )
 
     def get_sport(self, language="ru"):
+        # Return the sport in requested language, falling back to available translations.
         value = getattr(self, f"sport_{language}", None)
-        return value if value else self.sport
+        if value:
+            return value
+        # Try RU then EN then KG
+        return (
+            getattr(self, "sport_ru", None)
+            or getattr(self, "sport_en", None)
+            or getattr(self, "sport_kg", None)
+            or ""
+        )
 
     def get_competition(self, language="ru"):
         value = getattr(self, f"competition_{language}", None)
-        return value if value else self.competition
+        if value:
+            return value
+        return (
+            getattr(self, "competition_ru", None)
+            or getattr(self, "competition_en", None)
+            or getattr(self, "competition_kg", None)
+            or ""
+        )
 
     def get_result(self, language="ru"):
         value = getattr(self, f"result_{language}", None)
-        return value if value else self.result
+        if value:
+            return value
+        return (
+            getattr(self, "result_ru", None)
+            or getattr(self, "result_en", None)
+            or getattr(self, "result_kg", None)
+            or ""
+        )
 
 
 class Infrastructure(models.Model):

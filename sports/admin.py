@@ -90,17 +90,22 @@ class SportSectionAdmin(admin.ModelAdmin):
 @admin.register(Achievement)
 class AchievementAdmin(admin.ModelAdmin):
     list_display = (
-        "athlete_name",
-        "sport",
-        "result",
+        "athlete_name_ru",
+        "sport_ru",
+        "result_ru",
         "date",
         "category",
         "is_active",
         "order",
     )
-    list_filter = ("is_active", "category", "sport", "date")
+    list_filter = ("is_active", "category", "date")
     list_editable = ("is_active", "order")
-    search_fields = ("athlete_name", "sport", "competition")
+    search_fields = (
+        "athlete_name",
+        "competition_ru",
+        "competition_en",
+        "competition_kg",
+    )
     date_hierarchy = "date"
 
     fieldsets = (
@@ -108,19 +113,15 @@ class AchievementAdmin(admin.ModelAdmin):
             "Основная информация",
             {
                 "fields": (
-                    "athlete_name",
                     "athlete_name_ru",
                     "athlete_name_kg",
                     "athlete_name_en",
-                    "sport",
                     "sport_ru",
                     "sport_kg",
                     "sport_en",
-                    "competition",
                     "competition_ru",
                     "competition_kg",
                     "competition_en",
-                    "result",
                     "result_ru",
                     "result_kg",
                     "result_en",
