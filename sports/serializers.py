@@ -12,6 +12,35 @@ from .models import (
 )
 from django.utils import translation
 
+# Map known seeded Russian placeholder strings to localized labels.
+# This avoids showing untranslated placeholder text coming from demo data.
+_PLACEHOLDER_MAP = {
+    "Имя спортсмена/команды:": {"ru": "Имя спортсмена/команды:", "en": "Athlete name:", "kg": "Спортчу аты:"},
+    "Вид спорта:": {"ru": "Вид спорта:", "en": "Sport:", "kg": "Спорт:"},
+    "Соревнование:": {"ru": "Соревнование:", "en": "Competition:", "kg": "Мелдешүү:"},
+    "Результат:": {"ru": "Результат:", "en": "Result:", "kg": "Жыйынтык:"},
+    "Описание достижения (RU):": {"ru": "Описание достижения (RU):", "en": "Achievement description:", "kg": "Сипаттамасы:"},
+}
+
+
+def _localize_placeholder(value, language="ru"):
+    """If value matches a known RU placeholder, return a small in-code localized string.
+
+    This is a pragmatic fallback for seeded/demo content that stored Russian labels
+    in model text fields. If the value is not a known placeholder, return it unchanged.
+    """
+    if not value:
+        return value
+    # Work with plain strings only
+    try:
+        s = str(value).strip()
+    except Exception:
+        return value
+
+    if s in _PLACEHOLDER_MAP:
+        return _PLACEHOLDER_MAP[s].get(language, _PLACEHOLDER_MAP[s].get("ru"))
+    return value
+
 
 # ==================== Sport Sections ====================
 
@@ -180,28 +209,43 @@ class AchievementSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj) -> str:
-        language = self.context.get("language", "ru")
-        return obj.get_description(language)
+        """Return localized description (handles seeded placeholder values)."""
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        raw = obj.get_description(language)
+        return _localize_placeholder(raw, language)
 
     def get_name(self, obj):
-        language = self.context.get("language", "ru")
-        return obj.get_name(language)
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        raw = obj.get_name(language)
+        return _localize_placeholder(raw, language)
 
     def get_athlete_name(self, obj):
-        language = self.context.get("language", "ru")
-        return obj.get_name(language)
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        raw = obj.get_name(language)
+        return _localize_placeholder(raw, language)
 
     def get_sport_type(self, obj):
-        return obj.sport
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        return _localize_placeholder(obj.sport, language)
 
     def get_event(self, obj):
-        return obj.competition
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        return _localize_placeholder(obj.competition, language)
 
     def get_place(self, obj):
-        return obj.result
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        return _localize_placeholder(obj.result, language)
 
     def get_achievement(self, obj):
-        return obj.result
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (request.query_params.get("language") if request else "ru")
+        return _localize_placeholder(obj.result, language)
 
     def get_event_date(self, obj):
         return obj.date.isoformat() if getattr(obj, "date", None) else None
@@ -224,7 +268,19 @@ class AchievementSerializer(serializers.ModelSerializer):
         language = request.query_params.get("language", "ru") if request else "ru"
         self.context["language"] = language
 
-        return super().to_representation(instance)
+        data = super().to_representation(instance)
+
+        # Ensure compatibility aliases (also localized if needed)
+        data["name"] = data.get("name") or data.get("athlete_name")
+        data["athlete_name"] = data.get("athlete_name")
+        data["sport_type"] = data.get("sport_type") or data.get("sport")
+        data["event"] = data.get("event") or data.get("competition")
+        data["place"] = data.get("place") or data.get("result")
+        data["achievement"] = data.get("achievement") or data.get("result")
+        data["event_date"] = data.get("event_date") or (data.get("date") if data.get("date") else None)
+        data["photo"] = data.get("photo") or data.get("image")
+
+        return data
 
 
 # ==================== Infrastructure ====================
