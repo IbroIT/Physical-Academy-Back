@@ -16,27 +16,28 @@ schema_view = SpectacularAPIView.as_view()
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
     # API endpoints
-    path('api/student-clubs/', include('student_clubs.urls')),
-    path('api/leadership-structure/', include('leadership_structure.urls')),
-    path('api/admission/', include('admission.urls')),
-    path('api/education/', include('education.urls')),
-    path('api/science/', include('science.urls')),
-    path('api/academy/', include('main_page.urls')),
-    path('api/banner/', include('banner.urls')),
-    path('api/news/', include('news.urls')),
-    path('api/announcements/', include('announcements.urls')),
-     path('api/events/', include('events.urls')), 
-    path('api/quotes/', include('quotes.urls')),
-    path('api/facts/', include('facts.urls')),
-    
+    path("api/student-clubs/", include("student_clubs.urls")),
+    path("api/leadership-structure/", include("leadership_structure.urls")),
+    path("api/admission/", include("admission.urls")),
+    path("api/education/", include("education.urls")),
+    path("api/science/", include("science.urls")),
+    path("api/academy/", include("main_page.urls")),
+    path("api/banner/", include("banner.urls")),
+    path("api/news/", include("news.urls")),
+    path("api/announcements/", include("announcements.urls")),
+    path("api/events/", include("events.urls")),
+    path("api/quotes/", include("quotes.urls")),
+    path("api/facts/", include("facts.urls")),
+    # Sports API
+    path("api/sports/", include("sports.urls")),
     # Schema (JSON/YAML)'
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Swagger / Redoc UI
-    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path(
+        "swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"
+    ),
+    path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
 
 # Serve static and media files in development

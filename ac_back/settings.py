@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import dj_database_url 
+import dj_database_url
 from dotenv import load_dotenv
 import os
 import cloudinary  # type: ignore
@@ -33,8 +33,13 @@ SECRET_KEY = "django-insecure-bbkj54s(slv=5fah8k-d$^p6)hn&h66z&dpgabcu99x4^aor5o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.ksapcs.kg','physical-academy-backend-3dccb860f75a.herokuapp.com', 'ksapcs.kg', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = [
+    "www.ksapcs.kg",
+    "physical-academy-backend-3dccb860f75a.herokuapp.com",
+    "ksapcs.kg",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -48,25 +53,26 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third party apps
     "cloudinary_storage",  # Должен быть перед django.contrib.staticfiles
-    "cloudinary",          # Cloudinary основной пакет
+    "cloudinary",  # Cloudinary основной пакет
     "rest_framework",
     "corsheaders",
     "drf_spectacular",
     "django_filters",
     # 'drf_yasg', удалил, так как используется drf_spectacular
     # Local apps
-    'student_clubs',
-    'leadership_structure',
-    'admission',   
-    'main_page',
-    'education',
-    'science', 
-    'banner',
-    'news',
-    'announcements',
-    'events',
-    'quotes',
-    'facts',
+    "student_clubs",
+    "leadership_structure",
+    "admission",
+    "main_page",
+    "education",
+    "science",
+    "banner",
+    "news",
+    "announcements",
+    "events",
+    "quotes",
+    "facts",
+    "sports",  # Новое приложение для спорта
 ]
 
 MIDDLEWARE = [
@@ -104,13 +110,10 @@ WSGI_APPLICATION = "ac_back.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"), conn_max_age=600, ssl_require=True
     )
 }
-
 
 
 # Password validation
@@ -151,11 +154,11 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Cloudinary Configuration
-cloudinary.config( 
-    cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'),
-    api_key = os.getenv('CLOUDINARY_API_KEY'),
-    api_secret = os.getenv('CLOUDINARY_API_SECRET'),
-    secure = True
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True,
 )
 
 # Cloudinary Storage Settings (Django 4.2+ format)
@@ -169,10 +172,10 @@ STORAGES = {
 }
 
 # Media files configuration
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 
 # Legacy setting для обратной совместимости
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -247,16 +250,15 @@ SPECTACULAR_SETTINGS = {
 }
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
     },
 }
-
