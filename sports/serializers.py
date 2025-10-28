@@ -304,6 +304,23 @@ class AchievementSerializer(serializers.ModelSerializer):
         )
         data["photo"] = data.get("photo") or data.get("image")
 
+        # Also localize raw model-backed fields that are still present in data
+        # (these were included in Meta.fields and come from the model directly).
+        for key in (
+            "sport",
+            "competition",
+            "result",
+            "athlete_name",
+            "description",
+            "name",
+        ):
+            if key in data and data.get(key):
+                try:
+                    data[key] = _localize_placeholder(data[key], language)
+                except Exception:
+                    # be conservative — leave original value on any error
+                    pass
+
         return data
 
 
