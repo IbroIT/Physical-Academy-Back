@@ -147,6 +147,8 @@ class AchievementSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     name = serializers.CharField(source="athlete_name", read_only=True)
+    # Compatibility field expected by frontend — map to model.sport
+    sport_type = serializers.CharField(source="sport", read_only=True)
 
     class Meta:
         model = Achievement
@@ -290,9 +292,18 @@ class InfrastructureCategorySerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         language = request.query_params.get("language", "ru") if request else "ru"
 
-        active_objects = obj.objects.filter(is_active=True)
+        include_inactive = False
+        if request:
+            q = request.query_params.get("include_inactive", "false").lower()
+            include_inactive = q in ("1", "true", "yes")
+
+        if include_inactive:
+            objects_qs = obj.objects.all()
+        else:
+            objects_qs = obj.objects.filter(is_active=True)
+
         serializer = InfrastructureObjectSerializer(
-            active_objects,
+            objects_qs,
             many=True,
             context={"request": request, "language": language},
         )
@@ -324,10 +335,21 @@ class InfrastructureSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
     stats = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()
+    badge_translated = serializers.SerializerMethodField()
 
     class Meta:
         model = Infrastructure
-        fields = ["name", "title", "description", "badge", "stats", "categories"]
+        fields = [
+            "id",
+            "name",
+            "title",
+            "description",
+            "badge",
+            "badge_translated",
+            "created_at",
+            "stats",
+            "categories",
+        ]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj) -> str:
@@ -348,12 +370,25 @@ class InfrastructureSerializer(serializers.ModelSerializer):
         """Получаем статистику из связанной модели InfrastructureStatistic"""
         request = self.context.get("request")
         language = request.query_params.get("language", "ru") if request else "ru"
+        include_inactive = False
+        if request:
+            q = request.query_params.get("include_inactive", "false").lower()
+            include_inactive = q in ("1", "true", "yes")
 
-        active_stats = obj.statistics.filter(is_active=True).order_by("order")
+        if include_inactive:
+            stats_qs = obj.statistics.all().order_by("order")
+        else:
+            stats_qs = obj.statistics.filter(is_active=True).order_by("order")
+
         serializer = InfrastructureStatisticSerializer(
-            active_stats, many=True, context={"request": request, "language": language}
+            stats_qs, many=True, context={"request": request, "language": language}
         )
         return serializer.data
+
+    def get_badge_translated(self, obj):
+        request = self.context.get("request")
+        language = request.query_params.get("language", "ru") if request else "ru"
+        return obj.get_badge(language)
 
     def get_categories(self, obj):
         """Получаем категории инфраструктуры"""
