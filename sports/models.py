@@ -31,6 +31,27 @@ class SportSection(models.Model):
         _("Изображение"), upload_to="sports/sections/", blank=True, null=True
     )
 
+    # Переводы - Название
+    name_ru = models.CharField(_("Название секции (RU)"), max_length=200)
+    name_kg = models.CharField(_("Название секции (KG)"), max_length=200)
+    name_en = models.CharField(_("Название секции (EN)"), max_length=200)
+
+    # Переводы - Описание
+    description_ru = models.TextField(_("Описание (RU)"))
+    description_kg = models.TextField(_("Описание (KG)"))
+    description_en = models.TextField(_("Описание (EN)"))
+
+    # Переводы - Контактная информация
+    contact_info_ru = models.CharField(
+        _("Контактная информация (RU)"), max_length=500, blank=True
+    )
+    contact_info_kg = models.CharField(
+        _("Контактная информация (KG)"), max_length=500, blank=True
+    )
+    contact_info_en = models.CharField(
+        _("Контактная информация (EN)"), max_length=500, blank=True
+    )
+
     # Информация о тренере
     coach_name = models.CharField(_("ФИО тренера"), max_length=200)
     coach_rank = models.CharField(
@@ -38,6 +59,16 @@ class SportSection(models.Model):
         max_length=200,
         blank=True,
         help_text=_("Например: Мастер спорта, Заслуженный тренер"),
+    )
+    # Переводы для звания тренера (опционально)
+    coach_rank_ru = models.CharField(
+        _("Звание тренера (RU)"), max_length=200, blank=True
+    )
+    coach_rank_kg = models.CharField(
+        _("Звание тренера (KG)"), max_length=200, blank=True
+    )
+    coach_rank_en = models.CharField(
+        _("Звание тренера (EN)"), max_length=200, blank=True
     )
     coach_contacts = models.CharField(
         _("Контакты тренера"), max_length=200, blank=True, help_text=_("Телефон, email")
@@ -49,6 +80,10 @@ class SportSection(models.Model):
         max_length=200,
         help_text=_("Краткое расписание, например: Пн, Ср, Пт 18:00-20:00"),
     )
+    # Если расписание содержит локализуемый текст — храните переводы
+    schedule_ru = models.CharField(_("Расписание (RU)"), max_length=200, blank=True)
+    schedule_kg = models.CharField(_("Расписание (KG)"), max_length=200, blank=True)
+    schedule_en = models.CharField(_("Расписание (EN)"), max_length=200, blank=True)
 
     # Мета
     is_active = models.BooleanField(
@@ -70,46 +105,32 @@ class SportSection(models.Model):
         ]
 
     def __str__(self):
-        # Попытка получить название на русском
-        translation = self.translations.filter(language="ru").first()
-        if translation:
-            return f"{translation.name} ({self.coach_name})"
-        return f"{self.coach_name} - {self.get_sport_type_display()}"
+        return f"{self.name_ru} ({self.coach_name})"
 
+    def get_name(self, language="ru"):
+        """Получить название секции на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
 
-class SportSectionTranslation(models.Model):
-    """
-    Переводы для спортивных секций
-    """
+    def get_description(self, language="ru"):
+        """Получить описание секции на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
-    LANGUAGES = [
-        ("ru", "Русский"),
-        ("en", "English"),
-        ("kg", "Кыргызча"),
-    ]
+    def get_contact_info(self, language="ru"):
+        """Получить контактную информацию на указанном языке"""
+        value = getattr(self, f"contact_info_{language}", None)
+        return value if value else self.contact_info_ru
 
-    section = models.ForeignKey(
-        SportSection,
-        on_delete=models.CASCADE,
-        related_name="translations",
-        verbose_name=_("Секция"),
-    )
-    language = models.CharField(_("Язык"), max_length=2, choices=LANGUAGES)
+    def get_schedule(self, language="ru"):
+        """Получить текст расписания на нужном языке"""
+        value = getattr(self, f"schedule_{language}", None)
+        return value if value else self.schedule
 
-    # Переводимые поля
-    name = models.CharField(_("Название секции"), max_length=200)
-    description = models.TextField(_("Описание"))
-    contact_info = models.CharField(
-        _("Контактная информация"), max_length=500, blank=True
-    )
-
-    class Meta:
-        verbose_name = _("Перевод секции")
-        verbose_name_plural = _("Переводы секций")
-        unique_together = ["section", "language"]
-
-    def __str__(self):
-        return f"{self.section.id} - {self.name} ({self.get_language_display()})"
+    def get_coach_rank(self, language="ru"):
+        """Получить звание тренера на нужном языке"""
+        value = getattr(self, f"coach_rank_{language}", None)
+        return value if value else self.coach_rank
 
 
 class TrainingSchedule(models.Model):
@@ -139,6 +160,16 @@ class TrainingSchedule(models.Model):
     time_start = models.TimeField(_("Время начала"))
     time_end = models.TimeField(_("Время окончания"))
     location = models.CharField(_("Место проведения"), max_length=200, blank=True)
+    # Переводы для мест проведения (опционально)
+    location_ru = models.CharField(
+        _("Место проведения (RU)"), max_length=200, blank=True
+    )
+    location_kg = models.CharField(
+        _("Место проведения (KG)"), max_length=200, blank=True
+    )
+    location_en = models.CharField(
+        _("Место проведения (EN)"), max_length=200, blank=True
+    )
 
     class Meta:
         verbose_name = _("Расписание тренировки")
@@ -147,6 +178,10 @@ class TrainingSchedule(models.Model):
 
     def __str__(self):
         return f"{self.section} - {self.get_day_of_week_display()} {self.time_start}-{self.time_end}"
+
+    def get_location(self, language="ru"):
+        value = getattr(self, f"location_{language}", None)
+        return value if value else self.location
 
 
 class Achievement(models.Model):
@@ -175,6 +210,11 @@ class Achievement(models.Model):
     image = models.ImageField(
         _("Изображение"), upload_to="sports/achievements/", blank=True, null=True
     )
+
+    # Переводы - Описание
+    description_ru = models.TextField(_("Описание достижения (RU)"))
+    description_kg = models.TextField(_("Описание достижения (KG)"))
+    description_en = models.TextField(_("Описание достижения (EN)"))
 
     # Категория
     category = models.CharField(
@@ -215,79 +255,38 @@ class Achievement(models.Model):
     def __str__(self):
         return f"{self.athlete_name} - {self.competition} ({self.result})"
 
-
-class AchievementTranslation(models.Model):
-    """
-    Переводы для достижений
-    """
-
-    LANGUAGES = [
-        ("ru", "Русский"),
-        ("en", "English"),
-        ("kg", "Кыргызча"),
-    ]
-
-    achievement = models.ForeignKey(
-        Achievement,
-        on_delete=models.CASCADE,
-        related_name="translations",
-        verbose_name=_("Достижение"),
-    )
-    language = models.CharField(_("Язык"), max_length=2, choices=LANGUAGES)
-
-    # Переводимые поля
-    description = models.TextField(_("Описание достижения"))
-
-    class Meta:
-        verbose_name = _("Перевод достижения")
-        verbose_name_plural = _("Переводы достижений")
-        unique_together = ["achievement", "language"]
-
-    def __str__(self):
-        return f"{self.achievement.athlete_name} - {self.get_language_display()}"
+    def get_description(self, language="ru"):
+        """Получить описание достижения на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
 
 class Infrastructure(models.Model):
     """
-    Модель спортивной инфраструктуры (обычно одна запись)
+    Модель спортивной инфраструктуры с многоязычной поддержкой (обычно одна запись)
     """
+
+    # Переводы - Название и описание
+    name_ru = models.CharField(_("Название (RU)"), max_length=200)
+    name_kg = models.CharField(_("Название (KG)"), max_length=200)
+    name_en = models.CharField(_("Название (EN)"), max_length=200)
+
+    description_ru = models.TextField(_("Описание (RU)"))
+    description_kg = models.TextField(_("Описание (KG)"))
+    description_en = models.TextField(_("Описание (EN)"))
 
     # Общая информация
     badge = models.CharField(
         _("Бейдж"), max_length=100, default="Спортивная инфраструктура"
     )
-
-    # Статистика
-    stat_1_value = models.CharField(
-        _("Статистика 1 - Значение"), max_length=50, default="25+"
-    )
-    stat_1_icon = models.CharField(
-        _("Статистика 1 - Иконка"), max_length=10, default="🏟️"
-    )
-
-    stat_2_value = models.CharField(
-        _("Статистика 2 - Значение"), max_length=50, default="5000+"
-    )
-    stat_2_icon = models.CharField(
-        _("Статистика 2 - Иконка"), max_length=10, default="👥"
-    )
-
-    stat_3_value = models.CharField(
-        _("Статистика 3 - Значение"), max_length=50, default="100%"
-    )
-    stat_3_icon = models.CharField(
-        _("Статистика 3 - Иконка"), max_length=10, default="⚡"
-    )
-
-    stat_4_value = models.CharField(
-        _("Статистика 4 - Значение"), max_length=50, default="15+"
-    )
-    stat_4_icon = models.CharField(
-        _("Статистика 4 - Иконка"), max_length=10, default="🎯"
-    )
+    # Переводы для бейджа/заголовка
+    badge_ru = models.CharField(_("Бейдж/заголовка (RU)"), max_length=100, blank=True)
+    badge_kg = models.CharField(_("Бейдж/заголовка (KG)"), max_length=100, blank=True)
+    badge_en = models.CharField(_("Бейдж/заголовка (EN)"), max_length=100, blank=True)
 
     # Мета
     is_active = models.BooleanField(_("Активно"), default=True)
+    created_at = models.DateTimeField(_("Дата создания"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Дата обновления"), auto_now=True)
 
     class Meta:
@@ -295,45 +294,65 @@ class Infrastructure(models.Model):
         verbose_name_plural = _("Спортивная инфраструктура")
 
     def __str__(self):
-        return "Спортивная инфраструктура КГАФКиС"
+        return self.name_ru
+
+    def get_name(self, language="ru"):
+        """Получить название на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
+
+    def get_description(self, language="ru"):
+        """Получить описание на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
+
+    def get_badge(self, language="ru"):
+        value = getattr(self, f"badge_{language}", None)
+        return value if value else self.badge
 
 
-class InfrastructureTranslation(models.Model):
+class InfrastructureStatistic(models.Model):
     """
-    Переводы для инфраструктуры
+    Статистика спортивной инфраструктуры (динамическая модель)
     """
-
-    LANGUAGES = [
-        ("ru", "Русский"),
-        ("en", "English"),
-        ("kg", "Кыргызча"),
-    ]
 
     infrastructure = models.ForeignKey(
         Infrastructure,
         on_delete=models.CASCADE,
-        related_name="translations",
+        related_name="statistics",
         verbose_name=_("Инфраструктура"),
     )
-    language = models.CharField(_("Язык"), max_length=2, choices=LANGUAGES)
 
-    # Переводимые поля
-    name = models.CharField(_("Название"), max_length=200)
-    description = models.TextField(_("Описание"))
+    # Переводы - Подписи статистики
+    label_ru = models.CharField(_("Подпись (RU)"), max_length=100)
+    label_kg = models.CharField(_("Подпись (KG)"), max_length=100)
+    label_en = models.CharField(_("Подпись (EN)"), max_length=100)
 
-    # Переводы для статистики
-    stat_1_label = models.CharField(_("Статистика 1 - Подпись"), max_length=100)
-    stat_2_label = models.CharField(_("Статистика 2 - Подпись"), max_length=100)
-    stat_3_label = models.CharField(_("Статистика 3 - Подпись"), max_length=100)
-    stat_4_label = models.CharField(_("Статистика 4 - Подпись"), max_length=100)
+    # Значение и иконка
+    value = models.CharField(
+        _("Значение"), max_length=50, help_text=_("Например: 25+, 5000+")
+    )
+    icon = models.CharField(_("Иконка"), max_length=10, default="📊")
+
+    # Порядок отображения
+    order = models.PositiveIntegerField(_("Порядок"), default=0, db_index=True)
+    is_active = models.BooleanField(_("Активно"), default=True)
 
     class Meta:
-        verbose_name = _("Перевод инфраструктуры")
-        verbose_name_plural = _("Переводы инфраструктуры")
-        unique_together = ["infrastructure", "language"]
+        verbose_name = _("Статистика инфраструктуры")
+        verbose_name_plural = _("Статистика инфраструктуры")
+        ordering = ["infrastructure", "order"]
+        indexes = [
+            models.Index(fields=["infrastructure", "order"]),
+        ]
 
     def __str__(self):
-        return f"Инфраструктура - {self.get_language_display()}"
+        return f"{self.label_ru}: {self.value}"
+
+    def get_label(self, language="ru"):
+        """Получить подпись на указанном языке"""
+        value = getattr(self, f"label_{language}", None)
+        return value if value else self.label_ru
 
 
 class InfrastructureCategory(models.Model):
@@ -352,6 +371,12 @@ class InfrastructureCategory(models.Model):
         max_length=50,
         help_text=_("Уникальный идентификатор категории: stadiums, pools, gyms"),
     )
+
+    # Переводы - Название категории
+    name_ru = models.CharField(_("Название категории (RU)"), max_length=100)
+    name_kg = models.CharField(_("Название категории (KG)"), max_length=100)
+    name_en = models.CharField(_("Название категории (EN)"), max_length=100)
+
     icon = models.CharField(_("Иконка"), max_length=10, default="🏟️")
     color = models.CharField(
         _("Цвет градиента"),
@@ -372,39 +397,12 @@ class InfrastructureCategory(models.Model):
         ]
 
     def __str__(self):
-        translation = self.translations.filter(language="ru").first()
-        if translation:
-            return translation.name
-        return self.slug
+        return self.name_ru
 
-
-class InfrastructureCategoryTranslation(models.Model):
-    """
-    Переводы для категорий инфраструктуры
-    """
-
-    LANGUAGES = [
-        ("ru", "Русский"),
-        ("en", "English"),
-        ("kg", "Кыргызча"),
-    ]
-
-    category = models.ForeignKey(
-        InfrastructureCategory,
-        on_delete=models.CASCADE,
-        related_name="translations",
-        verbose_name=_("Категория"),
-    )
-    language = models.CharField(_("Язык"), max_length=2, choices=LANGUAGES)
-    name = models.CharField(_("Название категории"), max_length=100)
-
-    class Meta:
-        verbose_name = _("Перевод категории")
-        verbose_name_plural = _("Переводы категорий")
-        unique_together = ["category", "language"]
-
-    def __str__(self):
-        return f"{self.category.slug} - {self.get_language_display()}"
+    def get_name(self, language="ru"):
+        """Получить название категории на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
 
 
 class InfrastructureObject(models.Model):
@@ -421,6 +419,15 @@ class InfrastructureObject(models.Model):
     image = models.ImageField(
         _("Изображение"), upload_to="sports/infrastructure/", blank=True, null=True
     )
+
+    # Переводы - Название и описание
+    name_ru = models.CharField(_("Название (RU)"), max_length=200)
+    name_kg = models.CharField(_("Название (KG)"), max_length=200)
+    name_en = models.CharField(_("Название (EN)"), max_length=200)
+
+    description_ru = models.TextField(_("Описание (RU)"))
+    description_kg = models.TextField(_("Описание (KG)"))
+    description_en = models.TextField(_("Описание (EN)"))
 
     # Характеристики - используем JSONField для неограниченного количества
     features = models.JSONField(
@@ -444,39 +451,14 @@ class InfrastructureObject(models.Model):
         ]
 
     def __str__(self):
-        translation = self.translations.filter(language="ru").first()
-        if translation:
-            return translation.name
-        return f"Объект {self.id}"
+        return self.name_ru
 
+    def get_name(self, language="ru"):
+        """Получить название объекта на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
 
-class InfrastructureObjectTranslation(models.Model):
-    """
-    Переводы для объектов инфраструктуры
-    """
-
-    LANGUAGES = [
-        ("ru", "Русский"),
-        ("en", "English"),
-        ("kg", "Кыргызча"),
-    ]
-
-    infrastructure_object = models.ForeignKey(
-        InfrastructureObject,
-        on_delete=models.CASCADE,
-        related_name="translations",
-        verbose_name=_("Объект"),
-    )
-    language = models.CharField(_("Язык"), max_length=2, choices=LANGUAGES)
-
-    # Переводимые поля
-    name = models.CharField(_("Название"), max_length=200)
-    description = models.TextField(_("Описание"))
-
-    class Meta:
-        verbose_name = _("Перевод объекта")
-        verbose_name_plural = _("Переводы объектов")
-        unique_together = ["infrastructure_object", "language"]
-
-    def __str__(self):
-        return f"{self.name} - {self.get_language_display()}"
+    def get_description(self, language="ru"):
+        """Получить описание объекта на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru

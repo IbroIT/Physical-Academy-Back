@@ -22,8 +22,9 @@ class SportSectionListAPIView(generics.ListAPIView):
     serializer_class = SportSectionSerializer
 
     def get_queryset(self):
+        # translations table was removed; use per-field translation columns.
         queryset = SportSection.objects.filter(is_active=True).prefetch_related(
-            "translations", "training_schedules"
+            "training_schedules"
         )
 
         # Фильтрация по типу спорта
@@ -54,7 +55,7 @@ class SportSectionDetailAPIView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return SportSection.objects.filter(is_active=True).prefetch_related(
-            "translations", "training_schedules"
+            "training_schedules"
         )
 
     def retrieve(self, request, *args, **kwargs):
@@ -75,9 +76,8 @@ class AchievementListAPIView(generics.ListAPIView):
     serializer_class = AchievementSerializer
 
     def get_queryset(self):
-        queryset = Achievement.objects.filter(is_active=True).prefetch_related(
-            "translations"
-        )
+        # Achievement uses per-field description_* translations now.
+        queryset = Achievement.objects.filter(is_active=True)
 
         # Фильтрация по категории
         category = self.request.query_params.get("category", None)
@@ -106,9 +106,7 @@ class AchievementDetailAPIView(generics.RetrieveAPIView):
     lookup_field = "id"
 
     def get_queryset(self):
-        return Achievement.objects.filter(is_active=True).prefetch_related(
-            "translations"
-        )
+        return Achievement.objects.filter(is_active=True)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -126,12 +124,14 @@ class InfrastructureAPIView(APIView):
 
     def get(self, request):
         # Получаем первую активную запись инфраструктуры
+        # Prefetch related categories, objects and statistics. The old
+        # "translations" relations were removed in favor of per-field columns.
         infrastructure = (
             Infrastructure.objects.filter(is_active=True)
             .prefetch_related(
-                "translations",
-                "categories__translations",
-                "categories__objects__translations",
+                "categories",
+                "categories__objects",
+                "statistics",
             )
             .first()
         )
