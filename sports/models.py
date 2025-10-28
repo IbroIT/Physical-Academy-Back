@@ -76,6 +76,45 @@ class SportSection(models.Model):
             return f"{translation.name} ({self.coach_name})"
         return f"{self.coach_name} - {self.get_sport_type_display()}"
 
+    def get_name(self, language="ru"):
+        """Получить название секции на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.name
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.name
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.name if translation else self.coach_name
+
+    def get_description(self, language="ru"):
+        """Получить описание секции на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.description
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.description
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.description if translation else ""
+
+    def get_contact_info(self, language="ru"):
+        """Получить контактную информацию на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.contact_info
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.contact_info
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.contact_info if translation else ""
+
 
 class SportSectionTranslation(models.Model):
     """
@@ -215,6 +254,19 @@ class Achievement(models.Model):
     def __str__(self):
         return f"{self.athlete_name} - {self.competition} ({self.result})"
 
+    def get_description(self, language="ru"):
+        """Получить описание достижения на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.description
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.description
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.description if translation else ""
+
 
 class AchievementTranslation(models.Model):
     """
@@ -297,6 +349,32 @@ class Infrastructure(models.Model):
     def __str__(self):
         return "Спортивная инфраструктура КГАФКиС"
 
+    def get_name(self, language="ru"):
+        """Получить название инфраструктуры на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.name
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.name
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.name if translation else "Спортивная инфраструктура"
+
+    def get_description(self, language="ru"):
+        """Получить описание инфраструктуры на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.description
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.description
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.description if translation else ""
+
 
 class InfrastructureTranslation(models.Model):
     """
@@ -377,6 +455,19 @@ class InfrastructureCategory(models.Model):
             return translation.name
         return self.slug
 
+    def get_name(self, language="ru"):
+        """Получить название категории на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.name
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.name
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.name if translation else self.slug
+
 
 class InfrastructureCategoryTranslation(models.Model):
     """
@@ -448,6 +539,32 @@ class InfrastructureObject(models.Model):
         if translation:
             return translation.name
         return f"Объект {self.id}"
+
+    def get_name(self, language="ru"):
+        """Получить название объекта на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.name
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.name
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.name if translation else f"Объект {self.id}"
+
+    def get_description(self, language="ru"):
+        """Получить описание объекта на указанном языке"""
+        translation = self.translations.filter(language=language).first()
+        if translation:
+            return translation.description
+        # Fallback на русский
+        translation = self.translations.filter(language="ru").first()
+        if translation:
+            return translation.description
+        # Fallback на первый доступный
+        translation = self.translations.first()
+        return translation.description if translation else ""
 
 
 class InfrastructureObjectTranslation(models.Model):

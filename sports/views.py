@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
@@ -10,18 +10,22 @@ from .serializers import (
 )
 
 
-class SportSectionListAPIView(generics.ListAPIView):
+class SportSectionViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API для получения списка спортивных секций
+    ViewSet для спортивных секций
 
     Query Parameters:
-        - language: ru, en, kg (по умолчанию: ru)
+        - lang: ru, en, kg (по умолчанию: ru)
         - type: фильтр по типу спорта (game, combat, winter, water, athletics)
     """
 
     serializer_class = SportSectionSerializer
 
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return SportSection.objects.none()
+
         queryset = SportSection.objects.filter(is_active=True).prefetch_related(
             "translations", "training_schedules"
         )
@@ -33,48 +37,30 @@ class SportSectionListAPIView(generics.ListAPIView):
 
         return queryset.order_by("order", "coach_name")
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(
-            queryset, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
+    def get_serializer_context(self):
+        """Передаём язык в контекст сериализатора"""
+        context = super().get_serializer_context()
+        language = self.request.query_params.get("lang", "ru")
+        context["language"] = language
+        return context
 
 
-class SportSectionDetailAPIView(generics.RetrieveAPIView):
+class AchievementViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API для получения детальной информации о спортивной секции
+    ViewSet для спортивных достижений
 
     Query Parameters:
-        - language: ru, en, kg (по умолчанию: ru)
-    """
-
-    serializer_class = SportSectionSerializer
-    lookup_field = "id"
-
-    def get_queryset(self):
-        return SportSection.objects.filter(is_active=True).prefetch_related(
-            "translations", "training_schedules"
-        )
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, context={"request": request})
-        return Response(serializer.data)
-
-
-class AchievementListAPIView(generics.ListAPIView):
-    """
-    API для получения списка спортивных достижений
-
-    Query Parameters:
-        - language: ru, en, kg (по умолчанию: ru)
+        - lang: ru, en, kg (по умолчанию: ru)
         - category: фильтр по категории (individual, team, international, olympic, coaching)
     """
 
     serializer_class = AchievementSerializer
 
     def get_queryset(self):
+        # Check for swagger schema generation
+        if getattr(self, "swagger_fake_view", False):
+            return Achievement.objects.none()
+
         queryset = Achievement.objects.filter(is_active=True).prefetch_related(
             "translations"
         )
@@ -86,45 +72,31 @@ class AchievementListAPIView(generics.ListAPIView):
 
         return queryset.order_by("-date", "order")
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(
-            queryset, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
+    def get_serializer_context(self):
+        """Передаём язык в контекст сериализатора"""
+        context = super().get_serializer_context()
+        language = self.request.query_params.get("lang", "ru")
+        context["language"] = language
+        return context
 
 
-class AchievementDetailAPIView(generics.RetrieveAPIView):
+class InfrastructureViewSet(viewsets.ViewSet):
     """
-    API для получения детальной информации о достижении
+    ViewSet для спортивной инфраструктуры
 
     Query Parameters:
-        - language: ru, en, kg (по умолчанию: ru)
+        - lang: ru, en, kg (по умолчанию: ru)
     """
 
-    serializer_class = AchievementSerializer
-    lookup_field = "id"
+    serializer_class = (
+        InfrastructureSerializer  # Default serializer for schema generation
+    )
+    queryset = Infrastructure.objects.none()  # Empty queryset for schema generation
 
-    def get_queryset(self):
-        return Achievement.objects.filter(is_active=True).prefetch_related(
-            "translations"
-        )
+    def list(self, request):
+        """Получить информацию о спортивной инфраструктуре"""
+        language = request.query_params.get("lang", "ru")
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, context={"request": request})
-        return Response(serializer.data)
-
-
-class InfrastructureAPIView(APIView):
-    """
-    API для получения информации о спортивной инфраструктуре
-
-    Query Parameters:
-        - language: ru, en, kg (по умолчанию: ru)
-    """
-
-    def get(self, request):
         # Получаем первую активную запись инфраструктуры
         infrastructure = (
             Infrastructure.objects.filter(is_active=True)
@@ -140,12 +112,12 @@ class InfrastructureAPIView(APIView):
             return Response({"error": "Инфраструктура не найдена"}, status=404)
 
         serializer = InfrastructureSerializer(
-            infrastructure, context={"request": request}
+            infrastructure, context={"language": language}
         )
         return Response(serializer.data)
 
 
-# Дополнительные view для статистики и фильтрации
+# Дополнительные view для статистики
 
 
 class SportStatisticsAPIView(APIView):
