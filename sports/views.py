@@ -1,4 +1,5 @@
 from rest_framework import generics
+import django.db.models as dj_models
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
@@ -32,7 +33,11 @@ class SportSectionListAPIView(generics.ListAPIView):
         # Фильтрация по типу спорта
         sport_type = self.request.query_params.get("type", None)
         if sport_type:
-            queryset = queryset.filter(sport_type=sport_type)
+            # support filtering by slug or numeric id
+            if sport_type.isdigit():
+                queryset = queryset.filter(sport_type__id=int(sport_type))
+            else:
+                queryset = queryset.filter(sport_type__slug=sport_type)
 
         return queryset.order_by("order", "coach_name")
 
@@ -84,7 +89,11 @@ class AchievementListAPIView(generics.ListAPIView):
         # Фильтрация по категории
         category = self.request.query_params.get("category", None)
         if category:
-            queryset = queryset.filter(category=category)
+            # support filtering by slug or numeric id
+            if category.isdigit():
+                queryset = queryset.filter(category__id=int(category))
+            else:
+                queryset = queryset.filter(category__slug=category)
 
         return queryset.order_by("-date", "order")
 
@@ -161,17 +170,17 @@ class SportStatisticsAPIView(APIView):
         sections_count = SportSection.objects.filter(is_active=True).count()
         achievements_count = Achievement.objects.filter(is_active=True).count()
 
-        # Статистика по типам спорта
+        # Статистика по типам спорта (return slug as 'sport_type')
         sections_by_type = (
             SportSection.objects.filter(is_active=True)
-            .values("sport_type")
+            .values(sport_type=dj_models.F("sport_type__slug"))
             .annotate(count=Count("id"))
         )
 
-        # Статистика по категориям достижений
+        # Статистика по категориям достижений (return slug as 'category')
         achievements_by_category = (
             Achievement.objects.filter(is_active=True)
-            .values("category")
+            .values(category=dj_models.F("category__slug"))
             .annotate(count=Count("id"))
         )
 

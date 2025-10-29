@@ -9,24 +9,15 @@ class SportSection(models.Model):
     Модель спортивной секции
     """
 
-    SPORT_TYPE_CHOICES = [
-        ("game", _("Игровые виды спорта")),
-        ("combat", _("Единоборства")),
-        ("winter", _("Зимние виды спорта")),
-        ("water", _("Водные виды спорта")),
-        ("athletics", _("Легкая атлетика")),
-        ("gymnastics", _("Гимнастика")),
-        ("team", _("Командные виды")),
-        ("individual", _("Индивидуальные виды")),
-    ]
-
     # Базовые поля
-    sport_type = models.CharField(
-        _("Тип спорта"),
-        max_length=20,
-        choices=SPORT_TYPE_CHOICES,
-        default="individual",
-        db_index=True,  # Индекс для быстрой фильтрации
+    # Переведено на ForeignKey к SportType — используйте SportType для настройки типов в админке.
+    sport_type = models.ForeignKey(
+        "sports.SportType",
+        verbose_name=_("Тип спорта"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="sections",
     )
     image = models.ImageField(
         _("Изображение"), upload_to="sports/sections/", blank=True, null=True
@@ -141,6 +132,12 @@ class SportSection(models.Model):
         """Получить имя тренера на указанном языке"""
         value = getattr(self, f"coach_name_{language}", None)
         return value if value else self.coach_name
+
+    def get_sport_type_slug(self):
+        """Compatibility helper: return slug for sport_type for frontend/backwards compatibility."""
+        if self.sport_type:
+            return getattr(self.sport_type, "slug", None) or str(self.sport_type.id)
+        return None
 
 
 class SportType(models.Model):
@@ -307,13 +304,14 @@ class Achievement(models.Model):
     description_kg = models.TextField(_("Описание достижения (KG)"))
     description_en = models.TextField(_("Описание достижения (EN)"))
 
-    # Категория
-    category = models.CharField(
-        _("Категория"),
-        max_length=20,
-        choices=CATEGORY_CHOICES,
-        default="individual",
-        db_index=True,  # Индекс для фильтрации по категориям
+    # Категория — теперь FK к AchievementCategory (создана ниже)
+    category = models.ForeignKey(
+        "sports.AchievementCategory",
+        verbose_name=_("Категория"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="achievements",
     )
 
     # Дополнительные детали - используем JSONField для гибкости
@@ -416,6 +414,52 @@ class Achievement(models.Model):
             or getattr(self, "result_kg", None)
             or ""
         )
+
+
+class AchievementCategory(models.Model):
+    """
+    Динамические категории достижений, чтобы можно было создавать их в админке.
+    """
+
+    slug = models.SlugField(_("Идентификатор"), max_length=100, unique=True)
+    name_ru = models.CharField(_("Название (RU)"), max_length=200, blank=True)
+    name_en = models.CharField(_("Название (EN)"), max_length=200, blank=True)
+    name_kg = models.CharField(_("Название (KG)"), max_length=200, blank=True)
+    icon = models.CharField(_("Иконка/emoji"), max_length=10, blank=True, default="")
+    order = models.IntegerField(_("Порядок"), default=0, db_index=True)
+    is_active = models.BooleanField(_("Активно"), default=True, db_index=True)
+
+    class Meta:
+        verbose_name = _("Категория достижения")
+        verbose_name_plural = _("Категории достижений")
+        ordering = ("order", "slug")
+
+    def __str__(self):
+        return self.get_name("ru") or self.slug
+
+    def get_name(self, lang="ru"):
+        return (
+            getattr(self, f"name_{lang}", None)
+            or self.name_en
+            or self.name_ru
+            or self.name_kg
+            or self.slug
+        )
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = (self.name_en or self.name_ru or self.name_kg or "category").strip()
+            self.slug = slugify(base)[:100]
+            i = 1
+            orig = self.slug
+            while (
+                AchievementCategory.objects.filter(slug=self.slug)
+                .exclude(pk=self.pk)
+                .exists()
+            ):
+                self.slug = f"{orig}-{i}"
+                i += 1
+        super().save(*args, **kwargs)
 
 
 class Infrastructure(models.Model):

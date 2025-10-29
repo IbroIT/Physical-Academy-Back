@@ -94,6 +94,7 @@ class SportSectionSerializer(serializers.ModelSerializer):
         source="training_schedules", many=True, read_only=True
     )
     coach_info = serializers.SerializerMethodField()
+    sport_type = serializers.SerializerMethodField()
     # Compatibility fields expected by frontend
     coach = serializers.CharField(source="coach_name", read_only=True)
     trainer = serializers.CharField(source="coach_name", read_only=True)
@@ -118,6 +119,21 @@ class SportSectionSerializer(serializers.ModelSerializer):
     def get_name(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_name(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_sport_type(self, obj):
+        """Return sport_type as slug for frontend compatibility."""
+        # obj.sport_type may be FK or plain string in legacy data
+        st = getattr(obj, "sport_type", None)
+        if st is None:
+            return None
+        if hasattr(st, "slug"):
+            return st.slug
+        # fallback to helper
+        try:
+            return obj.get_sport_type_slug()
+        except Exception:
+            return str(st)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj) -> str:
@@ -219,6 +235,17 @@ class AchievementSerializer(serializers.ModelSerializer):
             "category",
             "details",
         ]
+
+    def get_category(self, obj):
+        """Return category as slug for frontend compatibility; fall back to raw value."""
+        cat = getattr(obj, "category", None)
+        if cat is None:
+            return None
+        # If FK
+        if hasattr(cat, "slug"):
+            return cat.slug
+        # otherwise likely a string
+        return str(cat)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj) -> str:
