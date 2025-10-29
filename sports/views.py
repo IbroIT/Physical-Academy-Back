@@ -39,7 +39,9 @@ class SportSectionListAPIView(generics.ListAPIView):
             else:
                 queryset = queryset.filter(sport_type__slug=sport_type)
 
-        return queryset.order_by("order", "coach_name")
+        # 'coach_name' field doesn't exist (we use per-language fields like coach_name_ru).
+        # Order by 'order' and fallback to Russian name to keep stable ordering.
+        return queryset.order_by("order", "name_ru")
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
