@@ -33,36 +33,16 @@ class SportSection(models.Model):
     description_kg = models.TextField(_("Описание (KG)"))
     description_en = models.TextField(_("Описание (EN)"))
 
-    # Переводы - Контактная информация
-    contact_info_ru = models.CharField(
-        _("Контактная информация (RU)"), max_length=500, blank=True
-    )
-    contact_info_kg = models.CharField(
-        _("Контактная информация (KG)"), max_length=500, blank=True
-    )
-    contact_info_en = models.CharField(
-        _("Контактная информация (EN)"), max_length=500, blank=True
-    )
-
-    # Unified contact info (non-translated). We'll migrate existing localized
-    # contact fields into this column and then remove the localized columns.
+    # Единая контактная информация (без переводов)
     contact_info = models.CharField(
         _("Контактная информация"), max_length=500, blank=True, default=""
     )
 
-    # Информация о тренере
-    coach_name = models.CharField(_("ФИО тренера"), max_length=200)
-    # Переводы для имени тренера (опционально)
-    coach_name_ru = models.CharField(_("ФИО тренера (RU)"), max_length=200, blank=True)
-    coach_name_kg = models.CharField(_("ФИО тренера (KG)"), max_length=200, blank=True)
-    coach_name_en = models.CharField(_("ФИО тренера (EN)"), max_length=200, blank=True)
-    coach_rank = models.CharField(
-        _("Звание тренера"),
-        max_length=200,
-        blank=True,
-        help_text=_("Например: Мастер спорта, Заслуженный тренер"),
-    )
-    # Переводы для звания тренера (опционально)
+    # Информация о тренере - только переводы
+    coach_name_ru = models.CharField(_("ФИО тренера (RU)"), max_length=200)
+    coach_name_kg = models.CharField(_("ФИО тренера (KG)"), max_length=200)
+    coach_name_en = models.CharField(_("ФИО тренера (EN)"), max_length=200)
+
     coach_rank_ru = models.CharField(
         _("Звание тренера (RU)"), max_length=200, blank=True
     )
@@ -72,20 +52,15 @@ class SportSection(models.Model):
     coach_rank_en = models.CharField(
         _("Звание тренера (EN)"), max_length=200, blank=True
     )
+
     coach_contacts = models.CharField(
         _("Контакты тренера"), max_length=200, blank=True, help_text=_("Телефон, email")
     )
 
-    # Расписание
-    schedule = models.CharField(
-        _("Расписание"),
-        max_length=200,
-        help_text=_("Краткое расписание, например: Пн, Ср, Пт 18:00-20:00"),
-    )
-    # Если расписание содержит локализуемый текст — храните переводы
-    schedule_ru = models.CharField(_("Расписание (RU)"), max_length=200, blank=True)
-    schedule_kg = models.CharField(_("Расписание (KG)"), max_length=200, blank=True)
-    schedule_en = models.CharField(_("Расписание (EN)"), max_length=200, blank=True)
+    # Расписание - только переводы
+    schedule_ru = models.CharField(_("Расписание (RU)"), max_length=200)
+    schedule_kg = models.CharField(_("Расписание (KG)"), max_length=200)
+    schedule_en = models.CharField(_("Расписание (EN)"), max_length=200)
 
     # Мета
     is_active = models.BooleanField(
@@ -100,9 +75,6 @@ class SportSection(models.Model):
     class Meta:
         verbose_name = _("Спортивная секция")
         verbose_name_plural = _("Спортивные секции")
-        # Order primarily by custom order, then by Russian name as a stable
-        # secondary ordering (coach_name base field was removed during
-        # consolidation migration).
         ordering = ["order", "name_ru"]
         indexes = [
             models.Index(fields=["is_active", "order"]),  # Композитный индекс
@@ -110,7 +82,7 @@ class SportSection(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.name_ru} ({self.coach_name})"
+        return f"{self.name_ru} ({self.coach_name_ru})"
 
     def get_name(self, language="ru"):
         """Получить название секции на указанном языке"""
@@ -123,35 +95,29 @@ class SportSection(models.Model):
         return value if value else self.description_ru
 
     def get_contact_info(self, language="ru"):
-        """Получить контактную информацию на указанном языке"""
-        # Prefer unified `contact_info` if set (phone/email non-translated).
-        if getattr(self, "contact_info", None):
-            return self.contact_info
-        # Otherwise fall back to per-language columns for backward compatibility.
-        value = getattr(self, f"contact_info_{language}", None)
-        return value if value else self.contact_info_ru
+        """Получить контактную информацию"""
+        return self.contact_info
 
     def get_schedule(self, language="ru"):
         """Получить текст расписания на нужном языке"""
         value = getattr(self, f"schedule_{language}", None)
-        return value if value else self.schedule
+        return value if value else self.schedule_ru
 
     def get_coach_rank(self, language="ru"):
         """Получить звание тренера на нужном языке"""
         value = getattr(self, f"coach_rank_{language}", None)
-        return value if value else self.coach_rank
+        return value if value else self.coach_rank_ru
 
     def get_coach_name(self, language="ru"):
         """Получить имя тренера на указанном языке"""
         value = getattr(self, f"coach_name_{language}", None)
-        return value if value else self.coach_name
+        return value if value else self.coach_name_ru
 
     def get_sport_type_slug(self):
         """Compatibility helper: return slug for sport_type for frontend/backwards compatibility."""
         if self.sport_type:
             return getattr(self.sport_type, "slug", None) or str(self.sport_type.id)
         return None
-
 
 class SportType(models.Model):
     """
