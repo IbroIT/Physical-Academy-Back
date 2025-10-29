@@ -44,6 +44,12 @@ class SportSection(models.Model):
         _("Контактная информация (EN)"), max_length=500, blank=True
     )
 
+    # Unified contact info (non-translated). We'll migrate existing localized
+    # contact fields into this column and then remove the localized columns.
+    contact_info = models.CharField(
+        _("Контактная информация"), max_length=500, blank=True, default=""
+    )
+
     # Информация о тренере
     coach_name = models.CharField(_("ФИО тренера"), max_length=200)
     # Переводы для имени тренера (опционально)
@@ -115,6 +121,10 @@ class SportSection(models.Model):
 
     def get_contact_info(self, language="ru"):
         """Получить контактную информацию на указанном языке"""
+        # Prefer unified `contact_info` if set (phone/email non-translated).
+        if getattr(self, "contact_info", None):
+            return self.contact_info
+        # Otherwise fall back to per-language columns for backward compatibility.
         value = getattr(self, f"contact_info_{language}", None)
         return value if value else self.contact_info_ru
 

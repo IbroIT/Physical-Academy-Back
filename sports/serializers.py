@@ -142,8 +142,10 @@ class SportSectionSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_contact_info(self, obj) -> str:
-        language = self.context.get("language", "ru")
-        return obj.get_contact_info(language)
+        # contact_info is now a unified non-translated field (phone/email).
+        # Keep compatibility: if not set, `get_contact_info` will fall back to
+        # per-language fields.
+        return obj.get_contact_info()
 
     def get_image(self, obj):
         if obj.image:

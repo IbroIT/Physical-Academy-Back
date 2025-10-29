@@ -64,7 +64,7 @@ class SportSectionAdmin(admin.ModelAdmin):
         ),
         (
             "Контактная информация (многоязычность)",
-            {"fields": ("contact_info_ru", "contact_info_kg", "contact_info_en")},
+            {"fields": ("contact_info",)},
         ),
         (
             "Информация о тренере",
