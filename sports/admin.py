@@ -8,6 +8,7 @@ from .models import (
     InfrastructureCategory,
     InfrastructureObject,
 )
+from .models import SportType
 
 
 # ==================== Inlines ====================
@@ -197,3 +198,16 @@ class InfrastructureObjectAdmin(admin.ModelAdmin):
 # Простая регистрация остальных моделей
 admin.site.register(TrainingSchedule)
 admin.site.register(InfrastructureStatistic)
+
+
+@admin.register(SportType)
+class SportTypeAdmin(admin.ModelAdmin):
+    list_display = ("slug", "get_name_ru", "is_active", "order")
+    list_editable = ("is_active", "order")
+    search_fields = ("slug", "name_ru", "name_en", "name_kg")
+    prepopulated_fields = {"slug": ("name_en", "name_ru")}
+
+    def get_name_ru(self, obj):
+        return obj.name_ru or obj.name_en or obj.name_kg
+
+    get_name_ru.short_description = "Название (RU)"

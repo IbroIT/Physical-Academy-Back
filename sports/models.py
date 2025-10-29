@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -140,6 +141,58 @@ class SportSection(models.Model):
         """Получить имя тренера на указанном языке"""
         value = getattr(self, f"coach_name_{language}", None)
         return value if value else self.coach_name
+
+
+class SportType(models.Model):
+    """
+    Каталог видов спорта — используется для управления типами секций в админке.
+    Хранит slug (используется в фильтрах на фронтенде) и переводы названия.
+    """
+
+    slug = models.SlugField(
+        _("Идентификатор"),
+        max_length=100,
+        unique=True,
+        help_text=_("URL-friendly id, e.g. 'game'"),
+    )
+
+    name_ru = models.CharField(_("Название (RU)"), max_length=200, blank=True)
+    name_en = models.CharField(_("Название (EN)"), max_length=200, blank=True)
+    name_kg = models.CharField(_("Название (KG)"), max_length=200, blank=True)
+
+    icon = models.CharField(_("Иконка/emoji"), max_length=10, blank=True, default="")
+    order = models.IntegerField(_("Порядок"), default=0, db_index=True)
+    is_active = models.BooleanField(_("Активно"), default=True, db_index=True)
+
+    class Meta:
+        verbose_name = _("Вид спорта")
+        verbose_name_plural = _("Виды спорта")
+        ordering = ("order", "slug")
+
+    def __str__(self):
+        return self.get_name("ru") or self.slug
+
+    def get_name(self, lang="ru"):
+        return (
+            getattr(self, f"name_{lang}", None)
+            or self.name_en
+            or self.name_ru
+            or self.name_kg
+            or self.slug
+        )
+
+    def save(self, *args, **kwargs):
+        # Auto-generate slug from available name fields if not provided.
+        if not self.slug:
+            base = (self.name_en or self.name_ru or self.name_kg or "type").strip()
+            self.slug = slugify(base)[:100]
+            # Ensure uniqueness
+            i = 1
+            orig = self.slug
+            while SportType.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+                self.slug = f"{orig}-{i}"
+                i += 1
+        super().save(*args, **kwargs)
 
 
 class TrainingSchedule(models.Model):

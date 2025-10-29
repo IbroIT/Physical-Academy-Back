@@ -8,6 +8,8 @@ from .serializers import (
     AchievementSerializer,
     InfrastructureSerializer,
 )
+from .models import SportType
+from .serializers import SportTypeSerializer
 
 
 class SportSectionListAPIView(generics.ListAPIView):
@@ -181,3 +183,24 @@ class SportStatisticsAPIView(APIView):
                 "achievements_by_category": list(achievements_by_category),
             }
         )
+
+
+class SportTypeListAPIView(generics.ListAPIView):
+    """
+    Список доступных типов/видов спорта. Возвращает полный список (без пагинации)
+    Query params: language=ru|en|kg
+    """
+
+    serializer_class = SportTypeSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = SportType.objects.filter(is_active=True).order_by("order", "slug")
+        return qs
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(
+            queryset, many=True, context={"request": request}
+        )
+        return Response(serializer.data)

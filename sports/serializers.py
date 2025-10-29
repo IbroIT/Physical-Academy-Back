@@ -10,6 +10,7 @@ from .models import (
     InfrastructureCategory,
     InfrastructureObject,
 )
+from .models import SportType
 from django.utils import translation
 
 # Map known seeded Russian placeholder strings to localized labels.
@@ -593,3 +594,21 @@ class InfrastructureSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
 
         return data
+
+
+class SportTypeSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SportType
+        fields = ("id", "slug", "name", "icon", "order", "is_active")
+
+    def get_name(self, obj):
+        request = self.context.get("request")
+        language = None
+        if request:
+            language = request.query_params.get("language") or getattr(
+                request, "LANGUAGE_CODE", None
+            )
+        language = language or "ru"
+        return obj.get_name(language)

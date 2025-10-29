@@ -8,6 +8,7 @@ from .views import (
     AchievementDetailAPIView,
     InfrastructureAPIView,
     SportStatisticsAPIView,
+    SportTypeListAPIView,
 )
 
 app_name = "sports"
@@ -25,6 +26,7 @@ def api_root(request, format=None):
             "achievements": base + "achievements/",
             "infrastructure": base + "infrastructure/",
             "statistics": base + "statistics/",
+            "types": base + "types/",
         }
     )
 
@@ -47,4 +49,6 @@ urlpatterns = [
     path("infrastructure/", InfrastructureAPIView.as_view(), name="infrastructure"),
     # Statistics
     path("statistics/", SportStatisticsAPIView.as_view(), name="statistics"),
+    # Sport types (catalog)
+    path("types/", SportTypeListAPIView.as_view(), name="types-list"),
 ]
