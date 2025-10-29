@@ -170,26 +170,61 @@ class SportStatisticsAPIView(APIView):
         sections_count = SportSection.objects.filter(is_active=True).count()
         achievements_count = Achievement.objects.filter(is_active=True).count()
 
-        # Статистика по типам спорта (return slug as 'sport_type')
-        sections_by_type = (
-            SportSection.objects.filter(is_active=True)
-            .values(sport_type=dj_models.F("sport_type__slug"))
-            .annotate(count=Count("id"))
-        )
+        # Try DB-level aggregation (fast). If it fails for any reason, fall back to Python aggregation.
+        try:
+            sections_by_type_qs = (
+                SportSection.objects.filter(is_active=True)
+                .values(sport_type=dj_models.F("sport_type__slug"))
+                .annotate(count=Count("id"))
+            )
+            achievements_by_category_qs = (
+                Achievement.objects.filter(is_active=True)
+                .values(category=dj_models.F("category__slug"))
+                .annotate(count=Count("id"))
+            )
 
-        # Статистика по категориям достижений (return slug as 'category')
-        achievements_by_category = (
-            Achievement.objects.filter(is_active=True)
-            .values(category=dj_models.F("category__slug"))
-            .annotate(count=Count("id"))
-        )
+            sections_by_type = list(sections_by_type_qs)
+            achievements_by_category = list(achievements_by_category_qs)
+        except Exception as e:
+            # Fallback: compute counts in Python to avoid DB-level casting errors
+            sections_by_type_map = {}
+            for s in SportSection.objects.filter(is_active=True).select_related(
+                "sport_type"
+            ):
+                key = None
+                try:
+                    key = s.sport_type.slug if s.sport_type else None
+                except Exception:
+                    key = str(s.sport_type) if s.sport_type is not None else None
+                sections_by_type_map[key] = sections_by_type_map.get(key, 0) + 1
+
+            achievements_by_category_map = {}
+            for a in Achievement.objects.filter(is_active=True).select_related(
+                "category"
+            ):
+                key = None
+                try:
+                    key = a.category.slug if a.category else None
+                except Exception:
+                    key = str(a.category) if a.category is not None else None
+                achievements_by_category_map[key] = (
+                    achievements_by_category_map.get(key, 0) + 1
+                )
+
+            sections_by_type = [
+                {"sport_type": k, "count": v} for k, v in sections_by_type_map.items()
+            ]
+            achievements_by_category = [
+                {"category": k, "count": v}
+                for k, v in achievements_by_category_map.items()
+            ]
 
         return Response(
             {
                 "total_sections": sections_count,
                 "total_achievements": achievements_count,
-                "sections_by_type": list(sections_by_type),
-                "achievements_by_category": list(achievements_by_category),
+                "sections_by_type": sections_by_type,
+                "achievements_by_category": achievements_by_category,
             }
         )
 
@@ -213,3 +248,44 @@ class SportTypeListAPIView(generics.ListAPIView):
             queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)
+
+
+class AchievementCategoryListAPIView(generics.ListAPIView):
+    """List available achievement categories (for frontend). Returns full list without pagination."""
+
+    serializer_class = None
+    pagination_class = None
+
+    def get(self, request, *args, **kwargs):
+        # Lazily import to avoid circular imports
+        from .models import AchievementCategory
+        from .serializers import (
+            # create ad-hoc serializer
+            serializers as drf_serializers,
+        )
+
+        # Build minimal payload: id, slug, name (localized), icon, order, is_active
+        language = request.query_params.get("language", "ru")
+        qs = AchievementCategory.objects.filter(is_active=True).order_by(
+            "order", "slug"
+        )
+        out = []
+        for c in qs:
+            name = (
+                getattr(c, f"name_{language}", None)
+                or c.name_ru
+                or c.name_en
+                or c.name_kg
+                or c.slug
+            )
+            out.append(
+                {
+                    "id": c.id,
+                    "slug": c.slug,
+                    "name": name,
+                    "icon": c.icon,
+                    "order": c.order,
+                    "is_active": c.is_active,
+                }
+            )
+        return Response(out)
