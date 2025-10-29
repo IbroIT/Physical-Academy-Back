@@ -95,9 +95,9 @@ class SportSectionSerializer(serializers.ModelSerializer):
     )
     coach_info = serializers.SerializerMethodField()
     sport_type = serializers.SerializerMethodField()
-    # Compatibility fields expected by frontend
-    coach = serializers.CharField(source="coach_name", read_only=True)
-    trainer = serializers.CharField(source="coach_name", read_only=True)
+    # Compatibility fields expected by frontend (language-aware)
+    coach = serializers.SerializerMethodField()
+    trainer = serializers.SerializerMethodField()
 
     class Meta:
         model = SportSection
@@ -168,6 +168,17 @@ class SportSectionSerializer(serializers.ModelSerializer):
             "contacts": obj.coach_contacts,
             "phone": obj.coach_contacts,
         }
+
+    def get_coach(self, obj):
+        request = self.context.get("request")
+        language = self.context.get("language", None) or (
+            request.query_params.get("language") if request else "ru"
+        )
+        return obj.get_coach_name(language)
+
+    def get_trainer(self, obj):
+        # Trainer is the same as coach in the current data model
+        return self.get_coach(obj)
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_schedule(self, obj):

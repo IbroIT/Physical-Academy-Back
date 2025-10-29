@@ -100,7 +100,10 @@ class SportSection(models.Model):
     class Meta:
         verbose_name = _("Спортивная секция")
         verbose_name_plural = _("Спортивные секции")
-        ordering = ["order", "coach_name"]
+        # Order primarily by custom order, then by Russian name as a stable
+        # secondary ordering (coach_name base field was removed during
+        # consolidation migration).
+        ordering = ["order", "name_ru"]
         indexes = [
             models.Index(fields=["is_active", "order"]),  # Композитный индекс
             models.Index(fields=["sport_type", "is_active"]),  # Для фильтрации по типу

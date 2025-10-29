@@ -46,10 +46,10 @@ class InfrastructureObjectInline(admin.TabularInline):
 
 @admin.register(SportSection)
 class SportSectionAdmin(admin.ModelAdmin):
-    list_display = ("name_ru", "coach_name", "sport_type", "is_active", "order")
+    list_display = ("name_ru", "get_coach_name_ru", "sport_type", "is_active", "order")
     list_filter = ("is_active", "sport_type")
     list_editable = ("is_active", "order")
-    search_fields = ("name_ru", "name_en", "name_kg", "coach_name")
+    search_fields = ("name_ru", "name_en", "name_kg", "coach_name_ru")
     inlines = [TrainingScheduleInline]
 
     fieldsets = (
@@ -70,16 +70,13 @@ class SportSectionAdmin(admin.ModelAdmin):
             "Информация о тренере",
             {
                 "fields": (
-                    "coach_name",
                     "coach_name_ru",
                     "coach_name_kg",
                     "coach_name_en",
-                    "coach_rank",
                     "coach_rank_ru",
                     "coach_rank_kg",
                     "coach_rank_en",
                     "coach_contacts",
-                    "schedule",
                     "schedule_ru",
                     "schedule_kg",
                     "schedule_en",
@@ -87,6 +84,15 @@ class SportSectionAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_coach_name_ru(self, obj):
+        # Prefer coach_name_ru, fall back to other translations via model helper
+        try:
+            return obj.get_coach_name("ru")
+        except Exception:
+            return getattr(obj, "coach_name_ru", "")
+
+    get_coach_name_ru.short_description = "ФИО тренера (RU)"
 
 
 @admin.register(Achievement)
