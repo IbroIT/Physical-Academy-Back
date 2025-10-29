@@ -250,10 +250,9 @@ class SportTypeListAPIView(generics.ListAPIView):
         return Response(serializer.data)
 
 
-class AchievementCategoryListAPIView(generics.ListAPIView):
+class AchievementCategoryListAPIView(APIView):
     """List available achievement categories (for frontend). Returns full list without pagination."""
 
-    serializer_class = None
     pagination_class = None
 
     def get(self, request, *args, **kwargs):
