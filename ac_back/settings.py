@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "quotes",
     "facts",
     "sports",  # Новое приложение для спорта
+    "ipchain_app",  # IPChain приложение
 ]
 
 MIDDLEWARE = [
