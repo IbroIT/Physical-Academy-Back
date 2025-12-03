@@ -1,8 +1,31 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.reverse import reverse
 from .models import TabCategory, Card, TimelineEvent
 from .serializers import TabCategorySerializer, CardSerializer, TimelineEventSerializer
+
+
+class PedagogicalFacultyAPIRootView(APIView):
+    """
+    Корневой API эндпоинт педагогического факультета
+    Показывает все доступные эндпоинты
+    """
+
+    def get(self, request, format=None):
+        return Response(
+            {
+                "tabs": reverse(
+                    "pedagogical_faculty:tabs", request=request, format=format
+                ),
+                "cards": reverse(
+                    "pedagogical_faculty:cards", request=request, format=format
+                ),
+                "history": reverse(
+                    "pedagogical_faculty:history", request=request, format=format
+                ),
+            }
+        )
 
 
 class PedagogicalFacultyTabsAPIView(APIView):
