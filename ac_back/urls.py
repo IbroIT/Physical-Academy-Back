@@ -20,7 +20,6 @@ urlpatterns = [
     path("api/student-clubs/", include("student_clubs.urls")),
     path("api/leadership-structure/", include("leadership_structure.urls")),
     path("api/admission/", include("admission.urls")),
-    path("api/education/", include("education.urls")),
     path("api/science/", include("science.urls")),
     path("api/academy/", include("main_page.urls")),
     path("api/banner/", include("banner.urls")),
@@ -38,6 +37,8 @@ urlpatterns = [
     path("api/faculties/military/", include("military_faculty.urls")),
     path("api/faculties/correspondence/", include("correspondence_faculty.urls")),
     path("api/faculties/pedagogical/", include("pedagogical_faculty.urls")),
+    # General Departments API
+    path("api/general-departments/", include("general_departments.urls")),
     # Schema (JSON/YAML)'
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Swagger / Redoc UI

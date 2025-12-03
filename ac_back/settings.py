@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     "leadership_structure",
     "admission",
     "main_page",
-    "education",
     "science",
     "banner",
     "news",
@@ -79,6 +78,7 @@ INSTALLED_APPS = [
     "military_faculty",
     "correspondence_faculty",
     "pedagogical_faculty",
+    "general_departments",  # Общие кафедры
 ]
 
 MIDDLEWARE = [
