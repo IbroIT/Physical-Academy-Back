@@ -1,12 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import TabCategory, TimelineEvent
-from .serializers import (
-    TabCategorySerializer,
-    TimelineEventSerializer,
-    FacultyDataSerializer,
-)
+from .models import TabCategory
+from .serializers import TabCategorySerializer, FacultyDataSerializer
 
 
 class MilitaryFacultyDataAPIView(APIView):
@@ -14,37 +10,41 @@ class MilitaryFacultyDataAPIView(APIView):
     API для получения всех данных военного факультета
 
     Query Parameters:
-        - language: ru, en, kg (по умолчанию: ru)
+        - lang: ru, en, kg (по умолчанию: ru)
 
     Returns:
         {
-            "tabs": [...],  # категории с карточками
-            "timeline": [...]  # события истории
+            "tabs": [
+                {
+                    "key": "history",
+                    "title": "История",
+                    "cards": [],
+                    "timeline_events": [{"year": "1990", "event": "..."}]
+                },
+                {
+                    "key": "about",
+                    "title": "О факультете",
+                    "cards": [{"title": "...", "description": "..."}],
+                    "timeline_events": []
+                }
+            ]
         }
     """
 
     def get(self, request):
-        # Получаем все активные табы с карточками
+        # Получаем язык из query params
+        language = request.query_params.get("lang", "ru")
+
+        # Получаем все активные табы с карточками и timeline_events
         tabs = (
             TabCategory.objects.filter(is_active=True)
-            .prefetch_related("cards")
+            .prefetch_related("cards", "timeline_events")
             .order_by("order")
         )
 
-        # Получаем все активные события истории
-        timeline = TimelineEvent.objects.filter(is_active=True).order_by("order")
-
-        # Сериализуем данные
-        tabs_serializer = TabCategorySerializer(
-            tabs, many=True, context={"request": request}
-        )
-        timeline_serializer = TimelineEventSerializer(
-            timeline, many=True, context={"request": request}
+        # Сериализуем данные с передачей языка в контекст
+        serializer = FacultyDataSerializer(
+            {"tabs": tabs}, context={"request": request, "language": language}
         )
 
-        response_data = {
-            "tabs": tabs_serializer.data,
-            "timeline": timeline_serializer.data,
-        }
-
-        return Response(response_data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)

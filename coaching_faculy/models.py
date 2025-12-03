@@ -80,6 +80,13 @@ class Card(models.Model):
 class TimelineEvent(models.Model):
     """События для категории History (timeline)"""
 
+    tab = models.ForeignKey(
+        TabCategory,
+        on_delete=models.CASCADE,
+        related_name="timeline_events",
+        verbose_name=_("Таб"),
+        limit_choices_to={"key": "history"},
+    )
     year = models.CharField(max_length=20, verbose_name=_("Год"))
 
     # Многоязычные поля для события

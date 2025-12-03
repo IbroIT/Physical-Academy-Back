@@ -25,27 +25,6 @@ class CardSerializer(serializers.ModelSerializer):
         return obj.get_description(language)
 
 
-class TabCategorySerializer(serializers.ModelSerializer):
-    """Сериализатор для категорий/табов с карточками"""
-
-    title = serializers.SerializerMethodField()
-    cards = CardSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = TabCategory
-        fields = ["id", "key", "title", "icon", "order", "cards"]
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_title(self, obj) -> str:
-        language = self.context.get("language", "ru")
-        return obj.get_title(language)
-
-    def to_representation(self, instance):
-        language = self.context.get("language", "ru")
-        self.fields["cards"].context.update({"language": language})
-        return super().to_representation(instance)
-
-
 class TimelineEventSerializer(serializers.ModelSerializer):
     """Сериализатор для событий истории"""
 
@@ -61,8 +40,30 @@ class TimelineEventSerializer(serializers.ModelSerializer):
         return obj.get_event(language)
 
 
+class TabCategorySerializer(serializers.ModelSerializer):
+    """Сериализатор для категорий/табов с карточками и событиями timeline"""
+
+    title = serializers.SerializerMethodField()
+    cards = CardSerializer(many=True, read_only=True)
+    timeline_events = TimelineEventSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = TabCategory
+        fields = ["id", "key", "title", "icon", "order", "cards", "timeline_events"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_title(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
+
+    def to_representation(self, instance):
+        language = self.context.get("language", "ru")
+        self.fields["cards"].context.update({"language": language})
+        self.fields["timeline_events"].context.update({"language": language})
+        return super().to_representation(instance)
+
+
 class FacultyDataSerializer(serializers.Serializer):
     """Общий сериализатор для всех данных факультета"""
 
     tabs = TabCategorySerializer(many=True)
-    timeline = TimelineEventSerializer(many=True)
