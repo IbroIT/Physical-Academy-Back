@@ -41,26 +41,18 @@ class TimelineEventSerializer(serializers.ModelSerializer):
 
 
 class TabCategorySerializer(serializers.ModelSerializer):
-    """Сериализатор для категорий/табов с карточками и событиями timeline"""
+    """Сериализатор для категорий/табов"""
 
     title = serializers.SerializerMethodField()
-    cards = CardSerializer(many=True, read_only=True)
-    timeline_events = TimelineEventSerializer(many=True, read_only=True)
 
     class Meta:
         model = TabCategory
-        fields = ["id", "key", "title", "icon", "order", "cards", "timeline_events"]
+        fields = ["id", "key", "title", "icon", "order"]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_title(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_title(language)
-
-    def to_representation(self, instance):
-        language = self.context.get("language", "ru")
-        self.fields["cards"].context.update({"language": language})
-        self.fields["timeline_events"].context.update({"language": language})
-        return super().to_representation(instance)
 
 
 class FacultyDataSerializer(serializers.Serializer):

@@ -1,8 +1,14 @@
 from django.urls import path
-from .views import CoachingFacultyDataAPIView
+from .views import (
+    CoachingFacultyTabsAPIView,
+    CoachingFacultyCardsAPIView,
+    CoachingFacultyHistoryAPIView,
+)
 
 app_name = "coaching_faculty"
 
 urlpatterns = [
-    path("", CoachingFacultyDataAPIView.as_view(), name="coaching-faculty-data"),
+    path("tabs/", CoachingFacultyTabsAPIView.as_view(), name="tabs"),
+    path("cards/", CoachingFacultyCardsAPIView.as_view(), name="cards"),
+    path("history/", CoachingFacultyHistoryAPIView.as_view(), name="history"),
 ]

@@ -55,13 +55,13 @@ class CardAdmin(admin.ModelAdmin):
 
 @admin.register(TimelineEvent)
 class TimelineEventAdmin(admin.ModelAdmin):
-    list_display = ("year", "event_preview", "order", "is_active", "created_at")
-    list_filter = ("is_active", "created_at")
+    list_display = ("year", "tab", "event_preview", "order", "is_active", "created_at")
+    list_filter = ("tab", "is_active", "created_at")
     search_fields = ("year", "event_ru", "event_kg", "event_en")
     ordering = ("order",)
     list_editable = ("order", "is_active")
     fieldsets = (
-        (None, {"fields": ("year", "order", "is_active")}),
+        (None, {"fields": ("tab", "year", "order", "is_active")}),
         ("События", {"fields": ("event_ru", "event_kg", "event_en")}),
     )
 
