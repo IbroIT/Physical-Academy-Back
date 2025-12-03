@@ -74,6 +74,11 @@ INSTALLED_APPS = [
     "facts",
     "sports",  # Новое приложение для спорта
     "ipchain_app",  # IPChain приложение
+    # Faculty apps
+    "coaching_faculy",
+    "military_faculty",
+    "correspondence_faculty",
+    "pedagogical_faculty",
 ]
 
 MIDDLEWARE = [

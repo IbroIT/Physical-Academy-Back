@@ -33,6 +33,11 @@ urlpatterns = [
     path("api/sports/", include("sports.urls")),
     # IPChain API
     path("api/ipchain/", include("ipchain_app.urls")),
+    # Faculty APIs
+    path("api/faculties/coaching/", include("coaching_faculy.urls")),
+    path("api/faculties/military/", include("military_faculty.urls")),
+    path("api/faculties/correspondence/", include("correspondence_faculty.urls")),
+    path("api/faculties/pedagogical/", include("pedagogical_faculty.urls")),
     # Schema (JSON/YAML)'
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Swagger / Redoc UI
