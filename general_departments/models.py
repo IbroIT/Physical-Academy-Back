@@ -41,28 +41,52 @@ class DepartmentCategory(models.Model):
 
 
 class DepartmentInfo(models.Model):
-    """Информация о кафедре (описание, особенности)"""
+    """Описание кафедры"""
+
+    category = models.OneToOneField(
+        DepartmentCategory,
+        on_delete=models.CASCADE,
+        related_name="info",
+        verbose_name=_("Категория"),
+    )
+
+    # Многоязычные поля для описания
+    description_ru = models.TextField(verbose_name=_("Описание (Русский)"))
+    description_kg = models.TextField(verbose_name=_("Описание (Кыргызча)"))
+    description_en = models.TextField(verbose_name=_("Описание (English)"))
+
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Описание кафедры")
+        verbose_name_plural = _("Описания кафедр")
+
+    def __str__(self):
+        return f"{self.category.name_ru} - Описание"
+
+    def get_description(self, language="ru"):
+        """Получить описание на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
+
+
+class DepartmentFeature(models.Model):
+    """Особенности кафедры (пункты списка)"""
 
     category = models.ForeignKey(
         DepartmentCategory,
         on_delete=models.CASCADE,
-        related_name="info_items",
+        related_name="features",
         verbose_name=_("Категория"),
     )
 
-    info_type = models.CharField(
-        max_length=50,
-        choices=[
-            ("description", _("Описание")),
-            ("feature", _("Особенность")),
-        ],
-        verbose_name=_("Тип информации"),
-    )
-
-    # Многоязычные поля для контента
-    content_ru = models.TextField(verbose_name=_("Контент (Русский)"))
-    content_kg = models.TextField(verbose_name=_("Контент (Кыргызча)"))
-    content_en = models.TextField(verbose_name=_("Контент (English)"))
+    # Многоязычные поля для особенности
+    feature_ru = models.TextField(verbose_name=_("Особенность (Русский)"))
+    feature_kg = models.TextField(verbose_name=_("Особенность (Кыргызча)"))
+    feature_en = models.TextField(verbose_name=_("Особенность (English)"))
 
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
@@ -71,14 +95,14 @@ class DepartmentInfo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Информация о кафедре")
-        verbose_name_plural = _("Информация о кафедрах")
-        ordering = ["category", "info_type", "order"]
+        verbose_name = _("Особенность кафедры")
+        verbose_name_plural = _("Особенности кафедр")
+        ordering = ["category", "order"]
 
     def __str__(self):
-        return f"{self.category.name_ru} - {self.get_info_type_display()}"
+        return f"{self.category.name_ru} - {self.feature_ru[:50]}"
 
-    def get_content(self, language="ru"):
-        """Получить контент на указанном языке"""
-        value = getattr(self, f"content_{language}", None)
-        return value if value else self.content_ru
+    def get_feature(self, language="ru"):
+        """Получить особенность на указанном языке"""
+        value = getattr(self, f"feature_{language}", None)
+        return value if value else self.feature_ru

@@ -21,7 +21,6 @@ class GeneralDepartmentsAPIRootView(APIView):
                 "categories": reverse(
                     "general_departments:categories", request=request, format=format
                 ),
-                "category-detail": "Use /api/general-departments/categories/{key}/?lang=ru",
             }
         )
 
@@ -52,7 +51,8 @@ class DepartmentCategoriesAPIView(APIView):
 
         categories = (
             DepartmentCategory.objects.filter(is_active=True)
-            .prefetch_related("info_items")
+            .select_related("info")
+            .prefetch_related("features")
             .order_by("order")
         )
 
@@ -80,10 +80,14 @@ class DepartmentCategoryDetailAPIView(APIView):
             "name": "Кафедра языков",
             "color": "blue-500",
             "order": 1,
-            "info_items": [
-                {"id": 1, "info_type": "description", "content": "Описание...", "order": 1},
-                {"id": 2, "info_type": "feature", "content": "Особенность 1", "order": 1},
-                {"id": 3, "info_type": "feature", "content": "Особенность 2", "order": 2}
+            "info": {
+                "id": 1,
+                "description": "Описание кафедры..."
+            },
+            "features": [
+                {"id": 1, "feature": "Особенность 1", "order": 1},
+                {"id": 2, "feature": "Особенность 2", "order": 2},
+                {"id": 3, "feature": "Особенность 3", "order": 3}
             ]
         }
     """
@@ -92,8 +96,10 @@ class DepartmentCategoryDetailAPIView(APIView):
         language = request.query_params.get("lang", "ru")
 
         try:
-            category = DepartmentCategory.objects.prefetch_related("info_items").get(
-                key=key, is_active=True
+            category = (
+                DepartmentCategory.objects.select_related("info")
+                .prefetch_related("features")
+                .get(key=key, is_active=True)
             )
         except DepartmentCategory.DoesNotExist:
             return Response(

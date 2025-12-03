@@ -1,22 +1,37 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
-from .models import DepartmentCategory, DepartmentInfo
+from .models import DepartmentCategory, DepartmentInfo, DepartmentFeature
+
+
+class DepartmentFeatureSerializer(serializers.ModelSerializer):
+    """Сериализатор для особенностей кафедры"""
+
+    feature = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DepartmentFeature
+        fields = ["id", "feature", "order"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_feature(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_feature(language)
 
 
 class DepartmentInfoSerializer(serializers.ModelSerializer):
-    """Сериализатор для информации о кафедре"""
+    """Сериализатор для описания кафедры"""
 
-    content = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
 
     class Meta:
         model = DepartmentInfo
-        fields = ["id", "info_type", "content", "order"]
+        fields = ["id", "description"]
 
     @extend_schema_field(OpenApiTypes.STR)
-    def get_content(self, obj) -> str:
+    def get_description(self, obj) -> str:
         language = self.context.get("language", "ru")
-        return obj.get_content(language)
+        return obj.get_description(language)
 
 
 class DepartmentCategorySerializer(serializers.ModelSerializer):
@@ -38,31 +53,29 @@ class DepartmentCategorySerializer(serializers.ModelSerializer):
     @extend_schema_field(OpenApiTypes.STR)
     def get_description(self, obj) -> str:
         language = self.context.get("language", "ru")
-        # Получаем первое описание
-        description_item = obj.info_items.filter(
-            info_type="description", is_active=True
-        ).first()
-        return description_item.get_content(language) if description_item else ""
+        # Получаем описание (OneToOne relation)
+        if hasattr(obj, "info") and obj.info.is_active:
+            return obj.info.get_description(language)
+        return ""
 
     @extend_schema_field(OpenApiTypes.OBJECT)
     def get_features(self, obj) -> list:
         language = self.context.get("language", "ru")
         # Получаем все активные особенности
-        features = obj.info_items.filter(info_type="feature", is_active=True).order_by(
-            "order"
-        )
-        return [feature.get_content(language) for feature in features]
+        features = obj.features.filter(is_active=True).order_by("order")
+        return [feature.get_feature(language) for feature in features]
 
 
 class DepartmentCategoryDetailSerializer(serializers.ModelSerializer):
     """Детальный сериализатор категории с полной информацией"""
 
     name = serializers.SerializerMethodField()
-    info_items = DepartmentInfoSerializer(many=True, read_only=True)
+    info = DepartmentInfoSerializer(read_only=True)
+    features = DepartmentFeatureSerializer(many=True, read_only=True)
 
     class Meta:
         model = DepartmentCategory
-        fields = ["id", "key", "name", "color", "order", "info_items"]
+        fields = ["id", "key", "name", "color", "order", "info", "features"]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj) -> str:
@@ -71,5 +84,6 @@ class DepartmentCategoryDetailSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         language = self.context.get("language", "ru")
-        self.fields["info_items"].context.update({"language": language})
+        self.fields["info"].context.update({"language": language})
+        self.fields["features"].context.update({"language": language})
         return super().to_representation(instance)
