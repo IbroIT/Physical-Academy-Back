@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cloudinary.models import CloudinaryField
 
 
 class TabCategory(models.Model):
@@ -12,9 +13,7 @@ class TabCategory(models.Model):
     title_kg = models.CharField(max_length=200, verbose_name=_("Заголовок (Кыргызча)"))
     title_en = models.CharField(max_length=200, verbose_name=_("Заголовок (English)"))
 
-    icon = models.CharField(
-        max_length=10, blank=True, verbose_name=_("Иконка (эмодзи)")
-    )
+    icon = CloudinaryField(blank=True, null=True, verbose_name=_("Иконка"))
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
 
