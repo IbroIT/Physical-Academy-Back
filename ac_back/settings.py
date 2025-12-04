@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     "leadership_structure",
     "admission",
     "main_page",
-    "education",
     "science",
     "banner",
     "news",
@@ -74,6 +73,12 @@ INSTALLED_APPS = [
     "facts",
     "sports",  # Новое приложение для спорта
     "ipchain_app",  # IPChain приложение
+    # Faculty apps
+    "coaching_faculy",
+    "military_faculty",
+    "correspondence_faculty",
+    "pedagogical_faculty",
+    "general_departments",  # Общие кафедры
 ]
 
 MIDDLEWARE = [
