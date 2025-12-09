@@ -86,7 +86,7 @@ class TimelineEvent(models.Model):
         verbose_name=_("Таб"),
         limit_choices_to={"key": "history"},
     )
-    year = models.CharField(max_length=20, verbose_name=_("Год"))
+    image = CloudinaryField(blank=True, null=True, verbose_name=_("Картинка"))
 
     # Многоязычные поля для события
     event_ru = models.TextField(verbose_name=_("Событие (Русский)"))
@@ -105,9 +105,45 @@ class TimelineEvent(models.Model):
         ordering = ["order"]
 
     def __str__(self):
-        return f"{self.year} - {self.event_ru[:50]}"
+        return f"{self.event_ru[:50]}"
 
     def get_event(self, language="ru"):
         """Получить событие на указанном языке"""
         value = getattr(self, f"event_{language}", None)
         return value if value else self.event_ru
+
+
+class AboutFaculty(models.Model):
+    """Описание факультета (About Faculty)"""
+
+    tab = models.ForeignKey(
+        TabCategory,
+        on_delete=models.CASCADE,
+        related_name="about_faculty",
+        verbose_name=_("Таб"),
+        limit_choices_to={"key": "about_faculty"},
+    )
+
+    # Многоязычные поля для текста
+    text_ru = models.TextField(verbose_name=_("Текст (Русский)"))
+    text_kg = models.TextField(verbose_name=_("Текст (Кыргызча)"))
+    text_en = models.TextField(verbose_name=_("Текст (English)"))
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("О факультете")
+        verbose_name_plural = _("О факультете")
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"О факультете - {self.text_ru[:50]}"
+
+    def get_text(self, language="ru"):
+        """Получить текст на указанном языке"""
+        value = getattr(self, f"text_{language}", None)
+        return value if value else self.text_ru

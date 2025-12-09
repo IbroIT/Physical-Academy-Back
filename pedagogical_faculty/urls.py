@@ -4,6 +4,7 @@ from .views import (
     PedagogicalFacultyTabsAPIView,
     PedagogicalFacultyCardsAPIView,
     PedagogicalFacultyHistoryAPIView,
+    PedagogicalFacultyAboutAPIView,
 )
 
 app_name = "pedagogical_faculty"
@@ -13,4 +14,5 @@ urlpatterns = [
     path("tabs/", PedagogicalFacultyTabsAPIView.as_view(), name="tabs"),
     path("cards/", PedagogicalFacultyCardsAPIView.as_view(), name="cards"),
     path("history/", PedagogicalFacultyHistoryAPIView.as_view(), name="history"),
+    path("about/", PedagogicalFacultyAboutAPIView.as_view(), name="about"),
 ]

@@ -2,8 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
-from .models import TabCategory, Card, TimelineEvent
-from .serializers import TabCategorySerializer, CardSerializer, TimelineEventSerializer
+from .models import TabCategory, Card, TimelineEvent, AboutFaculty
+from .serializers import (
+    TabCategorySerializer,
+    CardSerializer,
+    TimelineEventSerializer,
+    AboutFacultySerializer,
+)
 
 
 class CorrespondenceFacultyAPIRootView(APIView):
@@ -23,6 +28,9 @@ class CorrespondenceFacultyAPIRootView(APIView):
                 ),
                 "history": reverse(
                     "correspondence_faculty:history", request=request, format=format
+                ),
+                "about": reverse(
+                    "correspondence_faculty:about", request=request, format=format
                 ),
             }
         )
@@ -123,6 +131,27 @@ class CorrespondenceFacultyHistoryAPIView(APIView):
 
         serializer = TimelineEventSerializer(
             timeline, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CorrespondenceFacultyAboutAPIView(APIView):
+    """API для получения текста 'О факультете' (about_faculty)"""
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            about_tab = TabCategory.objects.get(key="about_faculty", is_active=True)
+            items = AboutFaculty.objects.filter(tab=about_tab, is_active=True).order_by(
+                "order"
+            )
+        except TabCategory.DoesNotExist:
+            items = AboutFaculty.objects.none()
+
+        serializer = AboutFacultySerializer(
+            items, many=True, context={"request": request, "language": language}
         )
 
         return Response(serializer.data, status=status.HTTP_200_OK)
