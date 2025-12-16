@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "correspondence_faculty",
     "pedagogical_faculty",
     "general_departments",  # Общие кафедры
+    "education",  # Образование (магистратура, докторантура, колледж)
 ]
 
 MIDDLEWARE = [

@@ -39,6 +39,8 @@ urlpatterns = [
     path("api/faculties/pedagogical/", include("pedagogical_faculty.urls")),
     # General Departments API
     path("api/general-departments/", include("general_departments.urls")),
+    # Education API (магистратура, докторантура, колледж)
+    path("api/education/", include("education.urls")),
     # Schema (JSON/YAML)'
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Swagger / Redoc UI

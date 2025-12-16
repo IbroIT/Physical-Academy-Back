@@ -56,3 +56,23 @@
     }
 ]
 ```
+
+### to get about us
+
+```http
+/api/faculties/coaching/about/?lang=kg
+```
+```json
+[
+    {
+        "id": 1,
+        "text": "awfeawefawdf",
+        "order": 0
+    },
+    {
+        "id": 2,
+        "text": "awfeawefawdf",
+        "order": 0
+    }
+]
+```
