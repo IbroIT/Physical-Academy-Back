@@ -5,6 +5,9 @@ from .views import (
     CoachingFacultyCardsAPIView,
     CoachingFacultyHistoryAPIView,
     CoachingFacultyAboutAPIView,
+    CoachingFacultyManagementAPIView,
+    CoachingFacultySpecializationsAPIView,
+    CoachingFacultyDepartmentsAPIView,
 )
 
 app_name = "coaching_faculty"
@@ -15,4 +18,15 @@ urlpatterns = [
     path("cards/", CoachingFacultyCardsAPIView.as_view(), name="cards"),
     path("history/", CoachingFacultyHistoryAPIView.as_view(), name="history"),
     path("about/", CoachingFacultyAboutAPIView.as_view(), name="about"),
+    path("management/", CoachingFacultyManagementAPIView.as_view(), name="management"),
+    path(
+        "specializations/",
+        CoachingFacultySpecializationsAPIView.as_view(),
+        name="specializations",
+    ),
+    path(
+        "departments/",
+        CoachingFacultyDepartmentsAPIView.as_view(),
+        name="departments",
+    ),
 ]

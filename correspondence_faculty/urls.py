@@ -5,6 +5,8 @@ from .views import (
     CorrespondenceFacultyCardsAPIView,
     CorrespondenceFacultyHistoryAPIView,
     CorrespondenceFacultyAboutAPIView,
+    CorrespondenceFacultyManagementAPIView,
+    CorrespondenceFacultySpecializationsAPIView,
 )
 
 app_name = "correspondence_faculty"
@@ -15,4 +17,14 @@ urlpatterns = [
     path("cards/", CorrespondenceFacultyCardsAPIView.as_view(), name="cards"),
     path("history/", CorrespondenceFacultyHistoryAPIView.as_view(), name="history"),
     path("about/", CorrespondenceFacultyAboutAPIView.as_view(), name="about"),
+    path(
+        "management/",
+        CorrespondenceFacultyManagementAPIView.as_view(),
+        name="management",
+    ),
+    path(
+        "specializations/",
+        CorrespondenceFacultySpecializationsAPIView.as_view(),
+        name="specializations",
+    ),
 ]

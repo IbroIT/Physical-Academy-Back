@@ -1,7 +1,14 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
-from .models import TabCategory, Card, TimelineEvent, AboutFaculty
+from .models import (
+    TabCategory,
+    Card,
+    TimelineEvent,
+    AboutFaculty,
+    Management,
+    Specialization,
+)
 
 
 class CardSerializer(serializers.ModelSerializer):
@@ -86,3 +93,67 @@ class AboutFacultySerializer(serializers.ModelSerializer):
     def get_text(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_text(language)
+
+
+class ManagementSerializer(serializers.ModelSerializer):
+    """Сериализатор для руководства факультета"""
+
+    name = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
+    resume = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Management
+        fields = ["id", "name", "role", "photo", "phone", "email", "resume", "order"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_name(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_role(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_role(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_photo(self, obj) -> str | None:
+        img = getattr(obj, "photo", None)
+        if not img:
+            return None
+        try:
+            return img.url
+        except Exception:
+            return str(img)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_resume(self, obj) -> str | None:
+        resume = getattr(obj, "resume", None)
+        if not resume:
+            return None
+        try:
+            return resume.url
+        except Exception:
+            return str(resume)
+
+
+class SpecializationSerializer(serializers.ModelSerializer):
+    """Сериализатор для специализаций факультета"""
+
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Specialization
+        fields = ["id", "title", "description", "order"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_title(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_description(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)

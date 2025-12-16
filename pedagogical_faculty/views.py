@@ -2,12 +2,24 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
-from .models import TabCategory, Card, TimelineEvent, AboutFaculty
+from .models import (
+    TabCategory,
+    Card,
+    TimelineEvent,
+    AboutFaculty,
+    Management,
+    Specialization,
+    Department,
+    DepartmentStaff,
+)
 from .serializers import (
     TabCategorySerializer,
     CardSerializer,
     TimelineEventSerializer,
     AboutFacultySerializer,
+    ManagementSerializer,
+    SpecializationSerializer,
+    DepartmentSerializer,
 )
 
 
@@ -31,6 +43,17 @@ class PedagogicalFacultyAPIRootView(APIView):
                 ),
                 "about": reverse(
                     "pedagogical_faculty:about", request=request, format=format
+                ),
+                "management": reverse(
+                    "pedagogical_faculty:management", request=request, format=format
+                ),
+                "specializations": reverse(
+                    "pedagogical_faculty:specializations",
+                    request=request,
+                    format=format,
+                ),
+                "departments": reverse(
+                    "pedagogical_faculty:departments", request=request, format=format
                 ),
             }
         )
@@ -151,6 +174,81 @@ class PedagogicalFacultyAboutAPIView(APIView):
             items = AboutFaculty.objects.none()
 
         serializer = AboutFacultySerializer(
+            items, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PedagogicalFacultyManagementAPIView(APIView):
+    """API для получения руководства факультета (management)
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            management_tab = TabCategory.objects.get(key="management", is_active=True)
+            items = Management.objects.filter(
+                tab=management_tab, is_active=True
+            ).order_by("order")
+        except TabCategory.DoesNotExist:
+            items = Management.objects.none()
+
+        serializer = ManagementSerializer(
+            items, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PedagogicalFacultySpecializationsAPIView(APIView):
+    """API для получения специализаций факультета (specializations)
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            spec_tab = TabCategory.objects.get(key="specializations", is_active=True)
+            items = Specialization.objects.filter(
+                tab=spec_tab, is_active=True
+            ).order_by("order")
+        except TabCategory.DoesNotExist:
+            items = Specialization.objects.none()
+
+        serializer = SpecializationSerializer(
+            items, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PedagogicalFacultyDepartmentsAPIView(APIView):
+    """API для получения кафедр факультета с сотрудниками (departments)
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            dept_tab = TabCategory.objects.get(key="departments", is_active=True)
+            items = Department.objects.filter(tab=dept_tab, is_active=True).order_by(
+                "order"
+            )
+        except TabCategory.DoesNotExist:
+            items = Department.objects.none()
+
+        serializer = DepartmentSerializer(
             items, many=True, context={"request": request, "language": language}
         )
 

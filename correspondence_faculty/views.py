@@ -2,12 +2,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
-from .models import TabCategory, Card, TimelineEvent, AboutFaculty
+from .models import (
+    TabCategory,
+    Card,
+    TimelineEvent,
+    AboutFaculty,
+    Management,
+    Specialization,
+)
 from .serializers import (
     TabCategorySerializer,
     CardSerializer,
     TimelineEventSerializer,
     AboutFacultySerializer,
+    ManagementSerializer,
+    SpecializationSerializer,
 )
 
 
@@ -31,6 +40,14 @@ class CorrespondenceFacultyAPIRootView(APIView):
                 ),
                 "about": reverse(
                     "correspondence_faculty:about", request=request, format=format
+                ),
+                "management": reverse(
+                    "correspondence_faculty:management", request=request, format=format
+                ),
+                "specializations": reverse(
+                    "correspondence_faculty:specializations",
+                    request=request,
+                    format=format,
                 ),
             }
         )
@@ -151,6 +168,56 @@ class CorrespondenceFacultyAboutAPIView(APIView):
             items = AboutFaculty.objects.none()
 
         serializer = AboutFacultySerializer(
+            items, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CorrespondenceFacultyManagementAPIView(APIView):
+    """API для получения руководства факультета (management)
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            management_tab = TabCategory.objects.get(key="management", is_active=True)
+            items = Management.objects.filter(
+                tab=management_tab, is_active=True
+            ).order_by("order")
+        except TabCategory.DoesNotExist:
+            items = Management.objects.none()
+
+        serializer = ManagementSerializer(
+            items, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CorrespondenceFacultySpecializationsAPIView(APIView):
+    """API для получения специализаций факультета (specializations)
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            spec_tab = TabCategory.objects.get(key="specializations", is_active=True)
+            items = Specialization.objects.filter(
+                tab=spec_tab, is_active=True
+            ).order_by("order")
+        except TabCategory.DoesNotExist:
+            items = Specialization.objects.none()
+
+        serializer = SpecializationSerializer(
             items, many=True, context={"request": request, "language": language}
         )
 

@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import TabCategory, Card, TimelineEvent, AboutFaculty
+from .models import (
+    TabCategory,
+    Card,
+    TimelineEvent,
+    AboutFaculty,
+    Management,
+    Specialization,
+)
 
 
 class CardInline(admin.TabularInline):
@@ -21,7 +28,6 @@ class TabCategoryAdmin(admin.ModelAdmin):
     list_filter = ("is_active",)
     search_fields = ("title_ru", "title_kg", "title_en", "key")
     ordering = ("order",)
-    inlines = [CardInline]
     fieldsets = (
         (None, {"fields": ("key", "order", "is_active")}),
         ("Заголовки", {"fields": ("title_ru", "title_kg", "title_en")}),
@@ -89,3 +95,52 @@ class AboutFacultyAdmin(admin.ModelAdmin):
         return text[:100] + "..." if len(text) > 100 else text
 
     text_preview.short_description = "Текст"
+
+
+@admin.register(Management)
+class ManagementAdmin(admin.ModelAdmin):
+    list_display = ("name_ru", "role_ru", "phone", "email", "order", "is_active")
+    list_filter = ("tab", "is_active", "created_at")
+    search_fields = (
+        "name_ru",
+        "name_kg",
+        "name_en",
+        "role_ru",
+        "role_kg",
+        "role_en",
+        "phone",
+        "email",
+    )
+    ordering = ("order",)
+    list_editable = ("order", "is_active")
+    fieldsets = (
+        (None, {"fields": ("tab", "photo", "order", "is_active")}),
+        ("Имена", {"fields": ("name_ru", "name_kg", "name_en")}),
+        ("Роли", {"fields": ("role_ru", "role_kg", "role_en")}),
+        ("Контакты", {"fields": ("phone", "email")}),
+        ("Резюме", {"fields": ("resume",)}),
+    )
+
+
+@admin.register(Specialization)
+class SpecializationAdmin(admin.ModelAdmin):
+    list_display = ("title_ru", "order", "is_active", "created_at")
+    list_filter = ("tab", "is_active", "created_at")
+    search_fields = (
+        "title_ru",
+        "title_kg",
+        "title_en",
+        "description_ru",
+        "description_kg",
+        "description_en",
+    )
+    ordering = ("order",)
+    list_editable = ("order", "is_active")
+    fieldsets = (
+        (None, {"fields": ("tab", "order", "is_active")}),
+        ("Названия", {"fields": ("title_ru", "title_kg", "title_en")}),
+        (
+            "Описания",
+            {"fields": ("description_ru", "description_kg", "description_en")},
+        ),
+    )
