@@ -134,8 +134,12 @@ class ManagementSerializer(serializers.ModelSerializer):
             return None
         request = self.context.get('request')
         if request:
-            return request.build_absolute_uri(obj.resume.url)
-        return obj.resume.url
+            from django.urls import reverse
+            # Возвращаем URL на endpoint для скачивания
+            download_url = reverse('pedagogical_faculty:download-resume', 
+                                  kwargs={'model_type': 'management', 'pk': obj.pk})
+            return request.build_absolute_uri(download_url)
+        return None
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -186,8 +190,12 @@ class DepartmentStaffSerializer(serializers.ModelSerializer):
             return None
         request = self.context.get('request')
         if request:
-            return request.build_absolute_uri(obj.resume.url)
-        return obj.resume.url
+            from django.urls import reverse
+            # Возвращаем URL на endpoint для скачивания
+            download_url = reverse('pedagogical_faculty:download-resume', 
+                                  kwargs={'model_type': 'staff', 'pk': obj.pk})
+            return request.build_absolute_uri(download_url)
+        return None
 
 
 class DepartmentSerializer(serializers.ModelSerializer):

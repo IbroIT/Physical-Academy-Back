@@ -2,6 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404
+import mimetypes
 from .models import (
     TabCategory,
     Card,
@@ -253,3 +256,36 @@ class PedagogicalFacultyDepartmentsAPIView(APIView):
         )
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DownloadResumeView(APIView):
+    """
+    View для скачивания резюме управления и сотрудников кафедр
+    """
+    def get(self, request, model_type, pk):
+        # Определяем модель по типу
+        if model_type == "management":
+            obj = get_object_or_404(Management, pk=pk, is_active=True)
+        elif model_type == "staff":
+            obj = get_object_or_404(DepartmentStaff, pk=pk, is_active=True)
+        else:
+            raise Http404("Invalid model type")
+        
+        # Проверяем наличие резюме
+        if not obj.resume:
+            raise Http404("Resume not found")
+        
+        try:
+            # Получаем файл
+            file_content = obj.resume.read()
+            
+            # Определяем MIME тип
+            content_type = mimetypes.guess_type(obj.resume.name)[0] or 'application/pdf'
+            
+            # Создаем ответ с файлом
+            response = HttpResponse(file_content, content_type=content_type)
+            response['Content-Disposition'] = f'inline; filename="{obj.resume.name.split("/")[-1]}"'
+            
+            return response
+        except Exception as e:
+            raise Http404(f"Error reading file: {str(e)}")

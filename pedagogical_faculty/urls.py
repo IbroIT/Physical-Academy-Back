@@ -8,6 +8,7 @@ from .views import (
     PedagogicalFacultyManagementAPIView,
     PedagogicalFacultySpecializationsAPIView,
     PedagogicalFacultyDepartmentsAPIView,
+    DownloadResumeView,
 )
 
 app_name = "pedagogical_faculty"
@@ -30,5 +31,10 @@ urlpatterns = [
         "departments/",
         PedagogicalFacultyDepartmentsAPIView.as_view(),
         name="departments",
+    ),
+    path(
+        "resume/<str:model_type>/<int:pk>/",
+        DownloadResumeView.as_view(),
+        name="download-resume",
     ),
 ]
