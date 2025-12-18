@@ -276,16 +276,25 @@ class DownloadResumeView(APIView):
             raise Http404("Resume not found")
         
         try:
-            # Получаем файл
-            file_content = obj.resume.read()
+            # Открываем файл через storage
+            file = obj.resume.open('rb')
+            file_content = file.read()
+            file.close()
+            
+            # Получаем имя файла
+            filename = obj.resume.name.split('/')[-1]
+            if not filename.endswith('.pdf'):
+                filename += '.pdf'
             
             # Определяем MIME тип
-            content_type = mimetypes.guess_type(obj.resume.name)[0] or 'application/pdf'
+            content_type = 'application/pdf'
             
             # Создаем ответ с файлом
             response = HttpResponse(file_content, content_type=content_type)
-            response['Content-Disposition'] = f'inline; filename="{obj.resume.name.split("/")[-1]}"'
+            response['Content-Disposition'] = f'inline; filename="{filename}"'
+            response['Content-Length'] = len(file_content)
             
             return response
         except Exception as e:
             raise Http404(f"Error reading file: {str(e)}")
+
