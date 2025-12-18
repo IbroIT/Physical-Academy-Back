@@ -138,10 +138,21 @@ class ManagementSerializer(serializers.ModelSerializer):
             url = resume.url
             # Для raw файлов Cloudinary генерируем signed URL для безопасного доступа
             if 'cloudinary.com' in url and '/raw/upload/' in url:
-                # Извлекаем public_id из URL
+                # Извлекаем public_id из URL (после /upload/ и включая версию)
                 parts = url.split('/upload/')
                 if len(parts) > 1:
-                    public_id = parts[1].split('.')[0]  # Убираем расширение
+                    # Получаем все после /upload/, включая версию и расширение
+                    path_with_version = parts[1]
+                    # Убираем версию (v1234567890/) если есть
+                    if path_with_version.startswith('v'):
+                        path_parts = path_with_version.split('/', 1)
+                        if len(path_parts) > 1:
+                            public_id = path_parts[1]  # Путь с расширением
+                        else:
+                            public_id = path_with_version
+                    else:
+                        public_id = path_with_version
+                    
                     # Генерируем signed URL с длительным сроком действия
                     url = cloudinary.utils.cloudinary_url(
                         public_id,
@@ -210,10 +221,21 @@ class DepartmentStaffSerializer(serializers.ModelSerializer):
             url = resume.url
             # Для raw файлов Cloudinary генерируем signed URL для безопасного доступа
             if 'cloudinary.com' in url and '/raw/upload/' in url:
-                # Извлекаем public_id из URL
+                # Извлекаем public_id из URL (после /upload/ и включая версию)
                 parts = url.split('/upload/')
                 if len(parts) > 1:
-                    public_id = parts[1].split('.')[0]  # Убираем расширение
+                    # Получаем все после /upload/, включая версию и расширение
+                    path_with_version = parts[1]
+                    # Убираем версию (v1234567890/) если есть
+                    if path_with_version.startswith('v'):
+                        path_parts = path_with_version.split('/', 1)
+                        if len(path_parts) > 1:
+                            public_id = path_parts[1]  # Путь с расширением
+                        else:
+                            public_id = path_with_version
+                    else:
+                        public_id = path_with_version
+                    
                     # Генерируем signed URL с длительным сроком действия
                     url = cloudinary.utils.cloudinary_url(
                         public_id,
