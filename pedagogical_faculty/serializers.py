@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
+import cloudinary
 from .models import (
     TabCategory,
     Card,
@@ -134,14 +135,28 @@ class ManagementSerializer(serializers.ModelSerializer):
         if not resume:
             return None
         try:
-            # Для Cloudinary raw файлов (PDF) добавляем fl_attachment для правильного скачивания
             url = resume.url
+            # Для raw файлов Cloudinary генерируем signed URL для безопасного доступа
             if 'cloudinary.com' in url and '/raw/upload/' in url:
-                # Вставляем fl_attachment/ после /raw/upload/
-                url = url.replace('/raw/upload/', '/raw/upload/fl_attachment/')
+                # Извлекаем public_id из URL
+                parts = url.split('/upload/')
+                if len(parts) > 1:
+                    public_id = parts[1].split('.')[0]  # Убираем расширение
+                    # Генерируем signed URL с длительным сроком действия
+                    url = cloudinary.utils.cloudinary_url(
+                        public_id,
+                        resource_type="raw",
+                        type="upload",
+                        sign_url=True,
+                        secure=True,
+                    )[0]
             return url
-        except Exception:
-            return str(resume)
+        except Exception as e:
+            # В случае ошибки возвращаем оригинальный URL
+            try:
+                return resume.url
+            except:
+                return str(resume)
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -192,14 +207,28 @@ class DepartmentStaffSerializer(serializers.ModelSerializer):
         if not resume:
             return None
         try:
-            # Для Cloudinary raw файлов (PDF) добавляем fl_attachment для правильного скачивания
             url = resume.url
+            # Для raw файлов Cloudinary генерируем signed URL для безопасного доступа
             if 'cloudinary.com' in url and '/raw/upload/' in url:
-                # Вставляем fl_attachment/ после /raw/upload/
-                url = url.replace('/raw/upload/', '/raw/upload/fl_attachment/')
+                # Извлекаем public_id из URL
+                parts = url.split('/upload/')
+                if len(parts) > 1:
+                    public_id = parts[1].split('.')[0]  # Убираем расширение
+                    # Генерируем signed URL с длительным сроком действия
+                    url = cloudinary.utils.cloudinary_url(
+                        public_id,
+                        resource_type="raw",
+                        type="upload",
+                        sign_url=True,
+                        secure=True,
+                    )[0]
             return url
-        except Exception:
-            return str(resume)
+        except Exception as e:
+            # В случае ошибки возвращаем оригинальный URL
+            try:
+                return resume.url
+            except:
+                return str(resume)
 
 
 class DepartmentSerializer(serializers.ModelSerializer):

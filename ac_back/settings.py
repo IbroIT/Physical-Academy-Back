@@ -166,6 +166,8 @@ cloudinary.config(
     api_key=os.getenv("CLOUDINARY_API_KEY"),
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
     secure=True,
+    # Разрешаем публичный доступ к raw файлам
+    private_cdn=False,
 )
 
 # Cloudinary Storage Settings (Django 4.2+ format)

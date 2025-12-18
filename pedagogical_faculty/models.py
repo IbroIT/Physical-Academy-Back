@@ -180,8 +180,7 @@ class Management(models.Model):
     resume = CloudinaryField(
         blank=True,
         null=True,
-        resource_type="raw",
-        verbose_name=_("Резюме (PDF)"),
+        resource_type="raw",        folder="pedagogical_faculty/management/resumes",        verbose_name=_("Резюме (PDF)"),
     )
 
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
@@ -331,6 +330,7 @@ class DepartmentStaff(models.Model):
         blank=True,
         null=True,
         resource_type="raw",
+        folder="pedagogical_faculty/departments/resumes",
         verbose_name=_("Резюме (PDF)"),
     )
 
