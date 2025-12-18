@@ -5,6 +5,10 @@ from rest_framework.reverse import reverse
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 import mimetypes
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import requests
 from .models import (
     TabCategory,
     Card,
@@ -276,25 +280,61 @@ class DownloadResumeView(APIView):
             raise Http404("Resume not found")
         
         try:
-            # Открываем файл через storage
-            file = obj.resume.open('rb')
-            file_content = file.read()
-            file.close()
+            # Получаем URL файла из Cloudinary
+            file_url = obj.resume.url
+            
+            # Если это Cloudinary URL, генерируем signed URL
+            if 'cloudinary.com' in file_url:
+                # Извлекаем public_id из URL
+                if '/media/' in file_url:
+                    # Формат: .../v1/media/path/to/file.pdf или .../media/path/to/file.pdf
+                    parts = file_url.split('/media/')
+                    if len(parts) > 1:
+                        # Убираем version если есть (v1/)
+                        public_id_part = parts[1]
+                        # Извлекаем public_id (все до последнего расширения)
+                        # Для Cloudinary public_id включает путь но без расширения
+                        public_id = 'media/' + public_id_part.rsplit('.', 1)[0] if '.' in public_id_part else 'media/' + public_id_part
+                        
+                        # Генерируем authenticated URL через Cloudinary API
+                        signed_url = cloudinary.utils.cloudinary_url(
+                            public_id,
+                            resource_type="raw",
+                            type="upload",
+                            sign_url=True,
+                            secure=True,
+                        )[0]
+                        
+                        # Скачиваем файл по signed URL
+                        response = requests.get(signed_url, timeout=30)
+                        response.raise_for_status()
+                        file_content = response.content
+                else:
+                    # Пробуем скачать напрямую
+                    response = requests.get(file_url, timeout=30)
+                    response.raise_for_status()
+                    file_content = response.content
+            else:
+                # Для не-Cloudinary файлов читаем напрямую
+                file = obj.resume.open('rb')
+                file_content = file.read()
+                file.close()
             
             # Получаем имя файла
             filename = obj.resume.name.split('/')[-1]
             if not filename.endswith('.pdf'):
                 filename += '.pdf'
             
-            # Определяем MIME тип
-            content_type = 'application/pdf'
-            
             # Создаем ответ с файлом
-            response = HttpResponse(file_content, content_type=content_type)
+            response = HttpResponse(file_content, content_type='application/pdf')
             response['Content-Disposition'] = f'inline; filename="{filename}"'
             response['Content-Length'] = len(file_content)
+            response['Cache-Control'] = 'public, max-age=3600'
             
             return response
+        except requests.exceptions.RequestException as e:
+            raise Http404(f"Error downloading file from Cloudinary: {str(e)}")
         except Exception as e:
             raise Http404(f"Error reading file: {str(e)}")
+
 
