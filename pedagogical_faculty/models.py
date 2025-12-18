@@ -177,10 +177,11 @@ class Management(models.Model):
     )
     email = models.EmailField(blank=True, verbose_name=_("Email"))
 
-    resume = CloudinaryField(
+    resume = models.FileField(
+        upload_to="pedagogical_faculty/management/resumes/",
         blank=True,
         null=True,
-        resource_type="raw",        folder="pedagogical_faculty/management/resumes",        verbose_name=_("Резюме (PDF)"),
+        verbose_name=_("Резюме (PDF)"),
     )
 
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
@@ -326,11 +327,10 @@ class DepartmentStaff(models.Model):
         max_length=200, verbose_name=_("Должность (English)")
     )
 
-    resume = CloudinaryField(
+    resume = models.FileField(
+        upload_to="pedagogical_faculty/departments/resumes/",
         blank=True,
         null=True,
-        resource_type="raw",
-        folder="pedagogical_faculty/departments/resumes",
         verbose_name=_("Резюме (PDF)"),
     )
 

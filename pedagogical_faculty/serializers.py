@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
-import cloudinary
 from .models import (
     TabCategory,
     Card,
@@ -131,43 +130,12 @@ class ManagementSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_resume(self, obj) -> str | None:
-        resume = getattr(obj, "resume", None)
-        if not resume:
+        if not obj.resume:
             return None
-        try:
-            url = resume.url
-            # Для raw файлов Cloudinary генерируем signed URL для безопасного доступа
-            if 'cloudinary.com' in url and '/raw/upload/' in url:
-                # Извлекаем public_id из URL (после /upload/ и включая версию)
-                parts = url.split('/upload/')
-                if len(parts) > 1:
-                    # Получаем все после /upload/, включая версию и расширение
-                    path_with_version = parts[1]
-                    # Убираем версию (v1234567890/) если есть
-                    if path_with_version.startswith('v'):
-                        path_parts = path_with_version.split('/', 1)
-                        if len(path_parts) > 1:
-                            public_id = path_parts[1]  # Путь с расширением
-                        else:
-                            public_id = path_with_version
-                    else:
-                        public_id = path_with_version
-                    
-                    # Генерируем signed URL с длительным сроком действия
-                    url = cloudinary.utils.cloudinary_url(
-                        public_id,
-                        resource_type="raw",
-                        type="upload",
-                        sign_url=True,
-                        secure=True,
-                    )[0]
-            return url
-        except Exception as e:
-            # В случае ошибки возвращаем оригинальный URL
-            try:
-                return resume.url
-            except:
-                return str(resume)
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(obj.resume.url)
+        return obj.resume.url
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -214,43 +182,12 @@ class DepartmentStaffSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_resume(self, obj) -> str | None:
-        resume = getattr(obj, "resume", None)
-        if not resume:
+        if not obj.resume:
             return None
-        try:
-            url = resume.url
-            # Для raw файлов Cloudinary генерируем signed URL для безопасного доступа
-            if 'cloudinary.com' in url and '/raw/upload/' in url:
-                # Извлекаем public_id из URL (после /upload/ и включая версию)
-                parts = url.split('/upload/')
-                if len(parts) > 1:
-                    # Получаем все после /upload/, включая версию и расширение
-                    path_with_version = parts[1]
-                    # Убираем версию (v1234567890/) если есть
-                    if path_with_version.startswith('v'):
-                        path_parts = path_with_version.split('/', 1)
-                        if len(path_parts) > 1:
-                            public_id = path_parts[1]  # Путь с расширением
-                        else:
-                            public_id = path_with_version
-                    else:
-                        public_id = path_with_version
-                    
-                    # Генерируем signed URL с длительным сроком действия
-                    url = cloudinary.utils.cloudinary_url(
-                        public_id,
-                        resource_type="raw",
-                        type="upload",
-                        sign_url=True,
-                        secure=True,
-                    )[0]
-            return url
-        except Exception as e:
-            # В случае ошибки возвращаем оригинальный URL
-            try:
-                return resume.url
-            except:
-                return str(resume)
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(obj.resume.url)
+        return obj.resume.url
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
