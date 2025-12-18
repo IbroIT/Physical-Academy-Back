@@ -134,7 +134,12 @@ class ManagementSerializer(serializers.ModelSerializer):
         if not resume:
             return None
         try:
-            return resume.url
+            # Для Cloudinary raw файлов (PDF) добавляем fl_attachment для правильного скачивания
+            url = resume.url
+            if 'cloudinary.com' in url and '/raw/upload/' in url:
+                # Меняем /raw/upload/ на /image/upload/fl_attachment/ для безопасной загрузки
+                url = url.replace('/raw/upload/', '/image/upload/fl_attachment/')
+            return url
         except Exception:
             return str(resume)
 
@@ -187,7 +192,12 @@ class DepartmentStaffSerializer(serializers.ModelSerializer):
         if not resume:
             return None
         try:
-            return resume.url
+            # Для Cloudinary raw файлов (PDF) добавляем fl_attachment для правильного скачивания
+            url = resume.url
+            if 'cloudinary.com' in url and '/raw/upload/' in url:
+                # Меняем /raw/upload/ на /image/upload/fl_attachment/ для безопасной загрузки
+                url = url.replace('/raw/upload/', '/image/upload/fl_attachment/')
+            return url
         except Exception:
             return str(resume)
 
