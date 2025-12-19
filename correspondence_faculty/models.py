@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
+from ckeditor_uploader.fields import RichTextUploadingField
+
 
 
 class TabCategory(models.Model):
@@ -125,9 +127,9 @@ class AboutFaculty(models.Model):
     )
 
     # Многоязычные поля для текста
-    text_ru = models.TextField(verbose_name=_("Текст (Русский)"))
-    text_kg = models.TextField(verbose_name=_("Текст (Кыргызча)"))
-    text_en = models.TextField(verbose_name=_("Текст (English)"))
+    text_ru = RichTextUploadingField(null=True, blank=True)
+    text_kg = RichTextUploadingField(null=True, blank=True)
+    text_en = RichTextUploadingField(null=True, blank=True)
 
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активно"))

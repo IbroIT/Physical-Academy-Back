@@ -80,6 +80,8 @@ INSTALLED_APPS = [
     "pedagogical_faculty",
     "general_departments",  # Общие кафедры
     "education",  # Образование (магистратура, докторантура, колледж)
+    "ckeditor_uploader",
+    "ckeditor",
 ]
 
 MIDDLEWARE = [
@@ -140,6 +142,22 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'extraPlugins': 'image2',  # Ключевой плагин для float left/right
+        'removePlugins': 'image',  # Отключаем старый плагин
+        'width': '100%',
+        'height': 500,
+        'enterMode': 2,  # Используем <br> для новой строки
+        'shiftEnterMode': 1,     # Shift+Enter создаёт <p> (если нужен параграф)
+        'allowedContent': True,  # разрешаем любые стили
+        'language': 'ru',          # Русский язык для UI CKEditor
+    },
+}
 
 
 # Internationalization
