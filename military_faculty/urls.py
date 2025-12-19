@@ -8,12 +8,14 @@ from .views import (
     MilitaryFacultyManagementAPIView,
     MilitaryFacultySpecializationsAPIView,
     MilitaryFacultyDepartmentsAPIView,
+    GalleryCardListAPIView
 )
 
 app_name = "military_faculty"
 
 urlpatterns = [
     path("departments/", MilitaryFacultyDepartmentsAPIView.as_view(), name="departments"),
+    path("gallery-cards/", GalleryCardListAPIView.as_view(), name="gallery-cards"),
     path("tabs/", MilitaryFacultyTabsAPIView.as_view(), name="tabs"),
     path("cards/", MilitaryFacultyCardsAPIView.as_view(), name="cards"),
     path("history/", MilitaryFacultyHistoryAPIView.as_view(), name="history"),

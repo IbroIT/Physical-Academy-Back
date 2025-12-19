@@ -9,12 +9,14 @@ from .views import (
     PedagogicalFacultySpecializationsAPIView,
     PedagogicalFacultyDepartmentsAPIView,
     DownloadResumeView,
+    GalleryCardListAPIView
 )
 
 app_name = "pedagogical_faculty"
 
 urlpatterns = [
     path("", PedagogicalFacultyAPIRootView.as_view(), name="api-root"),
+    path("gallery-cards/", GalleryCardListAPIView.as_view(), name="gallery-cards"),
     path("tabs/", PedagogicalFacultyTabsAPIView.as_view(), name="tabs"),
     path("cards/", PedagogicalFacultyCardsAPIView.as_view(), name="cards"),
     path("history/", PedagogicalFacultyHistoryAPIView.as_view(), name="history"),

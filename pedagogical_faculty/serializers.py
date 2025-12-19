@@ -10,8 +10,24 @@ from .models import (
     Specialization,
     Department,
     DepartmentStaff,
+    GalleryCard
 )
 
+
+class GalleryCardSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = GalleryCard
+        fields = ["id", "title", "description", "image", "order"]
+
+    def get_title(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
+    def get_description(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
 
 class CardSerializer(serializers.ModelSerializer):
     """Сериализатор для карточек"""

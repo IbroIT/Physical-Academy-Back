@@ -357,3 +357,33 @@ class DepartmentStaff(models.Model):
         """Получить должность на указанном языке"""
         value = getattr(self, f"position_{language}", None)
         return value if value else self.position_ru
+
+class GalleryCard(models.Model):
+    """Галерея факультета (Gallery Cards)"""
+
+    photo = models.ImageField(upload_to="pedagogical_faculty/gallery/", verbose_name=_("Фото"))
+
+    title_ru = models.CharField(max_length=200, blank=True, verbose_name=_("Заголовок (Русский)"))
+    title_kg = models.CharField(max_length=200, blank=True, verbose_name=_("Заголовок (Кыргызча)"))
+    title_en = models.CharField(max_length=200, blank=True, verbose_name=_("Заголовок (English)"))  
+
+    description_ru = models.TextField(blank=True, verbose_name=_("Описание (Русский)"))
+    description_kg = models.TextField(blank=True, verbose_name=_("Описание (Кыргызча)"))
+    description_en = models.TextField(blank=True, verbose_name=_("Описание (English)")) 
+
+
+    class Meta:
+        verbose_name = _("Карточка галереи")
+        verbose_name_plural = _("Карточки галереи")
+        ordering = ["id"] 
+
+    def __str__(self):
+        return f"Галерея - {self.title_ru[:50]}"
+    def get_title(self, language="ru"):
+        """Получить заголовок на указанном языке"""
+        value = getattr(self, f"title_{language}", None)
+        return value if value else self.title_ru
+    def get_description(self, language="ru"):
+        """Получить описание на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru

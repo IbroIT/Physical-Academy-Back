@@ -7,11 +7,13 @@ from .models import (
     Management,
     Specialization,
     Department,
-    DepartmentStaff
+    DepartmentStaff,
+    GalleryCard
 )
 
 admin.site.register(Department)
 admin.site.register(DepartmentStaff)
+admin.site.register(GalleryCard)
 
 
 

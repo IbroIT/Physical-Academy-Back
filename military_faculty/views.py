@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework import status
 from rest_framework.reverse import reverse
 from .models import (
@@ -10,6 +11,7 @@ from .models import (
     Management,
     Specialization,
     Department,
+    GalleryCard
 )
 from .serializers import (
     TabCategorySerializer,
@@ -19,8 +21,32 @@ from .serializers import (
     ManagementSerializer,
     DepartmentSerializer,
     SpecializationSerializer,
+    GalleryCardSerializer,
 )
 
+
+class GalleryCardListAPIView(generics.ListAPIView):
+    """
+    API для получения всех карточек галереи педагогического факультета
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+
+    Returns:
+        [
+            {"id": 1, "title": "Заголовок", "description": "Описание", "image": "url", "order": 1},
+            ...
+        ]
+    """
+
+    queryset = GalleryCard.objects.filter(is_active=True).order_by("order")
+    serializer_class = GalleryCardSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        language = self.request.query_params.get("lang", "ru")
+        context.update({"language": language})
+        return context
 
 class MilitaryFacultyDepartmentsAPIView(APIView):
     """API для получения кафедр факультета с сотрудниками (departments)

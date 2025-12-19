@@ -8,8 +8,10 @@ from .models import (
     Specialization,
     Department,
     DepartmentStaff,
+    GalleryCard
 )
 
+admin.site.register(GalleryCard)
 
 class CardInline(admin.TabularInline):
     model = Card

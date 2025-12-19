@@ -9,7 +9,8 @@ from .models import (
     Management,
     Specialization,
     Department,
-    DepartmentStaff
+    DepartmentStaff,
+    GalleryCard
 )
 class DepartmentStaffSerializer(serializers.ModelSerializer):
     """Сериализатор для сотрудников кафедры"""
@@ -46,6 +47,20 @@ class DepartmentStaffSerializer(serializers.ModelSerializer):
         return None
 
 
+class GalleryCardSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = GalleryCard
+        fields = ["id", "title", "description", "image", "order"]
+
+    def get_title(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
+    def get_description(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
