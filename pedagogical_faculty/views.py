@@ -47,7 +47,7 @@ class GalleryCardListAPIView(generics.ListAPIView):
         ]
     """
 
-    queryset = GalleryCard.objects.filter(is_active=True).order_by("order")
+    queryset = GalleryCard.objects.all()
     serializer_class = GalleryCardSerializer
 
     def get_serializer_context(self):
