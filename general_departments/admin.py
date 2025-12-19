@@ -1,6 +1,40 @@
 from django.contrib import admin
-from .models import DepartmentCategory, DepartmentInfo, DepartmentFeature
+from .models import DepartmentCategory, DepartmentInfo, DepartmentFeature, TabCategory, Management
 
+@admin.register(TabCategory)
+class TabCategoryAdmin(admin.ModelAdmin):
+    list_display = ("title_ru", "key", "order", "is_active")
+    list_filter = ("is_active",)
+    search_fields = ("title_ru", "title_kg", "title_en", "key")
+    ordering = ("order",)
+    fieldsets = (
+        (None, {"fields": ("key", "order", "is_active")}),
+        ("Заголовки", {"fields": ("title_ru", "title_kg", "title_en")}),
+        ("Иконка", {"fields": ("icon",)}),
+    )
+
+@admin.register(Management)
+class ManagementAdmin(admin.ModelAdmin):
+    list_display = ("name_ru", "role_ru", "phone", "email", "order", "is_active")
+    list_filter = ("tab", "is_active", "created_at")
+    search_fields = (
+        "name_ru",
+        "name_kg",
+        "name_en",
+        "role_ru",
+        "role_kg",
+        "role_en",
+        "phone",
+        "email",
+    )
+    ordering = ("order",)
+    list_editable = ("order", "is_active")
+    fieldsets = (
+        (None, {"fields": ("tab", "photo", "order", "is_active")}),
+        ("Имена", {"fields": ("name_ru", "name_kg", "name_en")}),
+        ("Роли", {"fields": ("role_ru", "role_kg", "role_en")}),
+        ("Контакты", {"fields": ("phone", "email")}),
+    )
 
 class DepartmentInfoInline(admin.StackedInline):
     model = DepartmentInfo

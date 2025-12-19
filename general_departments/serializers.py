@@ -1,7 +1,55 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
-from .models import DepartmentCategory, DepartmentInfo, DepartmentFeature
+from .models import DepartmentCategory, DepartmentInfo, DepartmentFeature, Management, TabCategory
+
+
+class TabCategorySerializer(serializers.ModelSerializer):
+    """Сериализатор для категорий/табов"""
+
+    title = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TabCategory
+        fields = ["id", "key", "title", "icon", "order"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_title(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
+
+
+class ManagementSerializer(serializers.ModelSerializer):
+    """Сериализатор для руководства факультета"""
+
+    name = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
+    resume = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Management
+        fields = ["id", "name", "role", "photo", "phone", "email", "order"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_name(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_role(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_role(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_photo(self, obj) -> str | None:
+        img = getattr(obj, "photo", None)
+        if not img:
+            return None
+        try:
+            return img.url
+        except Exception:
+            return str(img)
 
 
 class DepartmentFeatureSerializer(serializers.ModelSerializer):

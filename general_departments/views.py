@@ -2,11 +2,90 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
-from .models import DepartmentCategory
+
+from coaching_faculy.models import TabCategory
+from .models import DepartmentCategory, Management
 from .serializers import (
     DepartmentCategorySerializer,
     DepartmentCategoryDetailSerializer,
+    ManagementSerializer,
+    TabCategorySerializer,
 )
+
+class GeneralFacultyTabsAPIView(APIView):
+    """
+    API для получения всех табов (категорий) общего факультета
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+
+    Returns:
+        [
+            {"id": 1, "key": "history", "title": "История", "icon": "📜", "order": 1},
+            {"id": 2, "key": "about", "title": "О факультете", "icon": "ℹ️", "order": 2}
+        ]
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        tabs = TabCategory.objects.filter(is_active=True).order_by("order")
+        serializer = TabCategorySerializer(
+            tabs, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PedagogicalFacultyTabsAPIView(APIView):
+    """
+    API для получения всех табов (категорий) педагогического факультета
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    
+    Returns:
+        [
+            {"id": 1, "key": "history", "title": "История", "icon": "📜", "order": 1},
+            {"id": 2, "key": "about", "title": "О факультете", "icon": "ℹ️", "order": 2}
+        ]
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        tabs = TabCategory.objects.filter(is_active=True).order_by("order")
+        serializer = TabCategorySerializer(
+            tabs, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GeneralFacultyManagementAPIView(APIView):
+    """API для получения руководства факультета (management)
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            management_tab = TabCategory.objects.get(key="management", is_active=True)
+            items = Management.objects.filter(
+                tab=management_tab, is_active=True
+            ).order_by("order")
+        except TabCategory.DoesNotExist:
+            items = Management.objects.none()
+
+        serializer = ManagementSerializer(
+            items, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class GeneralDepartmentsAPIRootView(APIView):
