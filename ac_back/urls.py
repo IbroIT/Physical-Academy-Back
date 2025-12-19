@@ -16,6 +16,7 @@ schema_view = SpectacularAPIView.as_view()
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("ckeditor/", include("ckeditor_uploader.urls")),
     # API endpoints
     path("api/student-clubs/", include("student_clubs.urls")),
     path("api/leadership-structure/", include("leadership_structure.urls")),
