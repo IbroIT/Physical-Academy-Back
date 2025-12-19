@@ -8,7 +8,66 @@ from .models import (
     AboutFaculty,
     Management,
     Specialization,
+    Department,
+    DepartmentStaff
 )
+class DepartmentStaffSerializer(serializers.ModelSerializer):
+    """Сериализатор для сотрудников кафедры"""
+
+    name = serializers.SerializerMethodField()
+    position = serializers.SerializerMethodField()
+    resume = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DepartmentStaff
+        fields = ["id", "name", "position", "resume", "order"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_name(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_position(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_position(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_resume(self, obj) -> str | None:
+        if not obj.resume:
+            return None
+        request = self.context.get('request')
+        if request:
+            from django.urls import reverse
+            # Возвращаем URL на endpoint для скачивания
+            download_url = reverse('pedagogical_faculty:download-resume', 
+                                  kwargs={'model_type': 'staff', 'pk': obj.pk})
+            return request.build_absolute_uri(download_url)
+        return None
+
+
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    """Сериализатор для кафедр факультета"""
+
+    name = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    staff = DepartmentStaffSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Department
+        fields = ["id", "name", "description", "staff", "order"]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_name(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_name(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_description(self, obj) -> str:
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
 
 
 class CardSerializer(serializers.ModelSerializer):

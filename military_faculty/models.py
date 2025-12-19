@@ -4,6 +4,8 @@ from cloudinary.models import CloudinaryField
 from ckeditor_uploader.fields import RichTextUploadingField
 
 
+
+
 class TabCategory(models.Model):
     """Категории/табы (history, about, management, specializations, departments)"""
 
@@ -254,3 +256,105 @@ class Specialization(models.Model):
         """Получить описание на указанном языке"""
         value = getattr(self, f"description_{language}", None)
         return value if value else self.description_ru
+
+
+class Department(models.Model):
+    """Кафедры факультета (Departments)"""
+
+    tab = models.ForeignKey(
+        TabCategory,
+        on_delete=models.CASCADE,
+        related_name="departments",
+        verbose_name=_("Таб"),
+        limit_choices_to={"key": "departments"},
+    )
+
+    # Многоязычные поля для названия кафедры
+    name_ru = models.CharField(max_length=300, verbose_name=_("Название (Русский)"))
+    name_kg = models.CharField(max_length=300, verbose_name=_("Название (Кыргызча)"))
+    name_en = models.CharField(max_length=300, verbose_name=_("Название (English)"))
+
+    description_ru = RichTextUploadingField(null=True, blank=True)
+    description_kg = RichTextUploadingField(null=True, blank=True)
+    description_en = RichTextUploadingField(null=True, blank=True)
+    
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Кафедра")
+        verbose_name_plural = _("Кафедры")
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.name_ru
+
+    def get_name(self, language="ru"):
+        """Получить название на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
+
+    def get_description(self, language="ru"):
+        """Получить описание на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
+
+class DepartmentStaff(models.Model):
+    """Сотрудники кафедры (Department Staff)"""
+
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.CASCADE,
+        related_name="staff",
+        verbose_name=_("Кафедра"),
+    )
+
+    # Многоязычные поля для имени
+    name_ru = models.CharField(max_length=200, verbose_name=_("Имя (Русский)"))
+    name_kg = models.CharField(max_length=200, verbose_name=_("Имя (Кыргызча)"))
+    name_en = models.CharField(max_length=200, verbose_name=_("Имя (English)"))
+
+    # Многоязычные поля для должности
+    position_ru = models.CharField(
+        max_length=200, verbose_name=_("Должность (Русский)")
+    )
+    position_kg = models.CharField(
+        max_length=200, verbose_name=_("Должность (Кыргызча)")
+    )
+    position_en = models.CharField(
+        max_length=200, verbose_name=_("Должность (English)")
+    )
+
+    resume = models.FileField(
+        upload_to="pedagogical_faculty/departments/resumes/",
+        blank=True,
+        null=True,
+        verbose_name=_("Резюме (PDF)"),
+    )
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Сотрудник кафедры")
+        verbose_name_plural = _("Сотрудники кафедры")
+        ordering = ["department", "order"]
+
+    def __str__(self):
+        return f"{self.name_ru} - {self.position_ru}"
+
+    def get_name(self, language="ru"):
+        """Получить имя на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
+
+    def get_position(self, language="ru"):
+        """Получить должность на указанном языке"""
+        value = getattr(self, f"position_{language}", None)
+        return value if value else self.position_ru

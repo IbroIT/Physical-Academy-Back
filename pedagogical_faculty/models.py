@@ -272,11 +272,10 @@ class Department(models.Model):
     name_kg = models.CharField(max_length=300, verbose_name=_("Название (Кыргызча)"))
     name_en = models.CharField(max_length=300, verbose_name=_("Название (English)"))
 
-    # Многоязычные поля для описания кафедры
-    description_ru = models.TextField(verbose_name=_("Описание (Русский)"))
-    description_kg = models.TextField(verbose_name=_("Описание (Кыргызча)"))
-    description_en = models.TextField(verbose_name=_("Описание (English)"))
-
+    description_ru = RichTextUploadingField(null=True, blank=True)
+    description_kg = RichTextUploadingField(null=True, blank=True)
+    description_en = RichTextUploadingField(null=True, blank=True)
+    
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
 

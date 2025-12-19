@@ -9,6 +9,7 @@ from .models import (
     AboutFaculty,
     Management,
     Specialization,
+    Department,
 )
 from .serializers import (
     TabCategorySerializer,
@@ -16,8 +17,36 @@ from .serializers import (
     TimelineEventSerializer,
     AboutFacultySerializer,
     ManagementSerializer,
+    DepartmentSerializer,
     SpecializationSerializer,
 )
+
+
+class MilitaryFacultyDepartmentsAPIView(APIView):
+    """API для получения кафедр факультета с сотрудниками (departments)
+
+    Query Parameters:
+        - lang: ru, en, kg (по умолчанию: ru)
+    """
+
+    def get(self, request):
+        language = request.query_params.get("lang", "ru")
+
+        try:
+            dept_tab = TabCategory.objects.get(key="departments", is_active=True)
+            items = Department.objects.filter(tab=dept_tab, is_active=True).order_by(
+                "order"
+            )
+        except TabCategory.DoesNotExist:
+            items = Department.objects.none()
+
+        serializer = DepartmentSerializer(
+            items, many=True, context={"request": request, "language": language}
+        )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 
 class MilitaryFacultyAPIRootView(APIView):
