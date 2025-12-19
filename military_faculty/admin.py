@@ -6,7 +6,13 @@ from .models import (
     AboutFaculty,
     Management,
     Specialization,
+    Department,
+    DepartmentStaff
 )
+
+admin.site.register(Department)
+admin.site.register(DepartmentStaff)
+
 
 
 class CardInline(admin.TabularInline):
