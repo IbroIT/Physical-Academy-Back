@@ -364,8 +364,8 @@ class DepartmentStaff(models.Model):
 class GalleryCard(models.Model):
     """Галерея факультета (Gallery Cards)"""
 
-    photo = models.ImageField(upload_to="pedagogical_faculty/gallery/", verbose_name=_("Фото"))
-
+    photo = models.ImageField(upload_to="pedagogical_faculty/gallery/", max_length=255, verbose_name=_("Фото"))
+    
     title_ru = models.CharField(max_length=200, blank=True, verbose_name=_("Заголовок (Русский)"))
     title_kg = models.CharField(max_length=200, blank=True, verbose_name=_("Заголовок (Кыргызча)"))
     title_en = models.CharField(max_length=200, blank=True, verbose_name=_("Заголовок (English)"))  
