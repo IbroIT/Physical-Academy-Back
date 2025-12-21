@@ -3,63 +3,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from coaching_faculy.models import TabCategory
-from .models import DepartmentCategory, Management
+from .models import TabCategory, Management
 from .serializers import (
     DepartmentCategorySerializer,
     DepartmentCategoryDetailSerializer,
     ManagementSerializer,
-    TabCategorySerializer,
 )
 
-class GeneralFacultyTabsAPIView(APIView):
-    """
-    API для получения всех табов (категорий) общего факультета
 
-    Query Parameters:
-        - lang: ru, en, kg (по умолчанию: ru)
-
-    Returns:
-        [
-            {"id": 1, "key": "history", "title": "История", "icon": "📜", "order": 1},
-            {"id": 2, "key": "about", "title": "О факультете", "icon": "ℹ️", "order": 2}
-        ]
-    """
-
-    def get(self, request):
-        language = request.query_params.get("lang", "ru")
-
-        tabs = TabCategory.objects.filter(is_active=True).order_by("order")
-        serializer = TabCategorySerializer(
-            tabs, many=True, context={"request": request, "language": language}
-        )
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class PedagogicalFacultyTabsAPIView(APIView):
-    """
-    API для получения всех табов (категорий) педагогического факультета
-
-    Query Parameters:
-        - lang: ru, en, kg (по умолчанию: ru)
-    
-    Returns:
-        [
-            {"id": 1, "key": "history", "title": "История", "icon": "📜", "order": 1},
-            {"id": 2, "key": "about", "title": "О факультете", "icon": "ℹ️", "order": 2}
-        ]
-    """
-
-    def get(self, request):
-        language = request.query_params.get("lang", "ru")
-
-        tabs = TabCategory.objects.filter(is_active=True).order_by("order")
-        serializer = TabCategorySerializer(
-            tabs, many=True, context={"request": request, "language": language}
-        )
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class GeneralFacultyManagementAPIView(APIView):
@@ -73,7 +24,7 @@ class GeneralFacultyManagementAPIView(APIView):
         language = request.query_params.get("lang", "ru")
 
         try:
-            management_tab = TabCategory.objects.get(key="management", is_active=True)
+            management_tab = TabCategory.objects.get(is_active=True)
             items = Management.objects.filter(
                 tab=management_tab, is_active=True
             ).order_by("order")
@@ -129,9 +80,8 @@ class DepartmentCategoriesAPIView(APIView):
         language = request.query_params.get("lang", "ru")
 
         categories = (
-            DepartmentCategory.objects.filter(is_active=True)
+            TabCategory.objects.filter(is_active=True)
             .select_related("info")
-            .prefetch_related("features")
             .order_by("order")
         )
 
@@ -176,11 +126,11 @@ class DepartmentCategoryDetailAPIView(APIView):
 
         try:
             category = (
-                DepartmentCategory.objects.select_related("info")
+                TabCategory.objects.select_related("info")
                 .prefetch_related("features")
                 .get(key=key, is_active=True)
             )
-        except DepartmentCategory.DoesNotExist:
+        except TabCategory.DoesNotExist:
             return Response(
                 {"error": f"Категория с ключом '{key}' не найдена"},
                 status=status.HTTP_404_NOT_FOUND,
