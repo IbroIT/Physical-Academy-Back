@@ -20,7 +20,7 @@ class GalleryCardSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = GalleryCard
-        fields = ["id", "title", "description", "photo", "order"]
+        fields = ["id", "title", "description", "photo", ]
 
     def get_title(self, obj) -> str:
         language = self.context.get("language", "ru")
