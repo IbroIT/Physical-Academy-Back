@@ -2,13 +2,12 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from cloudinary.models import CloudinaryField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 
 class TabCategory(models.Model):
     """Категории/табы (history, about, management, specializations, departments)"""
-
-    key = models.CharField(max_length=50, unique=True, verbose_name=_("Ключ"))
 
     # Многоязычные поля для заголовка
     name_ru = models.CharField(max_length=200, verbose_name=_("Заголовок (Русский)"))
@@ -56,9 +55,9 @@ class DepartmentInfo(models.Model):
     )
 
     # Многоязычные поля для описания
-    description_ru = models.TextField(verbose_name=_("Описание(Русский)"))
-    description_kg = models.TextField(verbose_name=_("Описание(Кыргызча)"))
-    description_en = models.TextField(verbose_name=_("Описание(English)"))
+    description_ru = RichTextUploadingField(verbose_name=_("Описание(Русский)"), blank=True, null=True)
+    description_kg = RichTextUploadingField(verbose_name=_("Описание(Кыргызча)"), blank=True, null=True)
+    description_en = RichTextUploadingField(verbose_name=_("Описание(English)"), blank=True, null=True)
 
     is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
 
@@ -80,11 +79,13 @@ class DepartmentInfo(models.Model):
 class Management(models.Model):
     """Руководство факультета (Management)"""
 
-    tab = models.ForeignKey(
+    department = models.ForeignKey(
         TabCategory,
         on_delete=models.CASCADE,
         related_name="management",
-        verbose_name=_("Таб"),
+        verbose_name=_("Кафедра"),
+        blank=True,
+        null=True,
     )
 
     photo = CloudinaryField(verbose_name=_("Фото"))

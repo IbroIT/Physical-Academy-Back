@@ -57,24 +57,15 @@ class DepartmentCategorySerializer(serializers.ModelSerializer):
     """Сериализатор для категории кафедры"""
 
     name = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
 
     class Meta:
         model = TabCategory
-        fields = ["id", "key", "name", "color", "description",  "order"]
+        fields = ["id", "name"]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_name(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj) -> str:
-        language = self.context.get("language", "ru")
-        # Получаем описание (OneToOne relation)
-        if hasattr(obj, "info") and obj.info.is_active:
-            return obj.info.get_description(language)
-        return ""
 
 
 
@@ -82,19 +73,29 @@ class DepartmentCategoryDetailSerializer(serializers.ModelSerializer):
     """Детальный сериализатор категории с полной информацией"""
 
     name = serializers.SerializerMethodField()
-    info = DepartmentInfoSerializer(read_only=True)
+    info = serializers.SerializerMethodField()
+    management = serializers.SerializerMethodField()
 
     class Meta:
         model = TabCategory
-        fields = ["id", "key", "name", "color", "order", "info", "features"]
+        fields = ["id", "name", "color", "order", "info", "management"]
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_name(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_name(language)
 
-    def to_representation(self, instance):
-        language = self.context.get("language", "ru")
-        self.fields["info"].context.update({"language": language})
-        self.fields["features"].context.update({"language": language})
-        return super().to_representation(instance)
+    @extend_schema_field(DepartmentInfoSerializer)
+    def get_info(self, obj):
+        try:
+            info = obj.info
+            if info.is_active:
+                return DepartmentInfoSerializer(info, context=self.context).data
+        except Exception:
+            return None
+        return None
+
+    @extend_schema_field(ManagementSerializer(many=True))
+    def get_management(self, obj):
+        items = obj.management.filter(is_active=True).order_by("order")
+        return ManagementSerializer(items, many=True, context=self.context).data

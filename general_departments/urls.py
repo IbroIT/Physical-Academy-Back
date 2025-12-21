@@ -12,11 +12,9 @@ urlpatterns = [
     path("", GeneralDepartmentsAPIRootView.as_view(), name="api-root"),
     path("categories/", DepartmentCategoriesAPIView.as_view(), name="categories"),
     path(
-        "management/", GeneralFacultyManagementAPIView.as_view(), name="management"
-    ),
-    path(
-        "categories/<str:key>/",
+        "categories/<int:id>/",
         DepartmentCategoryDetailAPIView.as_view(),
         name="category-detail",
     ),
+    path("management/", GeneralFacultyManagementAPIView.as_view(), name="management"),
 ]
