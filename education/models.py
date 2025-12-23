@@ -30,8 +30,8 @@ class MasterTabCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Категория кафедры")
-        verbose_name_plural = _("Категории кафедр")
+        verbose_name = _("Категория кафедры(магистратура)")
+        verbose_name_plural = _("Категории кафедр магистратура")
         ordering = ["order"]
 
     def __str__(self):
@@ -65,8 +65,8 @@ class MasterDepartmentInfo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Описание кафедры")
-        verbose_name_plural = _("Описания кафедр")
+        verbose_name = _("Описание кафедры (магистратура)")
+        verbose_name_plural = _("Описания кафедр (магистратура)")
 
     def __str__(self):
         return f"{self.category.name_ru} - Описание"
@@ -113,8 +113,8 @@ class MasterManagement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Руководство")
-        verbose_name_plural = _("Руководство")
+        verbose_name = _("Руководство (магистратура)")
+        verbose_name_plural = _("Руководство (магистратура)")
         ordering = ["order"]
 
     def __str__(self):
@@ -157,8 +157,8 @@ class PhdTabCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Категория кафедры")
-        verbose_name_plural = _("Категории кафедр")
+        verbose_name = _("Категория кафедры(доктурантура)")
+        verbose_name_plural = _("Категории кафедр(доктурантура)")
         ordering = ["order"]
 
     def __str__(self):
@@ -192,8 +192,8 @@ class PhdDepartmentInfo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Описание кафедры")
-        verbose_name_plural = _("Описания кафедр")
+        verbose_name = _("Описание кафедры (доктурантура)")
+        verbose_name_plural = _("Описания кафедр (доктурантура)")
 
     def __str__(self):
         return f"{self.category.name_ru} - Описание"
@@ -240,8 +240,8 @@ class PhdManagement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Руководство")
-        verbose_name_plural = _("Руководство")
+        verbose_name = _("Руководство (доктурантура)")
+        verbose_name_plural = _("Руководство (доктурантура)")
         ordering = ["order"]
 
     def __str__(self):
@@ -284,8 +284,8 @@ class CollegeTabCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Категория кафедры")
-        verbose_name_plural = _("Категории кафедр")
+        verbose_name = _("Категория кафедры (колледж)")
+        verbose_name_plural = _("Категории кафедр (колледж)")
         ordering = ["order"]
 
     def __str__(self):
@@ -319,8 +319,8 @@ class CollegeDepartmentInfo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Описание кафедры")
-        verbose_name_plural = _("Описания кафедр")
+        verbose_name = _("Описание кафедры (колледж)")
+        verbose_name_plural = _("Описания кафедр (колледж)")
 
     def __str__(self):
         return f"{self.category.name_ru} - Описание"
@@ -368,8 +368,8 @@ class CollegeManagement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Руководство")
-        verbose_name_plural = _("Руководство")
+        verbose_name = _("Руководство (колледж)")
+        verbose_name_plural = _("Руководство (колледж)")
         ordering = ["order"]
 
     def __str__(self):
