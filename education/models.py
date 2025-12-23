@@ -1,129 +1,387 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from cloudinary.models import CloudinaryField
+from ckeditor_uploader.fields import RichTextUploadingField
 
-# Create your models here.
 
 
-class PhdPrograms(models.Model):
-    emoji = models.CharField(max_length=10, verbose_name="Эмодзи")
+class MasterTabCategory(models.Model):
+    """Категории/табы (history, about, management, specializations, departments)"""
 
-    name_ru = models.CharField(max_length=100, verbose_name="Название (RU)")
-    name_kg = models.CharField(max_length=100, verbose_name="Название (KG)")
-    name_en = models.CharField(max_length=100, verbose_name="Название (EN)")
+    # Многоязычные поля для заголовка
+    name_ru = models.CharField(max_length=200, verbose_name=_("Заголовок (Русский)"))
+    name_kg = models.CharField(max_length=200, verbose_name=_("Заголовок (Кыргызча)"))
+    name_en = models.CharField(max_length=200, verbose_name=_("Заголовок (English)"))
 
-    description_ru = models.TextField(verbose_name="Описание (RU)")
-    description_kg = models.TextField(verbose_name="Описание (KG)")
-    description_en = models.TextField(verbose_name="Описание (EN)")
-
-    features_ru = models.JSONField(
-        verbose_name="Особенности (RU)", default=list, null=True, blank=True
-    )
-    features_kg = models.JSONField(
-        verbose_name="Особенности (KG)", default=list, null=True, blank=True
-    )
-    features_en = models.JSONField(
-        verbose_name="Особенности (EN)", default=list, null=True, blank=True
+    # Цвета для UI (опционально)
+    color = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name=_("Цвет"),
+        help_text="Например: blue-500, green-600",
     )
 
-    duration_years = models.IntegerField(verbose_name="Продолжительность (годы)")
-    offline = models.BooleanField(default=True, verbose_name="Очная форма")
-    tuition_fee = models.DecimalField(
-        max_digits=12, decimal_places=2, verbose_name="Стоимость обучения"
-    )
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Программа докторантуры"
-        verbose_name_plural = "Программы докторантуры"
+        verbose_name = _("Категория кафедры")
+        verbose_name_plural = _("Категории кафедр")
+        ordering = ["order"]
 
-    def str(self):
+    def __str__(self):
         return self.name_ru
 
     def get_name(self, language="ru"):
-        return getattr(self, f"name_{language}", self.name_ru)
-
-    def get_description(self, language="ru"):
-        return getattr(self, f"description_{language}", self.description_ru)
-
-    def get_features(self, language="ru"):
-        return getattr(self, f"features_{language}", self.features_ru)
+        """Получить название на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
 
 
-class CollegePrograms(models.Model):
-    emoji = models.CharField(max_length=10, verbose_name="Эмодзи")
 
-    name_ru = models.CharField(max_length=100, verbose_name="Название (RU)")
-    name_kg = models.CharField(max_length=100, verbose_name="Название (KG)")
-    name_en = models.CharField(max_length=100, verbose_name="Название (EN)")
+class MasterDepartmentInfo(models.Model):
+    """Описание кафедры"""
 
-    description_ru = models.TextField(verbose_name="Описание (RU)")
-    description_kg = models.TextField(verbose_name="Описание (KG)")
-    description_en = models.TextField(verbose_name="Описание (EN)")
-
-    features_ru = models.JSONField(
-        verbose_name="Особенности (RU)", default=list, null=True, blank=True
-    )
-    features_kg = models.JSONField(
-        verbose_name="Особенности (KG)", default=list, null=True, blank=True
-    )
-    features_en = models.JSONField(
-        verbose_name="Особенности (EN)", default=list, null=True, blank=True
+    category = models.OneToOneField(
+        MasterTabCategory,
+        on_delete=models.CASCADE,
+        related_name="info",
+        verbose_name=_("Категория"),
     )
 
-    duration_years = models.IntegerField(verbose_name="Продолжительность (годы)")
-    offline = models.BooleanField(default=True, verbose_name="Очная форма")
-    tuition_fee = models.DecimalField(
-        max_digits=12, decimal_places=2, verbose_name="Стоимость обучения"
-    )
+    # Многоязычные поля для описания
+    description_ru = RichTextUploadingField(verbose_name=_("Описание(Русский)"), blank=True, null=True)
+    description_kg = RichTextUploadingField(verbose_name=_("Описание(Кыргызча)"), blank=True, null=True)
+    description_en = RichTextUploadingField(verbose_name=_("Описание(English)"), blank=True, null=True)
+
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Программа колледжа"
-        verbose_name_plural = "Программы колледжа"
+        verbose_name = _("Описание кафедры")
+        verbose_name_plural = _("Описания кафедр")
 
-    def str(self):
+    def __str__(self):
+        return f"{self.category.name_ru} - Описание"
+
+    def get_description(self, language="ru"):
+        """Получить описание на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
+
+class MasterManagement(models.Model):
+    """Руководство факультета (Management)"""
+
+    department = models.ForeignKey(
+        MasterTabCategory,
+        on_delete=models.CASCADE,
+        related_name="management",
+        verbose_name=_("Кафедра"),
+        blank=True,
+        null=True,
+    )
+
+    photo = CloudinaryField(verbose_name=_("Фото"))
+
+    # Многоязычные поля для имени
+    name_ru = models.CharField(max_length=200, verbose_name=_("Имя (Русский)"))
+    name_kg = models.CharField(max_length=200, verbose_name=_("Имя (Кыргызча)"))
+    name_en = models.CharField(max_length=200, verbose_name=_("Имя (English)"))
+
+    # Многоязычные поля для роли
+    role_ru = models.CharField(max_length=200, verbose_name=_("Роль (Русский)"))
+    role_kg = models.CharField(max_length=200, verbose_name=_("Роль (Кыргызча)"))
+    role_en = models.CharField(max_length=200, verbose_name=_("Роль (English)"))
+
+    phone = models.CharField(
+        max_length=50, blank=True, verbose_name=_("Номер телефона")
+    )
+    email = models.EmailField(blank=True, verbose_name=_("Email"))
+
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Руководство")
+        verbose_name_plural = _("Руководство")
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.name_ru} - {self.role_ru}"
+
+    def get_name(self, language="ru"):
+        """Получить имя на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
+
+    def get_role(self, language="ru"):
+        """Получить роль на указанном языке"""
+        value = getattr(self, f"role_{language}", None)
+        return value if value else self.role_ru
+
+
+
+
+class PhdTabCategory(models.Model):
+    """Категории/табы (history, about, management, specializations, departments)"""
+
+    # Многоязычные поля для заголовка
+    name_ru = models.CharField(max_length=200, verbose_name=_("Заголовок (Русский)"))
+    name_kg = models.CharField(max_length=200, verbose_name=_("Заголовок (Кыргызча)"))
+    name_en = models.CharField(max_length=200, verbose_name=_("Заголовок (English)"))
+
+    # Цвета для UI (опционально)
+    color = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name=_("Цвет"),
+        help_text="Например: blue-500, green-600",
+    )
+
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Категория кафедры")
+        verbose_name_plural = _("Категории кафедр")
+        ordering = ["order"]
+
+    def __str__(self):
         return self.name_ru
 
     def get_name(self, language="ru"):
-        return getattr(self, f"name_{language}", self.name_ru)
-
-    def get_description(self, language="ru"):
-        return getattr(self, f"description_{language}", self.description_ru)
-
-    def get_features(self, language="ru"):
-        return getattr(self, f"features_{language}", self.features_ru)
+        """Получить название на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
 
 
-class MasterPrograms(models.Model):
-    emoji = models.CharField(max_length=10, verbose_name="Эмодзи")
 
-    name_ru = models.CharField(max_length=100, verbose_name="Название (RU)")
-    name_kg = models.CharField(max_length=100, verbose_name="Название (KG)")
-    name_en = models.CharField(max_length=100, verbose_name="Название (EN)")
+class PhdDepartmentInfo(models.Model):
+    """Описание кафедры"""
 
-    description_ru = models.TextField(verbose_name="Описание (RU)")
-    description_kg = models.TextField(verbose_name="Описание (KG)")
-    description_en = models.TextField(verbose_name="Описание (EN)")
-
-    features_ru = models.JSONField(verbose_name="Особенности (RU)")
-    features_kg = models.JSONField(verbose_name="Особенности (KG)")
-    features_en = models.JSONField(verbose_name="Особенности (EN)")
-
-    duration_years = models.IntegerField(verbose_name="Продолжительность (годы)")
-    offline = models.BooleanField(default=True, verbose_name="Очная форма")
-    tuition_fee = models.DecimalField(
-        max_digits=12, decimal_places=2, verbose_name="Стоимость обучения"
+    category = models.OneToOneField(
+        PhdTabCategory,
+        on_delete=models.CASCADE,
+        related_name="info",
+        verbose_name=_("Категория"),
     )
 
-    class Meta:
-        verbose_name = "Программа магистра"
-        verbose_name_plural = "Программы магистра"
+    # Многоязычные поля для описания
+    description_ru = RichTextUploadingField(verbose_name=_("Описание(Русский)"), blank=True, null=True)
+    description_kg = RichTextUploadingField(verbose_name=_("Описание(Кыргызча)"), blank=True, null=True)
+    description_en = RichTextUploadingField(verbose_name=_("Описание(English)"), blank=True, null=True)
 
-    def str(self):
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Описание кафедры")
+        verbose_name_plural = _("Описания кафедр")
+
+    def __str__(self):
+        return f"{self.category.name_ru} - Описание"
+
+    def get_description(self, language="ru"):
+        """Получить описание на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
+
+class PhdManagement(models.Model):
+    """Руководство факультета (Management)"""
+
+    department = models.ForeignKey(
+        PhdTabCategory,
+        on_delete=models.CASCADE,
+        related_name="management",
+        verbose_name=_("Кафедра"),
+        blank=True,
+        null=True,
+    )
+
+    photo = CloudinaryField(verbose_name=_("Фото"))
+
+    # Многоязычные поля для имени
+    name_ru = models.CharField(max_length=200, verbose_name=_("Имя (Русский)"))
+    name_kg = models.CharField(max_length=200, verbose_name=_("Имя (Кыргызча)"))
+    name_en = models.CharField(max_length=200, verbose_name=_("Имя (English)"))
+
+    # Многоязычные поля для роли
+    role_ru = models.CharField(max_length=200, verbose_name=_("Роль (Русский)"))
+    role_kg = models.CharField(max_length=200, verbose_name=_("Роль (Кыргызча)"))
+    role_en = models.CharField(max_length=200, verbose_name=_("Роль (English)"))
+
+    phone = models.CharField(
+        max_length=50, blank=True, verbose_name=_("Номер телефона")
+    )
+    email = models.EmailField(blank=True, verbose_name=_("Email"))
+
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Руководство")
+        verbose_name_plural = _("Руководство")
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.name_ru} - {self.role_ru}"
+
+    def get_name(self, language="ru"):
+        """Получить имя на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
+
+    def get_role(self, language="ru"):
+        """Получить роль на указанном языке"""
+        value = getattr(self, f"role_{language}", None)
+        return value if value else self.role_ru
+
+
+
+
+class CollegeTabCategory(models.Model):
+    """Категории/табы (history, about, management, specializations, departments)"""
+
+    # Многоязычные поля для заголовка
+    name_ru = models.CharField(max_length=200, verbose_name=_("Заголовок (Русский)"))
+    name_kg = models.CharField(max_length=200, verbose_name=_("Заголовок (Кыргызча)"))
+    name_en = models.CharField(max_length=200, verbose_name=_("Заголовок (English)"))
+
+    # Цвета для UI (опционально)
+    color = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name=_("Цвет"),
+        help_text="Например: blue-500, green-600",
+    )
+
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Категория кафедры")
+        verbose_name_plural = _("Категории кафедр")
+        ordering = ["order"]
+
+    def __str__(self):
         return self.name_ru
 
     def get_name(self, language="ru"):
-        return getattr(self, f"name_{language}", self.name_ru)
+        """Получить название на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
+
+
+
+class CollegeDepartmentInfo(models.Model):
+    """Описание кафедры"""
+
+    category = models.OneToOneField(
+        CollegeTabCategory,
+        on_delete=models.CASCADE,
+        related_name="info",
+        verbose_name=_("Категория"),
+    )
+
+    # Многоязычные поля для описания
+    description_ru = RichTextUploadingField(verbose_name=_("Описание(Русский)"), blank=True, null=True)
+    description_kg = RichTextUploadingField(verbose_name=_("Описание(Кыргызча)"), blank=True, null=True)
+    description_en = RichTextUploadingField(verbose_name=_("Описание(English)"), blank=True, null=True)
+
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Описание кафедры")
+        verbose_name_plural = _("Описания кафедр")
+
+    def __str__(self):
+        return f"{self.category.name_ru} - Описание"
 
     def get_description(self, language="ru"):
-        return getattr(self, f"description_{language}", self.description_ru)
+        """Получить описание на указанном языке"""
+        value = getattr(self, f"description_{language}", None)
+        return value if value else self.description_ru
 
-    def get_features(self, language="ru"):
-        return getattr(self, f"features_{language}", self.features_ru)
+
+class CollegeManagement(models.Model):
+    """Руководство факультета (Management)"""
+
+    department = models.ForeignKey(
+        CollegeTabCategory,
+        on_delete=models.CASCADE,
+        related_name="management",
+        verbose_name=_("Кафедра"),
+        blank=True,
+        null=True,
+    )
+
+    photo = CloudinaryField(verbose_name=_("Фото"))
+
+    # Многоязычные поля для имени
+    name_ru = models.CharField(max_length=200, verbose_name=_("Имя (Русский)"))
+    name_kg = models.CharField(max_length=200, verbose_name=_("Имя (Кыргызча)"))
+    name_en = models.CharField(max_length=200, verbose_name=_("Имя (English)"))
+
+    # Многоязычные поля для роли
+    role_ru = models.CharField(max_length=200, verbose_name=_("Роль (Русский)"))
+    role_kg = models.CharField(max_length=200, verbose_name=_("Роль (Кыргызча)"))
+    role_en = models.CharField(max_length=200, verbose_name=_("Роль (English)"))
+
+    phone = models.CharField(
+        max_length=50, blank=True, verbose_name=_("Номер телефона")
+    )
+    email = models.EmailField(blank=True, verbose_name=_("Email"))
+
+
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Руководство")
+        verbose_name_plural = _("Руководство")
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.name_ru} - {self.role_ru}"
+
+    def get_name(self, language="ru"):
+        """Получить имя на указанном языке"""
+        value = getattr(self, f"name_{language}", None)
+        return value if value else self.name_ru
+
+    def get_role(self, language="ru"):
+        """Получить роль на указанном языке"""
+        value = getattr(self, f"role_{language}", None)
+        return value if value else self.role_ru
+
