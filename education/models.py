@@ -30,8 +30,8 @@ class MasterTabCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Категория кафедры(магистратура)")
-        verbose_name_plural = _("Категории кафедр магистратура")
+        verbose_name = _("Категория кафедры (магистратура)")
+        verbose_name_plural = _("Категории кафедр (магистратура)")
         ordering = ["order"]
 
     def __str__(self):
