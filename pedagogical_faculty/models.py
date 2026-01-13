@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
 from ckeditor_uploader.fields import RichTextUploadingField
+from ac_back.storage import RawMediaCloudinaryStorage
+
+raw_storage = RawMediaCloudinaryStorage()
 
 
 class TabCategory(models.Model):
@@ -182,8 +185,9 @@ class Management(models.Model):
         upload_to="pedagogical_faculty/management/resumes/",
         blank=True,
         null=True,
-        verbose_name=_("Резюме (PDF)"),
+        verbose_name=_("Резюме (PDF)")
     )
+
 
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
@@ -328,11 +332,13 @@ class DepartmentStaff(models.Model):
     )
 
     resume = models.FileField(
-        upload_to="pedagogical_faculty/departments/resumes/",
-        blank=True,
-        null=True,
-        verbose_name=_("Резюме (PDF)"),
-    )
+    blank=True,
+    null=True,
+    verbose_name=_("Резюме (PDF)")
+)
+
+
+
 
     order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Порядок"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активно"))
