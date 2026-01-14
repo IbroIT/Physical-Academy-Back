@@ -1,10 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cloudinary.models import CloudinaryField
 
 
 class News(models.Model):
     # Базовые поля (не переводимые)
-    image = models.ImageField(upload_to="news/", verbose_name=_("Главное изображение"))
+    image = CloudinaryField(verbose_name=_("Главное изображение"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активный"))
     order = models.PositiveIntegerField(default=0, verbose_name=_("Порядок"))
     created_at = models.DateTimeField(
@@ -30,7 +31,7 @@ class NewsImage(models.Model):
         related_name="gallery_images",
         verbose_name=_("Новость"),
     )
-    image = models.ImageField(upload_to="news/gallery/", verbose_name=_("Изображение"))
+    image = CloudinaryField(verbose_name=_("Изображение"))
     order = models.PositiveIntegerField(default=0, verbose_name=_("Порядок"))
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Дата загрузки")
