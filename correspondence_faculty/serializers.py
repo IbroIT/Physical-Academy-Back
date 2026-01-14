@@ -62,6 +62,7 @@ class TabCategorySerializer(serializers.ModelSerializer):
     """Сериализатор для категорий/табов"""
 
     title = serializers.SerializerMethodField()
+    icon = serializers.SerializerMethodField()
 
     class Meta:
         model = TabCategory
@@ -71,6 +72,16 @@ class TabCategorySerializer(serializers.ModelSerializer):
     def get_title(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_title(language)
+    
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_icon(self, obj) -> str | None:
+        img = getattr(obj, "icon", None)
+        if not img:
+            return None
+        try:
+            return img.url
+        except Exception:
+            return str(img)
 
 
 class FacultyDataSerializer(serializers.Serializer):

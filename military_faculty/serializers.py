@@ -50,6 +50,7 @@ class DepartmentStaffSerializer(serializers.ModelSerializer):
 class GalleryCardSerializer(serializers.ModelSerializer):
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
     
     class Meta:
         model = GalleryCard
@@ -58,9 +59,20 @@ class GalleryCardSerializer(serializers.ModelSerializer):
     def get_title(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_title(language)
+    
     def get_description(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_description(language)
+    
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_photo(self, obj) -> str | None:
+        img = getattr(obj, "photo", None)
+        if not img:
+            return None
+        try:
+            return img.url
+        except Exception:
+            return str(img)
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -137,6 +149,7 @@ class TabCategorySerializer(serializers.ModelSerializer):
     """Сериализатор для категорий/табов"""
 
     title = serializers.SerializerMethodField()
+    icon = serializers.SerializerMethodField()
 
     class Meta:
         model = TabCategory
@@ -146,6 +159,16 @@ class TabCategorySerializer(serializers.ModelSerializer):
     def get_title(self, obj) -> str:
         language = self.context.get("language", "ru")
         return obj.get_title(language)
+    
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_icon(self, obj) -> str | None:
+        img = getattr(obj, "icon", None)
+        if not img:
+            return None
+        try:
+            return img.url
+        except Exception:
+            return str(img)
 
 
 class FacultyDataSerializer(serializers.Serializer):
