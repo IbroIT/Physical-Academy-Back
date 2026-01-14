@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 from .models import Announcement, AnnouncementTranslation, AnnouncementImage
 
 
@@ -22,13 +24,14 @@ class AnnouncementImageSerializer(serializers.ModelSerializer):
         model = AnnouncementImage
         fields = ["id", "image_url", "order"]
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_image_url(self, obj):
-        if obj.image:
-            request = self.context.get("request")
-            if request:
-                return request.build_absolute_uri(obj.image.url)
+        if not obj.image:
+            return None
+        try:
             return obj.image.url
-        return None
+        except Exception:
+            return str(obj.image)
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
@@ -49,13 +52,14 @@ class AnnouncementSerializer(serializers.ModelSerializer):
             "translations",
         ]
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_image_url(self, obj):
-        if obj.image:
-            request = self.context.get("request")
-            if request:
-                return request.build_absolute_uri(obj.image.url)
+        if not obj.image:
+            return None
+        try:
             return obj.image.url
-        return None
+        except Exception:
+            return str(obj.image)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cloudinary.models import CloudinaryField
 
 
 class Announcement(models.Model):
@@ -10,8 +11,8 @@ class Announcement(models.Model):
     ]
 
     # Базовые поля (не переводимые)
-    image = models.ImageField(
-        upload_to="announcements/", verbose_name=_("Главное изображение")
+    image = CloudinaryField(
+        verbose_name=_("Главное изображение")
     )
     urgency = models.CharField(
         max_length=10,
@@ -44,8 +45,8 @@ class AnnouncementImage(models.Model):
         related_name="gallery_images",
         verbose_name=_("Объявление"),
     )
-    image = models.ImageField(
-        upload_to="announcements/gallery/", verbose_name=_("Изображение")
+    image = CloudinaryField(
+        verbose_name=_("Изображение")
     )
     order = models.PositiveIntegerField(default=0, verbose_name=_("Порядок"))
     created_at = models.DateTimeField(

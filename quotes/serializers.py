@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 from .models import Quote, QuoteTranslation
 
 class QuoteTranslationSerializer(serializers.ModelSerializer):
@@ -14,10 +16,14 @@ class QuoteSerializer(serializers.ModelSerializer):
         model = Quote
         fields = ['id', 'image_url', 'is_active', 'order', 'created_at', 'translations']
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_image_url(self, obj):
-        if obj.image:
+        if not obj.image:
+            return None
+        try:
             return obj.image.url
-        return None
+        except Exception:
+            return str(obj.image)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

@@ -1,8 +1,9 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class BannerSlide(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
-    image = models.ImageField(upload_to='banner/', verbose_name="Изображение")
+    image = CloudinaryField(verbose_name="Изображение")
     alt_text = models.CharField(max_length=200, verbose_name="Альтернативный текст", blank=True)
     is_active = models.BooleanField(default=True, verbose_name="Активный")
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок")

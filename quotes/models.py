@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cloudinary.models import CloudinaryField
 
 class Quote(models.Model):
     # Базовые поля (не переводимые)
-    image = models.ImageField(
-        upload_to='quotes/', 
+    image = CloudinaryField(
         blank=True, 
         null=True, 
         verbose_name=_("Изображение автора")
