@@ -38,7 +38,7 @@ from .models import (
 class VestnikReleaseInline(admin.StackedInline):
     model = VestnikRelease
     extra = 1
-    fields = ("title_ru", "title_kg", "title_en", "pdf")
+    fields = ("title_ru", "title_kg", "title_en", "pdf_ru", "pdf_kg", "pdf_en", "description_ru", "description_kg", "description_en")
 
 
 @admin.register(VestnikYear)

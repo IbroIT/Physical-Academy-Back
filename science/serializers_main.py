@@ -55,7 +55,8 @@ class VestnikReleaseSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_pdf(self, obj) -> str | None:
-        pdf = getattr(obj, "pdf", None)
+        language = self.context.get("language", "ru")
+        pdf = getattr(obj, f"pdf_{language}", None)
         if not pdf:
             return None
         try:

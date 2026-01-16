@@ -205,8 +205,14 @@ class VestnikRelease(models.Model):
     description_en = RichTextUploadingField(_("Description (English)"), blank=True)
     description_kg = RichTextUploadingField(_("Description (Kyrgyz)"), blank=True)
 
-    pdf = models.FileField(
-        _("PDF File"), upload_to="vestnik/releases/", blank=True
+    pdf_ru = models.FileField(
+        _("PDF File (Russian)"), upload_to="vestnik/releases/", blank=True
+    )
+    pdf_en = models.FileField(
+        _("PDF File (English)"), upload_to="vestnik/releases/", blank=True
+    )
+    pdf_kg = models.FileField(
+        _("PDF File (Kyrgyz)"), upload_to="vestnik/releases/", blank=True
     )
 
     class Meta:
@@ -222,6 +228,9 @@ class VestnikRelease(models.Model):
     
     def get_description(self, language="ru"):
         return getattr(self, f"description_{language}", self.description_ru)
+
+    def get_pdf(self, language="ru"):
+        return getattr(self, f"pdf_{language}", self.pdf_ru)
 
 
 class DissertationCouncilAdminStaff(models.Model):
