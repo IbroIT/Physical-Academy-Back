@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 # Scientific Direction model
@@ -181,6 +182,48 @@ class DissertationCouncilDocuments(models.Model):
         return self.description_ru
 
 
+class VestnikYear(models.Model):
+    year = models.IntegerField(_("Year"), unique=True)
+
+    class Meta:
+        ordering = ["-year"]
+        verbose_name = _("Вестник год")
+        verbose_name_plural = _("Вестник годы")
+
+    def __str__(self):
+        return str(self.year)
+
+class VestnikRelease(models.Model):
+    vestnik_year = models.ForeignKey(
+        VestnikYear, on_delete=models.CASCADE, related_name="releases"
+    )
+    title_ru = models.CharField(_("Title (Russian)"), max_length=255)
+    title_en = models.CharField(_("Title (English)"), max_length=255, blank=True)
+    title_kg = models.CharField(_("Title (Kyrgyz)"), max_length=255, blank=True)
+
+    description_ru = RichTextUploadingField(_("Description (Russian)"), blank=True)
+    description_en = RichTextUploadingField(_("Description (English)"), blank=True)
+    description_kg = RichTextUploadingField(_("Description (Kyrgyz)"), blank=True)
+
+    pdf = models.FileField(
+        _("PDF File"), upload_to="vestnik/releases/", blank=True
+    )
+
+    class Meta:
+        ordering = ["-vestnik_year__year"]
+        verbose_name = _("Вестник выпуск")
+        verbose_name_plural = _("Вестник выпуски")
+
+    def __str__(self):
+        return f"{self.title_ru} ({self.vestnik_year.year})"
+
+    def get_title(self, language="ru"):
+        return getattr(self, f"title_{language}", self.title_ru)
+    
+    def get_description(self, language="ru"):
+        return getattr(self, f"description_{language}", self.description_ru)
+
+
 class DissertationCouncilAdminStaff(models.Model):
     """Model for dissertation council administrative staff members"""
 
@@ -351,149 +394,6 @@ class PublicationStats(models.Model):
         return f"{self.label_ru}: {self.value}"
 
 
-class VestnikIssue(models.Model):
-    """Model for Vestnik journal issues"""
-
-    title_ru = models.CharField(_("Title (Russian)"), max_length=500)
-    title_en = models.CharField(_("Title (English)"), max_length=500, blank=True)
-    title_kg = models.CharField(_("Title (Kyrgyz)"), max_length=500, blank=True)
-
-    description_ru = models.TextField(_("Description (Russian)"))
-    description_en = models.TextField(_("Description (English)"), blank=True)
-    description_kg = models.TextField(_("Description (Kyrgyz)"), blank=True)
-
-    volume_number = models.IntegerField(_("Volume Number"))
-    issue_number = models.IntegerField(_("Issue Number"))
-    year = models.IntegerField(_("Year"))
-    publication_date = models.DateField(_("Publication Date"))
-
-    cover_image = models.ImageField(
-        _("Cover Image"), upload_to="vestnik/covers/", blank=True, null=True
-    )
-    pdf_file = models.FileField(_("PDF File"), upload_to="vestnik/issues/", blank=True)
-
-    issn_print = models.CharField(_("ISSN (Print)"), max_length=20, blank=True)
-    issn_online = models.CharField(_("ISSN (Online)"), max_length=20, blank=True)
-    doi_prefix = models.CharField(_("DOI Prefix"), max_length=100, blank=True)
-
-    is_featured = models.BooleanField(_("Featured"), default=False)
-    is_published = models.BooleanField(_("Published"), default=True)
-    order = models.IntegerField(_("Order"), default=0)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ["-year", "-volume_number", "-issue_number", "order"]
-        verbose_name = _("Vestnik Issue")
-        verbose_name_plural = _("Vestnik Issues")
-        unique_together = ["volume_number", "issue_number", "year"]
-
-    def __str__(self):
-        return f"Vestnik Vol.{self.volume_number} №{self.issue_number} ({self.year})"
-
-    def get_title(self, language="ru"):
-        """Получить заголовок на нужном языке"""
-        return getattr(self, f"title_{language}", self.title_ru)
-
-    def get_description(self, language="ru"):
-        """Получить описание на нужном языке"""
-        return getattr(self, f"description_{language}", self.description_ru)
-
-    @property
-    def articles_count(self):
-        """Количество статей в выпуске"""
-        return self.articles.count()
-
-
-class VestnikArticle(models.Model):
-    """Model for articles within Vestnik issues"""
-
-    issue = models.ForeignKey(
-        VestnikIssue, on_delete=models.CASCADE, related_name="articles"
-    )
-
-    title_ru = models.CharField(_("Title (Russian)"), max_length=500)
-    title_en = models.CharField(_("Title (English)"), max_length=500, blank=True)
-    title_kg = models.CharField(_("Title (Kyrgyz)"), max_length=500, blank=True)
-
-    author_ru = models.CharField(_("Authors (Russian)"), max_length=500)
-    author_en = models.CharField(_("Authors (English)"), max_length=500, blank=True)
-    author_kg = models.CharField(_("Authors (Kyrgyz)"), max_length=500, blank=True)
-
-    abstract_ru = models.TextField(_("Abstract (Russian)"))
-    abstract_en = models.TextField(_("Abstract (English)"), blank=True)
-    abstract_kg = models.TextField(_("Abstract (Kyrgyz)"), blank=True)
-
-    keywords_ru = models.TextField(
-        _("Keywords (Russian)"), help_text="Comma-separated keywords", blank=True
-    )
-    keywords_en = models.TextField(
-        _("Keywords (English)"), help_text="Comma-separated keywords", blank=True
-    )
-    keywords_kg = models.TextField(
-        _("Keywords (Kyrgyz)"), help_text="Comma-separated keywords", blank=True
-    )
-
-    pages_from = models.IntegerField(_("Page From"))
-    pages_to = models.IntegerField(_("Page To"))
-
-    doi = models.CharField(_("DOI"), max_length=100, blank=True)
-    pdf_file = models.FileField(
-        _("Article PDF"), upload_to="vestnik/articles/", blank=True
-    )
-
-    article_type = models.CharField(
-        _("Article Type"),
-        max_length=50,
-        choices=[
-            ("research", _("Research Article")),
-            ("review", _("Review Article")),
-            ("case_study", _("Case Study")),
-            ("editorial", _("Editorial")),
-            ("letter", _("Letter to Editor")),
-        ],
-        default="research",
-    )
-
-    citation_count = models.IntegerField(_("Citation Count"), default=0)
-    order = models.IntegerField(_("Order in Issue"), default=0)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ["issue", "order", "pages_from"]
-        verbose_name = _("Vestnik Article")
-        verbose_name_plural = _("Vestnik Articles")
-
-    def __str__(self):
-        return f"{self.title_ru} - {self.issue}"
-
-    @property
-    def page_range(self):
-        return f"{self.pages_from}-{self.pages_to}"
-
-
-class VestnikStats(models.Model):
-    """Statistics for Vestnik page"""
-
-    label_ru = models.CharField(_("Label (Russian)"), max_length=255)
-    label_en = models.CharField(_("Label (English)"), max_length=255, blank=True)
-    label_kg = models.CharField(_("Label (Kyrgyz)"), max_length=255, blank=True)
-
-    value = models.IntegerField(_("Value"))
-    icon = models.CharField(_("Icon Class"), max_length=50, blank=True)
-    order = models.IntegerField(_("Order"), default=0)
-
-    class Meta:
-        ordering = ["order"]
-        verbose_name = _("Vestnik Statistic")
-        verbose_name_plural = _("Vestnik Statistics")
-
-    def __str__(self):
-        return f"{self.label_ru}: {self.value}"
-
 
 class DissertationDefense(models.Model):
     """Model for dissertation defense information"""
@@ -599,36 +499,6 @@ class ConferenceNotice(models.Model):
         return self.description_ru
 
 
-class Vestnik(models.Model):
-    """Model for scientific journal Vestnik"""
-
-    title_ru = models.CharField(_("Journal Title (Russian)"), max_length=255)
-    title_en = models.CharField(
-        _("Journal Title (English)"), max_length=255, blank=True
-    )
-    title_kg = models.CharField(_("Journal Title (Kyrgyz)"), max_length=255, blank=True)
-
-    description_ru = models.TextField(_("Description (Russian)"))
-    description_en = models.TextField(_("Description (English)"), blank=True)
-    description_kg = models.TextField(_("Description (Kyrgyz)"), blank=True)
-
-    issn = models.CharField(_("ISSN"), max_length=20)
-    image = models.ImageField(_("Journal Logo"), upload_to="vestnik/", blank=True)
-
-    is_active = models.BooleanField(_("Active"), default=True)
-
-    class Meta:
-        verbose_name = _("Vestnik Journal")
-        verbose_name_plural = _("Vestnik Journals")
-
-    def __str__(self):
-        return self.title_ru
-
-    def get_title(self):
-        return self.title_ru
-
-    def get_description(self):
-        return self.description_ru
 
 
 # --- NTS committee models (previously in nts_committee.py) ---

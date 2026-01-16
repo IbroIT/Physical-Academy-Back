@@ -6,9 +6,7 @@ from .models import (
     NTSCommitteeSection,
     Publication,
     PublicationStats,
-    VestnikIssue,
-    VestnikArticle,
-    VestnikStats,
+    VestnikRelease,
     ScopusMetrics,
     ScopusDocumentType,
     ScopusPublication,
@@ -18,6 +16,7 @@ from .models import (
     ScopusPublicationAuthor,
     ScopusJournal,
     ScopusPublisher,
+    VestnikYear,
     WebOfScienceTimeRange,
     WebOfScienceMetric,
     WebOfScienceCategory,
@@ -36,15 +35,22 @@ from .models import (
     StudentScientificSocietyContact,
 )
 
+class VestnikReleaseInline(admin.StackedInline):
+    model = VestnikRelease
+    extra = 1
+    fields = ("title_ru", "title_kg", "title_en", "pdf")
+
+
+@admin.register(VestnikYear)
+class VestnikYearAdmin(admin.ModelAdmin):
+    inlines = [VestnikReleaseInline]
+
 admin.site.register(NTSCommitteeRole)
 admin.site.register(NTSResearchDirection)
 admin.site.register(NTSCommitteeMember)
 admin.site.register(NTSCommitteeSection)
 admin.site.register(Publication)
 admin.site.register(PublicationStats)
-admin.site.register(VestnikIssue)
-admin.site.register(VestnikArticle)
-admin.site.register(VestnikStats)
 admin.site.register(ScopusMetrics)
 admin.site.register(ScopusDocumentType)
 admin.site.register(ScopusPublication)

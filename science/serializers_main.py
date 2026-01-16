@@ -5,10 +5,8 @@ from drf_spectacular.types import OpenApiTypes
 from .models import (
     Publication,
     PublicationStats,
-    Vestnik,
-    VestnikArticle,
-    VestnikIssue,
-    VestnikStats,
+    VestnikYear,
+    VestnikRelease,
 )
 
 
@@ -27,6 +25,55 @@ from .serializers.scopus import (
 )
 
 # ==================== PUBLICATION SERIALIZERS ====================
+
+
+class VestnikReleaseSerializer(serializers.ModelSerializer):
+    """Сериализатор для выпусков Вестника с поддержкой многоязычности"""
+
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    pdf = serializers.SerializerMethodField()
+
+    class Meta:
+        model = VestnikRelease
+        fields = [
+            "id",
+            "title",
+            "description",
+            "pdf",
+        ]
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_title(self, obj):
+        language = self.context.get("language", "ru")
+        return obj.get_title(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_description(self, obj):
+        language = self.context.get("language", "ru")
+        return obj.get_description(language)
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_pdf(self, obj) -> str | None:
+        pdf = getattr(obj, "pdf", None)
+        if not pdf:
+            return None
+        try:
+            return pdf.url
+        except Exception:
+            return str(pdf)
+        
+
+class VestnikYearSerializer(serializers.ModelSerializer):
+    """Сериализатор для годов Вестника с вложенными выпусками"""
+
+    releases = VestnikReleaseSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = VestnikYear
+        fields = ["id", "year", "releases"]
+
+
 
 
 class PublicationSerializer(serializers.ModelSerializer):
@@ -139,177 +186,3 @@ class PublicationsPageSerializer(serializers.Serializer):
         return serializer.data
 
 
-# ==================== VESTNIK SERIALIZERS ====================
-
-
-class VestnikSerializer(serializers.ModelSerializer):
-    """Сериализатор для журнала Vestnik"""
-
-    title = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
-    issn = serializers.CharField()
-
-    class Meta:
-        model = Vestnik
-        fields = ["id", "title", "description", "issn", "image", "is_active"]
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_title(self, obj):
-        language = self.context.get("language", "ru")
-        return obj.get_title(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj):
-        language = self.context.get("language", "ru")
-        return obj.get_description(language)
-
-
-class VestnikIssueSerializer(serializers.ModelSerializer):
-    """Сериализатор для выпусков журнала Vestnik с поддержкой многоязычности"""
-
-    title = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
-    articles_count = serializers.IntegerField(read_only=True)
-    pdf_url = serializers.SerializerMethodField()
-    cover_image_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = VestnikIssue
-        fields = [
-            "id",
-            "volume_number",
-            "issue_number",
-            "year",
-            "title",
-            "description",
-            "pdf_file",
-            "pdf_url",
-            "cover_image",
-            "cover_image_url",
-            "issn_print",
-            "issn_online",
-            "articles_count",
-            "is_featured",
-            "is_published",
-            "publication_date",
-        ]
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_title(self, obj):
-        language = self.context.get("language", "ru")
-        return obj.get_title(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_description(self, obj):
-        language = self.context.get("language", "ru")
-        return obj.get_description(language)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_pdf_url(self, obj):
-        """Возвращает полный URL для PDF файла"""
-        if obj.pdf_file:
-            request = self.context.get("request")
-            if request:
-                return request.build_absolute_uri(obj.pdf_file.url)
-        return None
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_cover_image_url(self, obj):
-        """Возвращает полный URL для обложки"""
-        if obj.cover_image:
-            request = self.context.get("request")
-            if request:
-                return request.build_absolute_uri(obj.cover_image.url)
-        return None
-
-
-class VestnikArticleSerializer(serializers.ModelSerializer):
-    """Сериализатор для статей журнала Vestnik"""
-
-    title = serializers.SerializerMethodField()
-    author = serializers.SerializerMethodField()
-    abstract = serializers.SerializerMethodField()
-    keywords = serializers.SerializerMethodField()
-    pdf_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = VestnikArticle
-        fields = [
-            "id",
-            "title",
-            "author",
-            "abstract",
-            "keywords",
-            "pages_from",
-            "pages_to",
-            "page_range",
-            "doi",
-            "pdf_url",
-            "article_type",
-            "citation_count",
-            "order",
-        ]
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_title(self, obj):
-        language = self.context.get("language", "ru")
-        return getattr(obj, f"title_{language}", obj.title_ru)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_author(self, obj):
-        language = self.context.get("language", "ru")
-        return getattr(obj, f"author_{language}", obj.author_ru)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_abstract(self, obj):
-        language = self.context.get("language", "ru")
-        return getattr(obj, f"abstract_{language}", obj.abstract_ru)
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_keywords(self, obj):
-        language = self.context.get("language", "ru")
-        return getattr(obj, f"keywords_{language}", obj.keywords_ru or "")
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_pdf_url(self, obj):
-        if obj.pdf_file:
-            request = self.context.get("request")
-            if request:
-                return request.build_absolute_uri(obj.pdf_file.url)
-        return None
-
-
-class VestnikStatsSerializer(serializers.ModelSerializer):
-    """Сериализатор для статистики Vestnik"""
-
-    label = serializers.SerializerMethodField()
-
-    class Meta:
-        model = VestnikStats
-        fields = ["id", "label", "value", "icon", "order"]
-
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_label(self, obj):
-        language = self.context.get("language", "ru")
-        return getattr(obj, f"label_{language}", obj.label_ru)
-
-
-class VestnikPageSerializer(serializers.Serializer):
-    """Сериализатор для полной страницы Vestnik"""
-
-    stats = VestnikStatsSerializer(many=True)
-    featured_issues = serializers.SerializerMethodField()
-    recent_issues = serializers.SerializerMethodField()
-    recent_articles = VestnikArticleSerializer(many=True)
-
-    def get_featured_issues(self, obj):
-        featured_qs = obj.get("featured_issues", [])
-        serializer = VestnikIssueSerializer(
-            featured_qs, many=True, context=self.context
-        )
-        return serializer.data
-
-    def get_recent_issues(self, obj):
-        recent_qs = obj.get("recent_issues", [])
-        serializer = VestnikIssueSerializer(recent_qs, many=True, context=self.context)
-        return serializer.data

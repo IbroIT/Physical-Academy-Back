@@ -8,11 +8,8 @@ from .serializers_main import (
     PublicationStatsSerializer,
     PublicationsPageSerializer,
     # Vestnik serializers
-    VestnikSerializer,
-    VestnikIssueSerializer,
-    VestnikArticleSerializer,
-    VestnikStatsSerializer,
-    VestnikPageSerializer,
+    VestnikYearSerializer,
+    VestnikReleaseSerializer,
 )
 
 # Import from old files (will be removed after full migration)
@@ -37,11 +34,8 @@ __all__ = [
     "PublicationStatsSerializer",
     "PublicationsPageSerializer",
     # Vestnik serializers
-    "VestnikSerializer",
-    "VestnikIssueSerializer",
-    "VestnikArticleSerializer",
-    "VestnikStatsSerializer",
-    "VestnikPageSerializer",
+    "VestnikYearSerializer",
+    "VestnikReleaseSerializer",
     # Science serializers (from old files)
     "ScientificDirectionSerializer",
     "DissertationSpecializationSerializer",

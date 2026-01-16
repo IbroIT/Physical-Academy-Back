@@ -6,10 +6,7 @@ from .views_main import (
     PublicationsViewSet,
     PublicationStatsViewSet,
     PublicationsPageView,
-    VestnikIssuesViewSet,
-    VestnikArticlesViewSet,
-    VestnikStatsViewSet,
-    VestnikPageView,
+    VestnikYearViewSet,
 )
 
 # Import other views from views package
@@ -58,10 +55,7 @@ router = DefaultRouter()
 router.register(r"publications", PublicationsViewSet)
 router.register(r"publication-stats", PublicationStatsViewSet)
 
-router.register(r"vestnik-issues", VestnikIssuesViewSet)
-router.register(r"vestnik-articles", VestnikArticlesViewSet)
-router.register(r"vestnik-stats", VestnikStatsViewSet)
-# Scopus API endpoints
+
 router.register(r"scopus-metrics", ScopusMetricsViewSet)
 router.register(r"scopus-document-types", ScopusDocumentTypeViewSet)
 router.register(r"scopus-publications", ScopusPublicationViewSet)
@@ -103,7 +97,7 @@ urlpatterns = [
     path(
         "publications-page/", PublicationsPageView.as_view(), name="publications-page"
     ),
-    path("vestnik-page/", VestnikPageView.as_view(), name="vestnik-page"),
+    path("vestnik-page/", VestnikYearViewSet.as_view(), name="vestnik-page"),
     # Scopus page view
     path("scopus-page/", ScopusPageView.as_view(), name="scopus-page"),
     # NTS Committee page view
